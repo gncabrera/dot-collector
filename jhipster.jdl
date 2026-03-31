@@ -1,0 +1,261 @@
+entity MegaSetType {
+  name String required unique,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaSet {
+  setNumber String required unique,
+  releaseDate LocalDate,
+  notes String,
+  nameEN String required,
+  nameES String,
+  nameDE String,
+  nameFR String,
+  descriptionEN String required,
+  descriptionES String,
+  descriptionDE String,
+  descriptionFR String,
+  attributes AnyBlob,  // 🔥 JSONB
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaSetPartCount {
+  count Integer,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaPartType {
+  name String required unique,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaPart {
+  releaseDate LocalDate,
+  partNumber String required unique,
+  nameEN String required,
+  nameES String,
+  nameDE String,
+  nameFR String,
+  description String,
+  notes String,
+  attributes AnyBlob,  // 🔥 JSONB
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaPartSubPartCount {
+  count Integer,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+// Simple Entities
+
+entity MegaAsset {
+  name String required,
+  description String,
+  path TextBlob required,
+  type AssetType,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+enum AssetType {
+  IMAGE,
+  FILE
+}
+
+entity PartSubCategory  {
+  name String required,
+  description String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity PartCategory  {
+  name String required,
+  description String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+enum AttributeType {
+  STRING,
+  NUMBER,
+  DATE,
+  BOOLEAN,
+  ENUM
+}
+
+entity MegaAttribute  {
+  name String required,
+  label String required,
+  description String,
+  uiComponent UIComponent,
+
+  type AttributeType required,
+
+  required Boolean,
+  multiple Boolean,
+
+  defaultValue String,
+
+  minNumber Double,
+  maxNumber Double,
+
+  minLength Integer,
+  maxLength Integer,
+
+  regex String,
+
+  // 🔥 para enums
+  options TextBlob
+
+  order Integer,
+  group String,
+  active Boolean,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity MegaAttributeOption {
+  label String,
+  value String,
+  description String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+enum UIComponent {
+  INPUT,
+  TEXTAREA,
+  NUMBER,
+  DATE,
+  SELECT,
+  CHECKBOX
+}
+
+// Part And Set implementations
+
+// User Data
+entity Profile {
+  username String,
+  fullName String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity FollowingProfile {
+  dateFollowing ZonedDateTime,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity BlockedProfile {
+  reason String,
+  dateBlocked ZonedDateTime,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity ProfileCollection {
+  title String,
+  description String,
+  isPublic Boolean,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity ProfileCollectionSet {
+  owned Boolean,
+  wanted Boolean,
+  dateAdded ZonedDateTime,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity ProfileRequest {
+  type String,
+  message String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity ProfileRequestType {
+  key String,
+  name String,
+  description String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+entity EnvironmentVariable {
+  key String,
+  value String,
+  description String,
+  type String,
+  createdDate Instant,
+  lastModifiedDate Instant
+}
+
+relationship ManyToOne {
+  MegaSet{type} to MegaSetType
+  MegaPart{type} to MegaPartType
+  MegaSetPartCount{set} to MegaSet
+  MegaSetPartCount{part} to MegaPart
+  MegaPart{partCategory} to PartCategory
+  MegaPartSubPartCount{part} to MegaPart
+  MegaPartSubPartCount{parentPart} to MegaPart
+
+  MegaAsset{set} to MegaSet
+  MegaAsset{set} to MegaSet
+  MegaAsset{part} to MegaPart
+  MegaAsset{part} to MegaPart
+
+  ProfileRequest{type} to ProfileRequestType
+
+}
+
+relationship ManyToMany {
+  MegaPart{partSubCategories} to PartSubCategory{megaParts}
+  MegaSetType{attributes} to MegaAttribute{types}
+  MegaPartType{attributes} to MegaAttribute{types}
+}
+
+
+// Profile
+relationship OneToOne {
+  Profile{user} to User
+}
+relationship ManyToOne {
+  FollowingProfile{profile} to Profile
+  BlockedProfile{profile} to Profile
+  ProfileCollection{profile} to Profile
+  ProfileCollectionSet{collection} to ProfileCollection
+  ProfileRequest{profile} to Profile
+}
+relationship ManyToMany {
+  ProfileCollectionSet{set} to MegaSet{profileCollectionSet}
+}
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceClass
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
+
+
+//@Column(columnDefinition = "jsonb")
+//private JsonNode attributes;
+
+//CREATE INDEX idx_megaset_attributes ON mega_set USING GIN (attributes);
+//CREATE INDEX idx_megapart_attributes ON mega_part USING GIN (attributes);
+//CREATE INDEX idx_megaset_type ON mega_set(type_id);
+//CREATE INDEX idx_megapart_type ON mega_part(type_id);
