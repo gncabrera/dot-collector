@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.TimeZone;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,11 @@ import tech.jhipster.config.JHipsterConstants;
 public class DotCollectorApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(DotCollectorApp.class);
+
+    static {
+        // pgjdbc sends JVM default zone in the startup packet; some PostgreSQL setups reject certain zone IDs.
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 
     private final Environment env;
 

@@ -1,0 +1,97 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175651"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "label",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "uiComponent",
+      "fieldType": "UIComponent",
+      "fieldValues": "INPUT,TEXTAREA,NUMBER,DATE,SELECT,CHECKBOX"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "AttributeType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "STRING,NUMBER,DATE,BOOLEAN,ENUM"
+    },
+    {
+      "fieldName": "required",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "multiple",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "defaultValue",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "minNumber",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "maxNumber",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "minLength",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "maxLength",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "regex",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "order",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "attributeGroup",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "MegaAttribute",
+  "relationships": [
+    {
+      "otherEntityName": "megaSetType",
+      "otherEntityRelationshipName": "attribute",
+      "relationshipName": "setType",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "megaPartType",
+      "otherEntityRelationshipName": "attribute",
+      "relationshipName": "partType",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

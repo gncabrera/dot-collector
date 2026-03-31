@@ -1,0 +1,30 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175700"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["unique"]
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String"
+    }
+  ],
+  "name": "EnvironmentVariable",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

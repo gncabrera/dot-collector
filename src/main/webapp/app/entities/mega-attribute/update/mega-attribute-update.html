@@ -1,0 +1,217 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-mega-attribute-heading" data-cy="MegaAttributeCreateUpdateHeading">Create or edit a Mega Attribute</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nameRef = editForm.get('name')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+            <div>
+              @if (editForm.get('name')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let labelRef = editForm.get('label')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_label">Label</label>
+          <input type="text" class="form-control" name="label" id="field_label" data-cy="label" formControlName="label" />
+          @if (labelRef.invalid && (labelRef.dirty || labelRef.touched)) {
+            <div>
+              @if (editForm.get('label')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_uiComponent">Ui Component</label>
+          <select class="form-control" name="uiComponent" formControlName="uiComponent" id="field_uiComponent" data-cy="uiComponent">
+            <option [ngValue]="null"></option>
+            @for (uIComponent of uIComponentValues; track $index) {
+              <option [value]="uIComponent">
+                {{
+                  {
+                    null: '',
+                    INPUT: 'INPUT',
+                    TEXTAREA: 'TEXTAREA',
+                    NUMBER: 'NUMBER',
+                    DATE: 'DATE',
+                    SELECT: 'SELECT',
+                    CHECKBOX: 'CHECKBOX',
+                  }[uIComponent]
+                }}
+              </option>
+            }
+          </select>
+        </div>
+
+        @let typeRef = editForm.get('type')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_type">Type</label>
+          <select class="form-control" name="type" formControlName="type" id="field_type" data-cy="type">
+            <option [ngValue]="null"></option>
+            @for (attributeType of attributeTypeValues; track $index) {
+              <option [value]="attributeType">
+                {{ { null: '', STRING: 'STRING', NUMBER: 'NUMBER', DATE: 'DATE', BOOLEAN: 'BOOLEAN', ENUM: 'ENUM' }[attributeType] }}
+              </option>
+            }
+          </select>
+          @if (typeRef.invalid && (typeRef.dirty || typeRef.touched)) {
+            <div>
+              @if (editForm.get('type')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_required">Required</label>
+          <input type="checkbox" class="form-check" name="required" id="field_required" data-cy="required" formControlName="required" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_multiple">Multiple</label>
+          <input type="checkbox" class="form-check" name="multiple" id="field_multiple" data-cy="multiple" formControlName="multiple" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_defaultValue">Default Value</label>
+          <input
+            type="text"
+            class="form-control"
+            name="defaultValue"
+            id="field_defaultValue"
+            data-cy="defaultValue"
+            formControlName="defaultValue"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_minNumber">Min Number</label>
+          <input type="number" class="form-control" name="minNumber" id="field_minNumber" data-cy="minNumber" formControlName="minNumber" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_maxNumber">Max Number</label>
+          <input type="number" class="form-control" name="maxNumber" id="field_maxNumber" data-cy="maxNumber" formControlName="maxNumber" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_minLength">Min Length</label>
+          <input type="number" class="form-control" name="minLength" id="field_minLength" data-cy="minLength" formControlName="minLength" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_maxLength">Max Length</label>
+          <input type="number" class="form-control" name="maxLength" id="field_maxLength" data-cy="maxLength" formControlName="maxLength" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_regex">Regex</label>
+          <input type="text" class="form-control" name="regex" id="field_regex" data-cy="regex" formControlName="regex" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_order">Order</label>
+          <input type="number" class="form-control" name="order" id="field_order" data-cy="order" formControlName="order" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_attributeGroup">Attribute Group</label>
+          <input
+            type="text"
+            class="form-control"
+            name="attributeGroup"
+            id="field_attributeGroup"
+            data-cy="attributeGroup"
+            formControlName="attributeGroup"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_active">Active</label>
+          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
+        </div>
+
+        <div class="mb-3">
+          <label for="field_setTypes">Set Type</label>
+          <select
+            class="form-control"
+            id="field_setTypes"
+            data-cy="setType"
+            multiple
+            name="setTypes"
+            formControlName="setTypes"
+            [compareWith]="compareMegaSetType"
+          >
+            @for (megaSetTypeOption of megaSetTypesSharedCollection(); track $index) {
+              <option [ngValue]="megaSetTypeOption">{{ megaSetTypeOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_partTypes">Part Type</label>
+          <select
+            class="form-control"
+            id="field_partTypes"
+            data-cy="partType"
+            multiple
+            name="partTypes"
+            formControlName="partTypes"
+            [compareWith]="compareMegaPartType"
+          >
+            @for (megaPartTypeOption of megaPartTypesSharedCollection(); track $index) {
+              <option [ngValue]="megaPartTypeOption">{{ megaPartTypeOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

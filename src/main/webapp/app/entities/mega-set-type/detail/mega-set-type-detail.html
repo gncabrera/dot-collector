@@ -1,0 +1,55 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaSetType(); as megaSetTypeRef) {
+      <div>
+        <h2 data-cy="megaSetTypeDetailsHeading"><span>Mega Set Type</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaSetTypeRef.id }}</span>
+          </dd>
+          <dt><span>Name</span></dt>
+          <dd>
+            <span>{{ megaSetTypeRef.name }}</span>
+          </dd>
+          <dt><span>Version</span></dt>
+          <dd>
+            <span>{{ megaSetTypeRef.version }}</span>
+          </dd>
+          <dt><span>Active</span></dt>
+          <dd>
+            <span>{{ megaSetTypeRef.active }}</span>
+          </dd>
+          <dt><span>Is Latest</span></dt>
+          <dd>
+            <span>{{ megaSetTypeRef.isLatest }}</span>
+          </dd>
+          <dt><span>Attribute</span></dt>
+          <dd>
+            @for (attribute of megaSetTypeRef.attributes; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/mega-attribute', attribute.id, 'view']">{{ attribute?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-set-type', megaSetTypeRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

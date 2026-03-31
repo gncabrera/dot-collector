@@ -1,0 +1,118 @@
+<div>
+  <h2 id="page-heading" data-cy="ProfileRequestHeading">
+    <span>Profile Requests</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-profile-request"
+        [routerLink]="['/profile-request/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Profile Request</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (profileRequests().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Profile Requests found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="message">
+              <div class="d-flex">
+                <span>Message</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type.id">
+              <div class="d-flex">
+                <span>Type</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="profile.id">
+              <div class="d-flex">
+                <span>Profile</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (profileRequest of profileRequests(); track trackId(profileRequest)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/profile-request', profileRequest.id, 'view']">{{ profileRequest.id }}</a>
+              </td>
+              <td>{{ profileRequest.message }}</td>
+              <td>
+                @if (profileRequest.type) {
+                  <div>
+                    <a [routerLink]="['/profile-request-type', profileRequest.type.id, 'view']">{{ profileRequest.type.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (profileRequest.profile) {
+                  <div>
+                    <a [routerLink]="['/profile', profileRequest.profile.id, 'view']">{{ profileRequest.profile.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/profile-request', profileRequest.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/profile-request', profileRequest.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(profileRequest)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

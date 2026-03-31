@@ -1,0 +1,206 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaSetHeading">
+    <span>Mega Sets</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-set"
+        [routerLink]="['/mega-set/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Set</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaSets().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Sets found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="setNumber">
+              <div class="d-flex">
+                <span>Set Number</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="releaseDate">
+              <div class="d-flex">
+                <span>Release Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="notes">
+              <div class="d-flex">
+                <span>Notes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameEN">
+              <div class="d-flex">
+                <span>Name EN</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameES">
+              <div class="d-flex">
+                <span>Name ES</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameDE">
+              <div class="d-flex">
+                <span>Name DE</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameFR">
+              <div class="d-flex">
+                <span>Name FR</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descriptionEN">
+              <div class="d-flex">
+                <span>Description EN</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descriptionES">
+              <div class="d-flex">
+                <span>Description ES</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descriptionDE">
+              <div class="d-flex">
+                <span>Description DE</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descriptionFR">
+              <div class="d-flex">
+                <span>Description FR</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="attributes">
+              <div class="d-flex">
+                <span>Attributes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type.id">
+              <div class="d-flex">
+                <span>Type</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="profileCollectionSet.id">
+              <div class="d-flex">
+                <span>Profile Collection Set</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaSet of megaSets(); track trackId(megaSet)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-set', megaSet.id, 'view']">{{ megaSet.id }}</a>
+              </td>
+              <td>{{ megaSet.setNumber }}</td>
+              <td>{{ megaSet.releaseDate | formatMediumDate }}</td>
+              <td>{{ megaSet.notes }}</td>
+              <td>{{ megaSet.nameEN }}</td>
+              <td>{{ megaSet.nameES }}</td>
+              <td>{{ megaSet.nameDE }}</td>
+              <td>{{ megaSet.nameFR }}</td>
+              <td>{{ megaSet.descriptionEN }}</td>
+              <td>{{ megaSet.descriptionES }}</td>
+              <td>{{ megaSet.descriptionDE }}</td>
+              <td>{{ megaSet.descriptionFR }}</td>
+              <td>
+                @if (megaSet.attributes) {
+                  <a (click)="openFile(megaSet.attributes, megaSet.attributesContentType)">Open</a>
+                  <span>{{ megaSet.attributesContentType }}, {{ byteSize(megaSet.attributes) }}</span>
+                }
+              </td>
+              <td>
+                @if (megaSet.type) {
+                  <div>
+                    <a [routerLink]="['/mega-set-type', megaSet.type.id, 'view']">{{ megaSet.type.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @for (profileCollectionSet of megaSet.profileCollectionSets; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/profile-collection-set', profileCollectionSet.id, 'view']">{{
+                      profileCollectionSet.id
+                    }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/mega-set', megaSet.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a [routerLink]="['/mega-set', megaSet.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaSet)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

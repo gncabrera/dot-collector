@@ -1,0 +1,71 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175646"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "releaseDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "partNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "nameEN",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nameES",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nameDE",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nameFR",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attributes",
+      "fieldType": "AnyBlob"
+    }
+  ],
+  "name": "MegaPart",
+  "relationships": [
+    {
+      "otherEntityName": "megaPartType",
+      "relationshipName": "type",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "partCategory",
+      "relationshipName": "partCategory",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "partSubCategory",
+      "otherEntityRelationshipName": "megaPart",
+      "relationshipName": "partSubCategory",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

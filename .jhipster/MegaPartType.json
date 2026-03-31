@@ -1,0 +1,39 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175645"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "isLatest",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "MegaPartType",
+  "relationships": [
+    {
+      "otherEntityName": "megaAttribute",
+      "otherEntityRelationshipName": "partType",
+      "relationshipName": "attribute",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

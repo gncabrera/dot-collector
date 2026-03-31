@@ -1,0 +1,195 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaPartHeading">
+    <span>Mega Parts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-part"
+        [routerLink]="['/mega-part/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Part</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaParts().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Parts found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="releaseDate">
+              <div class="d-flex">
+                <span>Release Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="partNumber">
+              <div class="d-flex">
+                <span>Part Number</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameEN">
+              <div class="d-flex">
+                <span>Name EN</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameES">
+              <div class="d-flex">
+                <span>Name ES</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameDE">
+              <div class="d-flex">
+                <span>Name DE</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nameFR">
+              <div class="d-flex">
+                <span>Name FR</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span>Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="notes">
+              <div class="d-flex">
+                <span>Notes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="attributes">
+              <div class="d-flex">
+                <span>Attributes</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type.id">
+              <div class="d-flex">
+                <span>Type</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="partCategory.id">
+              <div class="d-flex">
+                <span>Part Category</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="partSubCategory.id">
+              <div class="d-flex">
+                <span>Part Sub Category</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaPart of megaParts(); track trackId(megaPart)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-part', megaPart.id, 'view']">{{ megaPart.id }}</a>
+              </td>
+              <td>{{ megaPart.releaseDate | formatMediumDate }}</td>
+              <td>{{ megaPart.partNumber }}</td>
+              <td>{{ megaPart.nameEN }}</td>
+              <td>{{ megaPart.nameES }}</td>
+              <td>{{ megaPart.nameDE }}</td>
+              <td>{{ megaPart.nameFR }}</td>
+              <td>{{ megaPart.description }}</td>
+              <td>{{ megaPart.notes }}</td>
+              <td>
+                @if (megaPart.attributes) {
+                  <a (click)="openFile(megaPart.attributes, megaPart.attributesContentType)">Open</a>
+                  <span>{{ megaPart.attributesContentType }}, {{ byteSize(megaPart.attributes) }}</span>
+                }
+              </td>
+              <td>
+                @if (megaPart.type) {
+                  <div>
+                    <a [routerLink]="['/mega-part-type', megaPart.type.id, 'view']">{{ megaPart.type.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (megaPart.partCategory) {
+                  <div>
+                    <a [routerLink]="['/part-category', megaPart.partCategory.id, 'view']">{{ megaPart.partCategory.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @for (partSubCategory of megaPart.partSubCategories; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/part-sub-category', partSubCategory.id, 'view']">{{
+                      partSubCategory.id
+                    }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/mega-part', megaPart.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a [routerLink]="['/mega-part', megaPart.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaPart)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

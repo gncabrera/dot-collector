@@ -1,0 +1,30 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175654"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dateFollowing",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "name": "FollowingProfile",
+  "relationships": [
+    {
+      "otherEntityName": "profile",
+      "relationshipName": "profile",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "profile",
+      "relationshipName": "followedProfile",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

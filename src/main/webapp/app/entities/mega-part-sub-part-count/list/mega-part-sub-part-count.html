@@ -1,0 +1,120 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaPartSubPartCountHeading">
+    <span>Mega Part Sub Part Counts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-part-sub-part-count"
+        [routerLink]="['/mega-part-sub-part-count/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Part Sub Part Count</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaPartSubPartCounts().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Part Sub Part Counts found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="count">
+              <div class="d-flex">
+                <span>Count</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="part.id">
+              <div class="d-flex">
+                <span>Part</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="parentPart.id">
+              <div class="d-flex">
+                <span>Parent Part</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaPartSubPartCount of megaPartSubPartCounts(); track trackId(megaPartSubPartCount)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-part-sub-part-count', megaPartSubPartCount.id, 'view']">{{ megaPartSubPartCount.id }}</a>
+              </td>
+              <td>{{ megaPartSubPartCount.count }}</td>
+              <td>
+                @if (megaPartSubPartCount.part) {
+                  <div>
+                    <a [routerLink]="['/mega-part', megaPartSubPartCount.part.id, 'view']">{{ megaPartSubPartCount.part.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (megaPartSubPartCount.parentPart) {
+                  <div>
+                    <a [routerLink]="['/mega-part', megaPartSubPartCount.parentPart.id, 'view']">{{
+                      megaPartSubPartCount.parentPart.id
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/mega-part-sub-part-count', megaPartSubPartCount.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/mega-part-sub-part-count', megaPartSubPartCount.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaPartSubPartCount)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

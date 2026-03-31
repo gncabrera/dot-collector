@@ -1,0 +1,120 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaAttribute(); as megaAttributeRef) {
+      <div>
+        <h2 data-cy="megaAttributeDetailsHeading"><span>Mega Attribute</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.id }}</span>
+          </dd>
+          <dt><span>Name</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.name }}</span>
+          </dd>
+          <dt><span>Label</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.label }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.description }}</span>
+          </dd>
+          <dt><span>Ui Component</span></dt>
+          <dd>
+            <span>{{
+              { null: '', INPUT: 'INPUT', TEXTAREA: 'TEXTAREA', NUMBER: 'NUMBER', DATE: 'DATE', SELECT: 'SELECT', CHECKBOX: 'CHECKBOX' }[
+                megaAttributeRef.uiComponent ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            <span>{{
+              { null: '', STRING: 'STRING', NUMBER: 'NUMBER', DATE: 'DATE', BOOLEAN: 'BOOLEAN', ENUM: 'ENUM' }[
+                megaAttributeRef.type ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span>Required</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.required }}</span>
+          </dd>
+          <dt><span>Multiple</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.multiple }}</span>
+          </dd>
+          <dt><span>Default Value</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.defaultValue }}</span>
+          </dd>
+          <dt><span>Min Number</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.minNumber }}</span>
+          </dd>
+          <dt><span>Max Number</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.maxNumber }}</span>
+          </dd>
+          <dt><span>Min Length</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.minLength }}</span>
+          </dd>
+          <dt><span>Max Length</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.maxLength }}</span>
+          </dd>
+          <dt><span>Regex</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.regex }}</span>
+          </dd>
+          <dt><span>Order</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.order }}</span>
+          </dd>
+          <dt><span>Attribute Group</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.attributeGroup }}</span>
+          </dd>
+          <dt><span>Active</span></dt>
+          <dd>
+            <span>{{ megaAttributeRef.active }}</span>
+          </dd>
+          <dt><span>Set Type</span></dt>
+          <dd>
+            @for (setType of megaAttributeRef.setTypes; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/mega-set-type', setType.id, 'view']">{{ setType?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+          <dt><span>Part Type</span></dt>
+          <dd>
+            @for (partType of megaAttributeRef.partTypes; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/mega-part-type', partType.id, 'view']">{{ partType?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-attribute', megaAttributeRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

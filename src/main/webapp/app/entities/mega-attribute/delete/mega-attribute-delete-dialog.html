@@ -1,0 +1,22 @@
+@if (megaAttribute) {
+  <form name="deleteForm" (ngSubmit)="confirmDelete(megaAttribute.id!)">
+    <div class="modal-header">
+      <h4 class="modal-title" data-cy="megaAttributeDeleteDialogHeading">Confirm delete operation</h4>
+    </div>
+
+    <div class="modal-body">
+      <jhi-alert-error />
+      <p id="jhi-delete-megaAttribute-heading">Are you sure you want to delete Mega Attribute {{ megaAttribute.id }}?</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <fa-icon icon="ban" />&nbsp;<span>Cancel</span>
+      </button>
+
+      <button id="jhi-confirm-delete-megaAttribute" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+        <fa-icon icon="times" />&nbsp;<span>Delete</span>
+      </button>
+    </div>
+  </form>
+}

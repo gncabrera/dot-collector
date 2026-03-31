@@ -1,0 +1,96 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaPart(); as megaPartRef) {
+      <div>
+        <h2 data-cy="megaPartDetailsHeading"><span>Mega Part</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaPartRef.id }}</span>
+          </dd>
+          <dt><span>Release Date</span></dt>
+          <dd>
+            <span>{{ megaPartRef.releaseDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Part Number</span></dt>
+          <dd>
+            <span>{{ megaPartRef.partNumber }}</span>
+          </dd>
+          <dt><span>Name EN</span></dt>
+          <dd>
+            <span>{{ megaPartRef.nameEN }}</span>
+          </dd>
+          <dt><span>Name ES</span></dt>
+          <dd>
+            <span>{{ megaPartRef.nameES }}</span>
+          </dd>
+          <dt><span>Name DE</span></dt>
+          <dd>
+            <span>{{ megaPartRef.nameDE }}</span>
+          </dd>
+          <dt><span>Name FR</span></dt>
+          <dd>
+            <span>{{ megaPartRef.nameFR }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ megaPartRef.description }}</span>
+          </dd>
+          <dt><span>Notes</span></dt>
+          <dd>
+            <span>{{ megaPartRef.notes }}</span>
+          </dd>
+          <dt><span>Attributes</span></dt>
+          <dd>
+            @if (megaPartRef.attributes) {
+              <div>
+                <a (click)="openFile(megaPartRef.attributes, megaPartRef.attributesContentType)">Open</a>
+                {{ megaPartRef.attributesContentType }}, {{ byteSize(megaPartRef.attributes) }}
+              </div>
+            }
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            @if (megaPart()!.type) {
+              <div>
+                <a [routerLink]="['/mega-part-type', megaPart()!.type?.id, 'view']">{{ megaPartRef.type?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Part Category</span></dt>
+          <dd>
+            @if (megaPart()!.partCategory) {
+              <div>
+                <a [routerLink]="['/part-category', megaPart()!.partCategory?.id, 'view']">{{ megaPartRef.partCategory?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Part Sub Category</span></dt>
+          <dd>
+            @for (partSubCategory of megaPartRef.partSubCategories; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/part-sub-category', partSubCategory.id, 'view']">{{ partSubCategory?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-part', megaPartRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (followingProfile(); as followingProfileRef) {
+      <div>
+        <h2 data-cy="followingProfileDetailsHeading"><span>Following Profile</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ followingProfileRef.id }}</span>
+          </dd>
+          <dt><span>Date Following</span></dt>
+          <dd>
+            <span>{{ followingProfileRef.dateFollowing | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Profile</span></dt>
+          <dd>
+            @if (followingProfile()!.profile) {
+              <div>
+                <a [routerLink]="['/profile', followingProfile()!.profile?.id, 'view']">{{ followingProfileRef.profile?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Followed Profile</span></dt>
+          <dd>
+            @if (followingProfile()!.followedProfile) {
+              <div>
+                <a [routerLink]="['/profile', followingProfile()!.followedProfile?.id, 'view']">{{
+                  followingProfileRef.followedProfile?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/following-profile', followingProfileRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

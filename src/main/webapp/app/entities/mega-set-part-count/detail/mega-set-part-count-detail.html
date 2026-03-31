@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaSetPartCount(); as megaSetPartCountRef) {
+      <div>
+        <h2 data-cy="megaSetPartCountDetailsHeading"><span>Mega Set Part Count</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaSetPartCountRef.id }}</span>
+          </dd>
+          <dt><span>Count</span></dt>
+          <dd>
+            <span>{{ megaSetPartCountRef.count }}</span>
+          </dd>
+          <dt><span>Set</span></dt>
+          <dd>
+            @if (megaSetPartCount()!.set) {
+              <div>
+                <a [routerLink]="['/mega-set', megaSetPartCount()!.set?.id, 'view']">{{ megaSetPartCountRef.set?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Part</span></dt>
+          <dd>
+            @if (megaSetPartCount()!.part) {
+              <div>
+                <a [routerLink]="['/mega-part', megaSetPartCount()!.part?.id, 'view']">{{ megaSetPartCountRef.part?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-set-part-count', megaSetPartCountRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

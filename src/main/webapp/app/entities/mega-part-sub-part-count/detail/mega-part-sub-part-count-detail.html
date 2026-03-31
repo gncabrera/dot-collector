@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaPartSubPartCount(); as megaPartSubPartCountRef) {
+      <div>
+        <h2 data-cy="megaPartSubPartCountDetailsHeading"><span>Mega Part Sub Part Count</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaPartSubPartCountRef.id }}</span>
+          </dd>
+          <dt><span>Count</span></dt>
+          <dd>
+            <span>{{ megaPartSubPartCountRef.count }}</span>
+          </dd>
+          <dt><span>Part</span></dt>
+          <dd>
+            @if (megaPartSubPartCount()!.part) {
+              <div>
+                <a [routerLink]="['/mega-part', megaPartSubPartCount()!.part?.id, 'view']">{{ megaPartSubPartCountRef.part?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Parent Part</span></dt>
+          <dd>
+            @if (megaPartSubPartCount()!.parentPart) {
+              <div>
+                <a [routerLink]="['/mega-part', megaPartSubPartCount()!.parentPart?.id, 'view']">{{
+                  megaPartSubPartCountRef.parentPart?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-part-sub-part-count', megaPartSubPartCountRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

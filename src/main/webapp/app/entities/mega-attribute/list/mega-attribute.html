@@ -1,0 +1,250 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaAttributeHeading">
+    <span>Mega Attributes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-attribute"
+        [routerLink]="['/mega-attribute/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Attribute</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaAttributes().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Attributes found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="name">
+              <div class="d-flex">
+                <span>Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="label">
+              <div class="d-flex">
+                <span>Label</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span>Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="uiComponent">
+              <div class="d-flex">
+                <span>Ui Component</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type">
+              <div class="d-flex">
+                <span>Type</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="required">
+              <div class="d-flex">
+                <span>Required</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="multiple">
+              <div class="d-flex">
+                <span>Multiple</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="defaultValue">
+              <div class="d-flex">
+                <span>Default Value</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="minNumber">
+              <div class="d-flex">
+                <span>Min Number</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="maxNumber">
+              <div class="d-flex">
+                <span>Max Number</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="minLength">
+              <div class="d-flex">
+                <span>Min Length</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="maxLength">
+              <div class="d-flex">
+                <span>Max Length</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="regex">
+              <div class="d-flex">
+                <span>Regex</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="order">
+              <div class="d-flex">
+                <span>Order</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="attributeGroup">
+              <div class="d-flex">
+                <span>Attribute Group</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="active">
+              <div class="d-flex">
+                <span>Active</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="setType.id">
+              <div class="d-flex">
+                <span>Set Type</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="partType.id">
+              <div class="d-flex">
+                <span>Part Type</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaAttribute of megaAttributes(); track trackId(megaAttribute)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-attribute', megaAttribute.id, 'view']">{{ megaAttribute.id }}</a>
+              </td>
+              <td>{{ megaAttribute.name }}</td>
+              <td>{{ megaAttribute.label }}</td>
+              <td>{{ megaAttribute.description }}</td>
+              <td>
+                {{
+                  {
+                    null: '',
+                    INPUT: 'INPUT',
+                    TEXTAREA: 'TEXTAREA',
+                    NUMBER: 'NUMBER',
+                    DATE: 'DATE',
+                    SELECT: 'SELECT',
+                    CHECKBOX: 'CHECKBOX',
+                  }[megaAttribute.uiComponent ?? 'null']
+                }}
+              </td>
+              <td>
+                {{
+                  { null: '', STRING: 'STRING', NUMBER: 'NUMBER', DATE: 'DATE', BOOLEAN: 'BOOLEAN', ENUM: 'ENUM' }[
+                    megaAttribute.type ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ megaAttribute.required }}</td>
+              <td>{{ megaAttribute.multiple }}</td>
+              <td>{{ megaAttribute.defaultValue }}</td>
+              <td>{{ megaAttribute.minNumber }}</td>
+              <td>{{ megaAttribute.maxNumber }}</td>
+              <td>{{ megaAttribute.minLength }}</td>
+              <td>{{ megaAttribute.maxLength }}</td>
+              <td>{{ megaAttribute.regex }}</td>
+              <td>{{ megaAttribute.order }}</td>
+              <td>{{ megaAttribute.attributeGroup }}</td>
+              <td>{{ megaAttribute.active }}</td>
+              <td>
+                @for (setType of megaAttribute.setTypes; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/mega-set-type', setType.id, 'view']">{{ setType.id }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td>
+                @for (partType of megaAttribute.partTypes; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/mega-part-type', partType.id, 'view']">{{ partType.id }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/mega-attribute', megaAttribute.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a [routerLink]="['/mega-attribute', megaAttribute.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaAttribute)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

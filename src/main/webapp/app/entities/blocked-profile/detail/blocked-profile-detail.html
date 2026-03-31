@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (blockedProfile(); as blockedProfileRef) {
+      <div>
+        <h2 data-cy="blockedProfileDetailsHeading"><span>Blocked Profile</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ blockedProfileRef.id }}</span>
+          </dd>
+          <dt><span>Reason</span></dt>
+          <dd>
+            <span>{{ blockedProfileRef.reason }}</span>
+          </dd>
+          <dt><span>Date Blocked</span></dt>
+          <dd>
+            <span>{{ blockedProfileRef.dateBlocked | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Profile</span></dt>
+          <dd>
+            @if (blockedProfile()!.profile) {
+              <div>
+                <a [routerLink]="['/profile', blockedProfile()!.profile?.id, 'view']">{{ blockedProfileRef.profile?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Blocked Profile</span></dt>
+          <dd>
+            @if (blockedProfile()!.blockedProfile) {
+              <div>
+                <a [routerLink]="['/profile', blockedProfile()!.blockedProfile?.id, 'view']">{{ blockedProfileRef.blockedProfile?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/blocked-profile', blockedProfileRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

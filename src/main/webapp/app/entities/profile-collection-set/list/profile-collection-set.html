@@ -1,0 +1,137 @@
+<div>
+  <h2 id="page-heading" data-cy="ProfileCollectionSetHeading">
+    <span>Profile Collection Sets</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-profile-collection-set"
+        [routerLink]="['/profile-collection-set/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Profile Collection Set</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (profileCollectionSets().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Profile Collection Sets found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="owned">
+              <div class="d-flex">
+                <span>Owned</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="wanted">
+              <div class="d-flex">
+                <span>Wanted</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="dateAdded">
+              <div class="d-flex">
+                <span>Date Added</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="collection.id">
+              <div class="d-flex">
+                <span>Collection</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="set.id">
+              <div class="d-flex">
+                <span>Set</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (profileCollectionSet of profileCollectionSets(); track trackId(profileCollectionSet)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/profile-collection-set', profileCollectionSet.id, 'view']">{{ profileCollectionSet.id }}</a>
+              </td>
+              <td>{{ profileCollectionSet.owned }}</td>
+              <td>{{ profileCollectionSet.wanted }}</td>
+              <td>{{ profileCollectionSet.dateAdded | formatMediumDate }}</td>
+              <td>
+                @if (profileCollectionSet.collection) {
+                  <div>
+                    <a [routerLink]="['/profile-collection', profileCollectionSet.collection.id, 'view']">{{
+                      profileCollectionSet.collection.id
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @for (set of profileCollectionSet.sets; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/mega-set', set.id, 'view']">{{ set.id }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/profile-collection-set', profileCollectionSet.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/profile-collection-set', profileCollectionSet.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(profileCollectionSet)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

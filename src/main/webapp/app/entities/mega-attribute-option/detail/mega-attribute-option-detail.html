@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaAttributeOption(); as megaAttributeOptionRef) {
+      <div>
+        <h2 data-cy="megaAttributeOptionDetailsHeading"><span>Mega Attribute Option</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaAttributeOptionRef.id }}</span>
+          </dd>
+          <dt><span>Label</span></dt>
+          <dd>
+            <span>{{ megaAttributeOptionRef.label }}</span>
+          </dd>
+          <dt><span>Value</span></dt>
+          <dd>
+            <span>{{ megaAttributeOptionRef.value }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ megaAttributeOptionRef.description }}</span>
+          </dd>
+          <dt><span>Attribute</span></dt>
+          <dd>
+            @if (megaAttributeOption()!.attribute) {
+              <div>
+                <a [routerLink]="['/mega-attribute', megaAttributeOption()!.attribute?.id, 'view']">{{
+                  megaAttributeOptionRef.attribute?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-attribute-option', megaAttributeOptionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,32 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175656"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "isPublic",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "ProfileCollection",
+  "relationships": [
+    {
+      "otherEntityName": "profile",
+      "relationshipName": "profile",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

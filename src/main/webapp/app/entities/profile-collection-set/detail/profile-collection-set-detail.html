@@ -1,0 +1,61 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (profileCollectionSet(); as profileCollectionSetRef) {
+      <div>
+        <h2 data-cy="profileCollectionSetDetailsHeading"><span>Profile Collection Set</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ profileCollectionSetRef.id }}</span>
+          </dd>
+          <dt><span>Owned</span></dt>
+          <dd>
+            <span>{{ profileCollectionSetRef.owned }}</span>
+          </dd>
+          <dt><span>Wanted</span></dt>
+          <dd>
+            <span>{{ profileCollectionSetRef.wanted }}</span>
+          </dd>
+          <dt><span>Date Added</span></dt>
+          <dd>
+            <span>{{ profileCollectionSetRef.dateAdded | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Collection</span></dt>
+          <dd>
+            @if (profileCollectionSet()!.collection) {
+              <div>
+                <a [routerLink]="['/profile-collection', profileCollectionSet()!.collection?.id, 'view']">{{
+                  profileCollectionSetRef.collection?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Set</span></dt>
+          <dd>
+            @for (set of profileCollectionSetRef.sets; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/mega-set', set.id, 'view']">{{ set?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/profile-collection-set', profileCollectionSetRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

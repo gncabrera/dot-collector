@@ -1,0 +1,216 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-mega-set-heading" data-cy="MegaSetCreateUpdateHeading">Create or edit a Mega Set</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let setNumberRef = editForm.get('setNumber')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_setNumber">Set Number</label>
+          <input type="text" class="form-control" name="setNumber" id="field_setNumber" data-cy="setNumber" formControlName="setNumber" />
+          @if (setNumberRef.invalid && (setNumberRef.dirty || setNumberRef.touched)) {
+            <div>
+              @if (editForm.get('setNumber')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_releaseDate">Release Date</label>
+          <div class="input-group">
+            <input
+              id="field_releaseDate"
+              data-cy="releaseDate"
+              type="text"
+              class="form-control"
+              name="releaseDate"
+              ngbDatepicker
+              #releaseDateDp="ngbDatepicker"
+              formControlName="releaseDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="releaseDateDp.toggle()"><fa-icon icon="calendar-alt" /></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_notes">Notes</label>
+          <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" formControlName="notes" />
+        </div>
+
+        @let nameENRef = editForm.get('nameEN')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_nameEN">Name EN</label>
+          <input type="text" class="form-control" name="nameEN" id="field_nameEN" data-cy="nameEN" formControlName="nameEN" />
+          @if (nameENRef.invalid && (nameENRef.dirty || nameENRef.touched)) {
+            <div>
+              @if (editForm.get('nameEN')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_nameES">Name ES</label>
+          <input type="text" class="form-control" name="nameES" id="field_nameES" data-cy="nameES" formControlName="nameES" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_nameDE">Name DE</label>
+          <input type="text" class="form-control" name="nameDE" id="field_nameDE" data-cy="nameDE" formControlName="nameDE" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_nameFR">Name FR</label>
+          <input type="text" class="form-control" name="nameFR" id="field_nameFR" data-cy="nameFR" formControlName="nameFR" />
+        </div>
+
+        @let descriptionENRef = editForm.get('descriptionEN')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_descriptionEN">Description EN</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descriptionEN"
+            id="field_descriptionEN"
+            data-cy="descriptionEN"
+            formControlName="descriptionEN"
+          />
+          @if (descriptionENRef.invalid && (descriptionENRef.dirty || descriptionENRef.touched)) {
+            <div>
+              @if (editForm.get('descriptionEN')?.errors?.required) {
+                <small class="form-text text-danger">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_descriptionES">Description ES</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descriptionES"
+            id="field_descriptionES"
+            data-cy="descriptionES"
+            formControlName="descriptionES"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_descriptionDE">Description DE</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descriptionDE"
+            id="field_descriptionDE"
+            data-cy="descriptionDE"
+            formControlName="descriptionDE"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_descriptionFR">Description FR</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descriptionFR"
+            id="field_descriptionFR"
+            data-cy="descriptionFR"
+            formControlName="descriptionFR"
+          />
+        </div>
+
+        @let attributesRef = editForm.get('attributes')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_attributes">Attributes</label>
+          <div>
+            @if (attributesRef.value) {
+              <div class="form-text text-danger clearfix">
+                <a class="pull-start" (click)="openFile(attributesRef.value!, editForm.get('attributesContentType')!.value!)">Open</a><br />
+                <span class="pull-start">{{ editForm.get('attributesContentType')!.value }}, {{ byteSize(attributesRef.value!) }}</span>
+                <button
+                  type="button"
+                  (click)="editForm.patchValue({ attributes: undefined, attributesContentType: undefined })"
+                  class="btn btn-secondary btn-xs pull-end"
+                >
+                  <fa-icon icon="times" />
+                </button>
+              </div>
+            }
+            <input type="file" id="file_attributes" data-cy="attributes" (change)="setFileData($event, 'attributes', false)" />
+          </div>
+          <input
+            type="hidden"
+            class="form-control"
+            name="attributes"
+            id="field_attributes"
+            data-cy="attributes"
+            formControlName="attributes"
+          />
+          <input
+            type="hidden"
+            class="form-control"
+            name="attributesContentType"
+            id="field_attributesContentType"
+            formControlName="attributesContentType"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_type">Type</label>
+          <select class="form-control" id="field_type" data-cy="type" name="type" formControlName="type" [compareWith]="compareMegaSetType">
+            <option [ngValue]="null"></option>
+            @for (megaSetTypeOption of megaSetTypesSharedCollection(); track $index) {
+              <option [ngValue]="megaSetTypeOption">{{ megaSetTypeOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_profileCollectionSets">Profile Collection Set</label>
+          <select
+            class="form-control"
+            id="field_profileCollectionSets"
+            data-cy="profileCollectionSet"
+            multiple
+            name="profileCollectionSets"
+            formControlName="profileCollectionSets"
+            [compareWith]="compareProfileCollectionSet"
+          >
+            @for (profileCollectionSetOption of profileCollectionSetsSharedCollection(); track $index) {
+              <option [ngValue]="profileCollectionSetOption">{{ profileCollectionSetOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

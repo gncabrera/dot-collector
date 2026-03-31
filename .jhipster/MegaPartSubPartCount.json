@@ -1,0 +1,30 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175647"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "count",
+      "fieldType": "Integer"
+    }
+  ],
+  "name": "MegaPartSubPartCount",
+  "relationships": [
+    {
+      "otherEntityName": "megaPart",
+      "relationshipName": "part",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "megaPart",
+      "relationshipName": "parentPart",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

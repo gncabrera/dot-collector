@@ -1,0 +1,24 @@
+@if (profileCollectionSet) {
+  <form name="deleteForm" (ngSubmit)="confirmDelete(profileCollectionSet.id!)">
+    <div class="modal-header">
+      <h4 class="modal-title" data-cy="profileCollectionSetDeleteDialogHeading">Confirm delete operation</h4>
+    </div>
+
+    <div class="modal-body">
+      <jhi-alert-error />
+      <p id="jhi-delete-profileCollectionSet-heading">
+        Are you sure you want to delete Profile Collection Set {{ profileCollectionSet.id }}?
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <fa-icon icon="ban" />&nbsp;<span>Cancel</span>
+      </button>
+
+      <button id="jhi-confirm-delete-profileCollectionSet" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+        <fa-icon icon="times" />&nbsp;<span>Delete</span>
+      </button>
+    </div>
+  </form>
+}

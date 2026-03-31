@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175648"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "path",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "AssetType",
+      "fieldValues": "IMAGE,FILE"
+    }
+  ],
+  "name": "MegaAsset",
+  "relationships": [
+    {
+      "otherEntityName": "megaSet",
+      "relationshipName": "set",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "megaPart",
+      "relationshipName": "part",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

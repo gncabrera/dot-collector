@@ -1,0 +1,134 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaAssetHeading">
+    <span>Mega Assets</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-asset"
+        [routerLink]="['/mega-asset/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Asset</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaAssets().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Assets found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="name">
+              <div class="d-flex">
+                <span>Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span>Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="path">
+              <div class="d-flex">
+                <span>Path</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="type">
+              <div class="d-flex">
+                <span>Type</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="set.id">
+              <div class="d-flex">
+                <span>Set</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="part.id">
+              <div class="d-flex">
+                <span>Part</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaAsset of megaAssets(); track trackId(megaAsset)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-asset', megaAsset.id, 'view']">{{ megaAsset.id }}</a>
+              </td>
+              <td>{{ megaAsset.name }}</td>
+              <td>{{ megaAsset.description }}</td>
+              <td>{{ megaAsset.path }}</td>
+              <td>{{ { null: '', IMAGE: 'IMAGE', FILE: 'FILE' }[megaAsset.type ?? 'null'] }}</td>
+              <td>
+                @if (megaAsset.set) {
+                  <div>
+                    <a [routerLink]="['/mega-set', megaAsset.set.id, 'view']">{{ megaAsset.set.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (megaAsset.part) {
+                  <div>
+                    <a [routerLink]="['/mega-part', megaAsset.part.id, 'view']">{{ megaAsset.part.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/mega-asset', megaAsset.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a [routerLink]="['/mega-asset', megaAsset.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaAsset)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

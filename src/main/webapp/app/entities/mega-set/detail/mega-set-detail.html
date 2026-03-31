@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaSet(); as megaSetRef) {
+      <div>
+        <h2 data-cy="megaSetDetailsHeading"><span>Mega Set</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaSetRef.id }}</span>
+          </dd>
+          <dt><span>Set Number</span></dt>
+          <dd>
+            <span>{{ megaSetRef.setNumber }}</span>
+          </dd>
+          <dt><span>Release Date</span></dt>
+          <dd>
+            <span>{{ megaSetRef.releaseDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Notes</span></dt>
+          <dd>
+            <span>{{ megaSetRef.notes }}</span>
+          </dd>
+          <dt><span>Name EN</span></dt>
+          <dd>
+            <span>{{ megaSetRef.nameEN }}</span>
+          </dd>
+          <dt><span>Name ES</span></dt>
+          <dd>
+            <span>{{ megaSetRef.nameES }}</span>
+          </dd>
+          <dt><span>Name DE</span></dt>
+          <dd>
+            <span>{{ megaSetRef.nameDE }}</span>
+          </dd>
+          <dt><span>Name FR</span></dt>
+          <dd>
+            <span>{{ megaSetRef.nameFR }}</span>
+          </dd>
+          <dt><span>Description EN</span></dt>
+          <dd>
+            <span>{{ megaSetRef.descriptionEN }}</span>
+          </dd>
+          <dt><span>Description ES</span></dt>
+          <dd>
+            <span>{{ megaSetRef.descriptionES }}</span>
+          </dd>
+          <dt><span>Description DE</span></dt>
+          <dd>
+            <span>{{ megaSetRef.descriptionDE }}</span>
+          </dd>
+          <dt><span>Description FR</span></dt>
+          <dd>
+            <span>{{ megaSetRef.descriptionFR }}</span>
+          </dd>
+          <dt><span>Attributes</span></dt>
+          <dd>
+            @if (megaSetRef.attributes) {
+              <div>
+                <a (click)="openFile(megaSetRef.attributes, megaSetRef.attributesContentType)">Open</a>
+                {{ megaSetRef.attributesContentType }}, {{ byteSize(megaSetRef.attributes) }}
+              </div>
+            }
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            @if (megaSet()!.type) {
+              <div>
+                <a [routerLink]="['/mega-set-type', megaSet()!.type?.id, 'view']">{{ megaSetRef.type?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Profile Collection Set</span></dt>
+          <dd>
+            @for (profileCollectionSet of megaSetRef.profileCollectionSets; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/profile-collection-set', profileCollectionSet.id, 'view']">{{ profileCollectionSet?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-set', megaSetRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

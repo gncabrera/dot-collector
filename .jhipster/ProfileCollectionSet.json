@@ -1,0 +1,39 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175657"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "owned",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "wanted",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "dateAdded",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "name": "ProfileCollectionSet",
+  "relationships": [
+    {
+      "otherEntityName": "profileCollection",
+      "relationshipName": "collection",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "megaSet",
+      "otherEntityRelationshipName": "profileCollectionSet",
+      "relationshipName": "set",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

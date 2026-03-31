@@ -1,0 +1,78 @@
+{
+  "annotations": {
+    "changelogDate": "20260331175643"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "setNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "releaseDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "notes",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nameEN",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nameES",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nameDE",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nameFR",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descriptionEN",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descriptionES",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descriptionDE",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descriptionFR",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attributes",
+      "fieldType": "AnyBlob"
+    }
+  ],
+  "name": "MegaSet",
+  "relationships": [
+    {
+      "otherEntityName": "megaSetType",
+      "relationshipName": "type",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "profileCollectionSet",
+      "otherEntityRelationshipName": "set",
+      "relationshipName": "profileCollectionSet",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

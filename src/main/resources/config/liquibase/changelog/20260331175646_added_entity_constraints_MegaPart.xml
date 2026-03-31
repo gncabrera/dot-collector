@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity MegaPart.
+    -->
+    <changeSet id="20260331175646-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="type_id"
+                                 baseTableName="mega_part"
+                                 constraintName="fk_mega_part__type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="mega_part_type"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="part_category_id"
+                                 baseTableName="mega_part"
+                                 constraintName="fk_mega_part__part_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="part_category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="mega_part_id"
+                                 baseTableName="rel_mega_part__part_sub_category"
+                                 constraintName="fk_rel_mega_part__part_sub_category__mega_part_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="mega_part"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="part_sub_category_id"
+                                 baseTableName="rel_mega_part__part_sub_category"
+                                 constraintName="fk_rel_mega_part__part_sub_category__part_sub_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="part_sub_category"
+                                 />
+    </changeSet>
+</databaseChangeLog>

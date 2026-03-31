@@ -1,0 +1,123 @@
+<div>
+  <h2 id="page-heading" data-cy="MegaAttributeOptionHeading">
+    <span>Mega Attribute Options</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-mega-attribute-option"
+        [routerLink]="['/mega-attribute-option/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Create a new Mega Attribute Option</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (megaAttributeOptions().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>No Mega Attribute Options found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="label">
+              <div class="d-flex">
+                <span>Label</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="value">
+              <div class="d-flex">
+                <span>Value</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span>Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="attribute.id">
+              <div class="d-flex">
+                <span>Attribute</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (megaAttributeOption of megaAttributeOptions(); track trackId(megaAttributeOption)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/mega-attribute-option', megaAttributeOption.id, 'view']">{{ megaAttributeOption.id }}</a>
+              </td>
+              <td>{{ megaAttributeOption.label }}</td>
+              <td>{{ megaAttributeOption.value }}</td>
+              <td>{{ megaAttributeOption.description }}</td>
+              <td>
+                @if (megaAttributeOption.attribute) {
+                  <div>
+                    <a [routerLink]="['/mega-attribute', megaAttributeOption.attribute.id, 'view']">{{
+                      megaAttributeOption.attribute.id
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/mega-attribute-option', megaAttributeOption.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/mega-attribute-option', megaAttributeOption.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(megaAttributeOption)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

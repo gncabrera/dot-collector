@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ProfileCollectionSet.
+    -->
+    <changeSet id="20260331175657-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="collection_id"
+                                 baseTableName="profile_collection_set"
+                                 constraintName="fk_profile_collection_set__collection_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile_collection"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="profile_collection_set_id"
+                                 baseTableName="rel_profile_collection_set__set"
+                                 constraintName="fk_rel_profile_collection_set__set__profile_collection_set_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile_collection_set"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="set_id"
+                                 baseTableName="rel_profile_collection_set__set"
+                                 constraintName="fk_rel_profile_collection_set__set__set_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="mega_set"
+                                 />
+    </changeSet>
+</databaseChangeLog>

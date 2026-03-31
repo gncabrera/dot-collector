@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (profileRequest(); as profileRequestRef) {
+      <div>
+        <h2 data-cy="profileRequestDetailsHeading"><span>Profile Request</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ profileRequestRef.id }}</span>
+          </dd>
+          <dt><span>Message</span></dt>
+          <dd>
+            <span>{{ profileRequestRef.message }}</span>
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            @if (profileRequest()!.type) {
+              <div>
+                <a [routerLink]="['/profile-request-type', profileRequest()!.type?.id, 'view']">{{ profileRequestRef.type?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Profile</span></dt>
+          <dd>
+            @if (profileRequest()!.profile) {
+              <div>
+                <a [routerLink]="['/profile', profileRequest()!.profile?.id, 'view']">{{ profileRequestRef.profile?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/profile-request', profileRequestRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

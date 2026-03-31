@@ -12,7 +12,40 @@
     <property name="timeType" value="time(6)" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175642_added_entity_MegaSetType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175643_added_entity_MegaSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175644_added_entity_MegaSetPartCount.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175645_added_entity_MegaPartType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175646_added_entity_MegaPart.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175647_added_entity_MegaPartSubPartCount.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175648_added_entity_MegaAsset.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175649_added_entity_PartSubCategory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175650_added_entity_PartCategory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175651_added_entity_MegaAttribute.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175652_added_entity_MegaAttributeOption.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175653_added_entity_Profile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175654_added_entity_FollowingProfile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175655_added_entity_BlockedProfile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175656_added_entity_ProfileCollection.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175657_added_entity_ProfileCollectionSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175658_added_entity_ProfileRequest.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175659_added_entity_ProfileRequestType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175700_added_entity_EnvironmentVariable.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20260331175642_added_entity_constraints_MegaSetType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175643_added_entity_constraints_MegaSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175644_added_entity_constraints_MegaSetPartCount.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175645_added_entity_constraints_MegaPartType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175646_added_entity_constraints_MegaPart.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175647_added_entity_constraints_MegaPartSubPartCount.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175648_added_entity_constraints_MegaAsset.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175652_added_entity_constraints_MegaAttributeOption.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175653_added_entity_constraints_Profile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175654_added_entity_constraints_FollowingProfile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175655_added_entity_constraints_BlockedProfile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175656_added_entity_constraints_ProfileCollection.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175657_added_entity_constraints_ProfileCollectionSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260331175658_added_entity_constraints_ProfileRequest.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

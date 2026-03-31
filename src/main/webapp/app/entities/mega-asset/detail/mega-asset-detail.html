@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (megaAsset(); as megaAssetRef) {
+      <div>
+        <h2 data-cy="megaAssetDetailsHeading"><span>Mega Asset</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ megaAssetRef.id }}</span>
+          </dd>
+          <dt><span>Name</span></dt>
+          <dd>
+            <span>{{ megaAssetRef.name }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ megaAssetRef.description }}</span>
+          </dd>
+          <dt><span>Path</span></dt>
+          <dd>
+            <span>{{ megaAssetRef.path }}</span>
+          </dd>
+          <dt><span>Type</span></dt>
+          <dd>
+            <span>{{ { null: '', IMAGE: 'IMAGE', FILE: 'FILE' }[megaAssetRef.type ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Set</span></dt>
+          <dd>
+            @if (megaAsset()!.set) {
+              <div>
+                <a [routerLink]="['/mega-set', megaAsset()!.set?.id, 'view']">{{ megaAssetRef.set?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Part</span></dt>
+          <dd>
+            @if (megaAsset()!.part) {
+              <div>
+                <a [routerLink]="['/mega-part', megaAsset()!.part?.id, 'view']">{{ megaAssetRef.part?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mega-asset', megaAssetRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
