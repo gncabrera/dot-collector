@@ -4,10 +4,14 @@ import com.dot.collector.api.domain.User;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO representing a user, with only the public attributes.
  */
+@Getter
+@Setter
 public class UserDTO implements Serializable {
 
     @Serial
@@ -25,22 +29,6 @@ public class UserDTO implements Serializable {
         this.id = user.getId();
         // Customize it here if you need, or not, firstName/lastName/etc
         this.login = user.getLogin();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     @Override

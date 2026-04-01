@@ -2,11 +2,15 @@ package com.dot.collector.api.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.ProfileRequest} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class ProfileRequestDTO implements Serializable {
 
     private Long id;
@@ -16,38 +20,6 @@ public class ProfileRequestDTO implements Serializable {
     private ProfileRequestTypeDTO type;
 
     private ProfileDTO profile;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public ProfileRequestTypeDTO getType() {
-        return type;
-    }
-
-    public void setType(ProfileRequestTypeDTO type) {
-        this.type = type;
-    }
-
-    public ProfileDTO getProfile() {
-        return profile;
-    }
-
-    public void setProfile(ProfileDTO profile) {
-        this.profile = profile;
-    }
 
     @Override
     public boolean equals(Object o) {

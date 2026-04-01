@@ -3,11 +3,15 @@ package com.dot.collector.api.service.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.BlockedProfile} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class BlockedProfileDTO implements Serializable {
 
     private Long id;
@@ -19,46 +23,6 @@ public class BlockedProfileDTO implements Serializable {
     private ProfileDTO profile;
 
     private ProfileDTO blockedProfile;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDate getDateBlocked() {
-        return dateBlocked;
-    }
-
-    public void setDateBlocked(LocalDate dateBlocked) {
-        this.dateBlocked = dateBlocked;
-    }
-
-    public ProfileDTO getProfile() {
-        return profile;
-    }
-
-    public void setProfile(ProfileDTO profile) {
-        this.profile = profile;
-    }
-
-    public ProfileDTO getBlockedProfile() {
-        return blockedProfile;
-    }
-
-    public void setBlockedProfile(ProfileDTO blockedProfile) {
-        this.blockedProfile = blockedProfile;
-    }
 
     @Override
     public boolean equals(Object o) {

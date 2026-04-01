@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A ProfileCollectionSet.
@@ -14,6 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "profile_collection_set")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class ProfileCollectionSet implements Serializable {
 
     @Serial
@@ -49,21 +53,9 @@ public class ProfileCollectionSet implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public ProfileCollectionSet id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Boolean getOwned() {
-        return this.owned;
     }
 
     public ProfileCollectionSet owned(Boolean owned) {
@@ -71,25 +63,9 @@ public class ProfileCollectionSet implements Serializable {
         return this;
     }
 
-    public void setOwned(Boolean owned) {
-        this.owned = owned;
-    }
-
-    public Boolean getWanted() {
-        return this.wanted;
-    }
-
     public ProfileCollectionSet wanted(Boolean wanted) {
         this.setWanted(wanted);
         return this;
-    }
-
-    public void setWanted(Boolean wanted) {
-        this.wanted = wanted;
-    }
-
-    public LocalDate getDateAdded() {
-        return this.dateAdded;
     }
 
     public ProfileCollectionSet dateAdded(LocalDate dateAdded) {
@@ -97,29 +73,9 @@ public class ProfileCollectionSet implements Serializable {
         return this;
     }
 
-    public void setDateAdded(LocalDate dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public ProfileCollection getCollection() {
-        return this.collection;
-    }
-
-    public void setCollection(ProfileCollection profileCollection) {
-        this.collection = profileCollection;
-    }
-
     public ProfileCollectionSet collection(ProfileCollection profileCollection) {
         this.setCollection(profileCollection);
         return this;
-    }
-
-    public Set<MegaSet> getSets() {
-        return this.sets;
-    }
-
-    public void setSets(Set<MegaSet> megaSets) {
-        this.sets = megaSets;
     }
 
     public ProfileCollectionSet sets(Set<MegaSet> megaSets) {

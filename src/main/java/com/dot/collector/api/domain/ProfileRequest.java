@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A ProfileRequest.
@@ -11,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "profile_request")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class ProfileRequest implements Serializable {
 
     @Serial
@@ -34,21 +38,9 @@ public class ProfileRequest implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public ProfileRequest id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return this.message;
     }
 
     public ProfileRequest message(String message) {
@@ -56,29 +48,9 @@ public class ProfileRequest implements Serializable {
         return this;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public ProfileRequestType getType() {
-        return this.type;
-    }
-
-    public void setType(ProfileRequestType profileRequestType) {
-        this.type = profileRequestType;
-    }
-
     public ProfileRequest type(ProfileRequestType profileRequestType) {
         this.setType(profileRequestType);
         return this;
-    }
-
-    public Profile getProfile() {
-        return this.profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 
     public ProfileRequest profile(Profile profile) {

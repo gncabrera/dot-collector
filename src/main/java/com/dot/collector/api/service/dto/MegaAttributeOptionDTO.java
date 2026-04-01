@@ -2,11 +2,15 @@ package com.dot.collector.api.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.MegaAttributeOption} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaAttributeOptionDTO implements Serializable {
 
     private Long id;
@@ -18,46 +22,6 @@ public class MegaAttributeOptionDTO implements Serializable {
     private String description;
 
     private MegaAttributeDTO attribute;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public MegaAttributeDTO getAttribute() {
-        return attribute;
-    }
-
-    public void setAttribute(MegaAttributeDTO attribute) {
-        this.attribute = attribute;
-    }
 
     @Override
     public boolean equals(Object o) {

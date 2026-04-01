@@ -3,11 +3,15 @@ package com.dot.collector.api.service.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.FollowingProfile} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class FollowingProfileDTO implements Serializable {
 
     private Long id;
@@ -17,38 +21,6 @@ public class FollowingProfileDTO implements Serializable {
     private ProfileDTO profile;
 
     private ProfileDTO followedProfile;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getDateFollowing() {
-        return dateFollowing;
-    }
-
-    public void setDateFollowing(LocalDate dateFollowing) {
-        this.dateFollowing = dateFollowing;
-    }
-
-    public ProfileDTO getProfile() {
-        return profile;
-    }
-
-    public void setProfile(ProfileDTO profile) {
-        this.profile = profile;
-    }
-
-    public ProfileDTO getFollowedProfile() {
-        return followedProfile;
-    }
-
-    public void setFollowedProfile(ProfileDTO followedProfile) {
-        this.followedProfile = followedProfile;
-    }
 
     @Override
     public boolean equals(Object o) {

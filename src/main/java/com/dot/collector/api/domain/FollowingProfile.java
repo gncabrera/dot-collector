@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A FollowingProfile.
@@ -12,6 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "following_profile")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class FollowingProfile implements Serializable {
 
     @Serial
@@ -36,21 +40,9 @@ public class FollowingProfile implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public FollowingProfile id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getDateFollowing() {
-        return this.dateFollowing;
     }
 
     public FollowingProfile dateFollowing(LocalDate dateFollowing) {
@@ -58,29 +50,9 @@ public class FollowingProfile implements Serializable {
         return this;
     }
 
-    public void setDateFollowing(LocalDate dateFollowing) {
-        this.dateFollowing = dateFollowing;
-    }
-
-    public Profile getProfile() {
-        return this.profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
     public FollowingProfile profile(Profile profile) {
         this.setProfile(profile);
         return this;
-    }
-
-    public Profile getFollowedProfile() {
-        return this.followedProfile;
-    }
-
-    public void setFollowedProfile(Profile profile) {
-        this.followedProfile = profile;
     }
 
     public FollowingProfile followedProfile(Profile profile) {

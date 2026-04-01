@@ -7,6 +7,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A PartSubCategory.
@@ -14,6 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name = "part_sub_category")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class PartSubCategory implements Serializable {
 
     @Serial
@@ -34,25 +39,14 @@ public class PartSubCategory implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "partSubCategories")
     @JsonIgnoreProperties(value = { "type", "partCategory", "partSubCategories" }, allowSetters = true)
+    @Setter(AccessLevel.NONE)
     private Set<MegaPart> megaParts = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public PartSubCategory id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public PartSubCategory name(String name) {
@@ -60,25 +54,9 @@ public class PartSubCategory implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
     public PartSubCategory description(String description) {
         this.setDescription(description);
         return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<MegaPart> getMegaParts() {
-        return this.megaParts;
     }
 
     public void setMegaParts(Set<MegaPart> megaParts) {

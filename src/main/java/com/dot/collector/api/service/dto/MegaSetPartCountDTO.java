@@ -2,11 +2,15 @@ package com.dot.collector.api.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.MegaSetPartCount} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaSetPartCountDTO implements Serializable {
 
     private Long id;
@@ -16,38 +20,6 @@ public class MegaSetPartCountDTO implements Serializable {
     private MegaSetDTO set;
 
     private MegaPartDTO part;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public MegaSetDTO getSet() {
-        return set;
-    }
-
-    public void setSet(MegaSetDTO set) {
-        this.set = set;
-    }
-
-    public MegaPartDTO getPart() {
-        return part;
-    }
-
-    public void setPart(MegaPartDTO part) {
-        this.part = part;
-    }
 
     @Override
     public boolean equals(Object o) {

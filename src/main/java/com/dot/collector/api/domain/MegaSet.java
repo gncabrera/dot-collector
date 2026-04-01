@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaSet.
@@ -15,6 +18,8 @@ import java.util.Set;
 @Entity
 @Table(name = "mega_set")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaSet implements Serializable {
 
     @Serial
@@ -75,25 +80,14 @@ public class MegaSet implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "sets")
     @JsonIgnoreProperties(value = { "collection", "sets" }, allowSetters = true)
+    @Setter(AccessLevel.NONE)
     private Set<ProfileCollectionSet> profileCollectionSets = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaSet id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSetNumber() {
-        return this.setNumber;
     }
 
     public MegaSet setNumber(String setNumber) {
@@ -101,25 +95,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setSetNumber(String setNumber) {
-        this.setNumber = setNumber;
-    }
-
-    public LocalDate getReleaseDate() {
-        return this.releaseDate;
-    }
-
     public MegaSet releaseDate(LocalDate releaseDate) {
         this.setReleaseDate(releaseDate);
         return this;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getNotes() {
-        return this.notes;
     }
 
     public MegaSet notes(String notes) {
@@ -127,25 +105,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public String getNameEN() {
-        return this.nameEN;
-    }
-
     public MegaSet nameEN(String nameEN) {
         this.setNameEN(nameEN);
         return this;
-    }
-
-    public void setNameEN(String nameEN) {
-        this.nameEN = nameEN;
-    }
-
-    public String getNameES() {
-        return this.nameES;
     }
 
     public MegaSet nameES(String nameES) {
@@ -153,25 +115,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setNameES(String nameES) {
-        this.nameES = nameES;
-    }
-
-    public String getNameDE() {
-        return this.nameDE;
-    }
-
     public MegaSet nameDE(String nameDE) {
         this.setNameDE(nameDE);
         return this;
-    }
-
-    public void setNameDE(String nameDE) {
-        this.nameDE = nameDE;
-    }
-
-    public String getNameFR() {
-        return this.nameFR;
     }
 
     public MegaSet nameFR(String nameFR) {
@@ -179,25 +125,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setNameFR(String nameFR) {
-        this.nameFR = nameFR;
-    }
-
-    public String getDescriptionEN() {
-        return this.descriptionEN;
-    }
-
     public MegaSet descriptionEN(String descriptionEN) {
         this.setDescriptionEN(descriptionEN);
         return this;
-    }
-
-    public void setDescriptionEN(String descriptionEN) {
-        this.descriptionEN = descriptionEN;
-    }
-
-    public String getDescriptionES() {
-        return this.descriptionES;
     }
 
     public MegaSet descriptionES(String descriptionES) {
@@ -205,25 +135,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setDescriptionES(String descriptionES) {
-        this.descriptionES = descriptionES;
-    }
-
-    public String getDescriptionDE() {
-        return this.descriptionDE;
-    }
-
     public MegaSet descriptionDE(String descriptionDE) {
         this.setDescriptionDE(descriptionDE);
         return this;
-    }
-
-    public void setDescriptionDE(String descriptionDE) {
-        this.descriptionDE = descriptionDE;
-    }
-
-    public String getDescriptionFR() {
-        return this.descriptionFR;
     }
 
     public MegaSet descriptionFR(String descriptionFR) {
@@ -231,25 +145,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setDescriptionFR(String descriptionFR) {
-        this.descriptionFR = descriptionFR;
-    }
-
-    public byte[] getAttributes() {
-        return this.attributes;
-    }
-
     public MegaSet attributes(byte[] attributes) {
         this.setAttributes(attributes);
         return this;
-    }
-
-    public void setAttributes(byte[] attributes) {
-        this.attributes = attributes;
-    }
-
-    public String getAttributesContentType() {
-        return this.attributesContentType;
     }
 
     public MegaSet attributesContentType(String attributesContentType) {
@@ -257,25 +155,9 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public void setAttributesContentType(String attributesContentType) {
-        this.attributesContentType = attributesContentType;
-    }
-
-    public MegaSetType getType() {
-        return this.type;
-    }
-
-    public void setType(MegaSetType megaSetType) {
-        this.type = megaSetType;
-    }
-
     public MegaSet type(MegaSetType megaSetType) {
         this.setType(megaSetType);
         return this;
-    }
-
-    public Set<ProfileCollectionSet> getProfileCollectionSets() {
-        return this.profileCollectionSets;
     }
 
     public void setProfileCollectionSets(Set<ProfileCollectionSet> profileCollectionSets) {

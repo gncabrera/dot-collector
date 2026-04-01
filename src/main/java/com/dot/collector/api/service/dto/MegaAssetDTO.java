@@ -4,11 +4,15 @@ import com.dot.collector.api.domain.enumeration.AssetType;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.MegaAsset} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaAssetDTO implements Serializable {
 
     private Long id;
@@ -26,62 +30,6 @@ public class MegaAssetDTO implements Serializable {
     private MegaSetDTO set;
 
     private MegaPartDTO part;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public AssetType getType() {
-        return type;
-    }
-
-    public void setType(AssetType type) {
-        this.type = type;
-    }
-
-    public MegaSetDTO getSet() {
-        return set;
-    }
-
-    public void setSet(MegaSetDTO set) {
-        this.set = set;
-    }
-
-    public MegaPartDTO getPart() {
-        return part;
-    }
-
-    public void setPart(MegaPartDTO part) {
-        this.part = part;
-    }
 
     @Override
     public boolean equals(Object o) {

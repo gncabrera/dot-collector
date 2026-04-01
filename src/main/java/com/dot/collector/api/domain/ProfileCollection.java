@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A ProfileCollection.
@@ -11,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "profile_collection")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class ProfileCollection implements Serializable {
 
     @Serial
@@ -37,21 +41,9 @@ public class ProfileCollection implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public ProfileCollection id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return this.title;
     }
 
     public ProfileCollection title(String title) {
@@ -59,42 +51,14 @@ public class ProfileCollection implements Serializable {
         return this;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
     public ProfileCollection description(String description) {
         this.setDescription(description);
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getIsPublic() {
-        return this.isPublic;
-    }
-
     public ProfileCollection isPublic(Boolean isPublic) {
         this.setIsPublic(isPublic);
         return this;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public Profile getProfile() {
-        return this.profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 
     public ProfileCollection profile(Profile profile) {

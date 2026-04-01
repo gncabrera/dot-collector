@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaPart.
@@ -15,6 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name = "mega_part")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaPart implements Serializable {
 
     @Serial
@@ -77,21 +81,9 @@ public class MegaPart implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaPart id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getReleaseDate() {
-        return this.releaseDate;
     }
 
     public MegaPart releaseDate(LocalDate releaseDate) {
@@ -99,25 +91,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getPartNumber() {
-        return this.partNumber;
-    }
-
     public MegaPart partNumber(String partNumber) {
         this.setPartNumber(partNumber);
         return this;
-    }
-
-    public void setPartNumber(String partNumber) {
-        this.partNumber = partNumber;
-    }
-
-    public String getNameEN() {
-        return this.nameEN;
     }
 
     public MegaPart nameEN(String nameEN) {
@@ -125,25 +101,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public void setNameEN(String nameEN) {
-        this.nameEN = nameEN;
-    }
-
-    public String getNameES() {
-        return this.nameES;
-    }
-
     public MegaPart nameES(String nameES) {
         this.setNameES(nameES);
         return this;
-    }
-
-    public void setNameES(String nameES) {
-        this.nameES = nameES;
-    }
-
-    public String getNameDE() {
-        return this.nameDE;
     }
 
     public MegaPart nameDE(String nameDE) {
@@ -151,25 +111,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public void setNameDE(String nameDE) {
-        this.nameDE = nameDE;
-    }
-
-    public String getNameFR() {
-        return this.nameFR;
-    }
-
     public MegaPart nameFR(String nameFR) {
         this.setNameFR(nameFR);
         return this;
-    }
-
-    public void setNameFR(String nameFR) {
-        this.nameFR = nameFR;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public MegaPart description(String description) {
@@ -177,25 +121,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getNotes() {
-        return this.notes;
-    }
-
     public MegaPart notes(String notes) {
         this.setNotes(notes);
         return this;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public byte[] getAttributes() {
-        return this.attributes;
     }
 
     public MegaPart attributes(byte[] attributes) {
@@ -203,29 +131,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public void setAttributes(byte[] attributes) {
-        this.attributes = attributes;
-    }
-
-    public String getAttributesContentType() {
-        return this.attributesContentType;
-    }
-
     public MegaPart attributesContentType(String attributesContentType) {
         this.attributesContentType = attributesContentType;
         return this;
-    }
-
-    public void setAttributesContentType(String attributesContentType) {
-        this.attributesContentType = attributesContentType;
-    }
-
-    public MegaPartType getType() {
-        return this.type;
-    }
-
-    public void setType(MegaPartType megaPartType) {
-        this.type = megaPartType;
     }
 
     public MegaPart type(MegaPartType megaPartType) {
@@ -233,25 +141,9 @@ public class MegaPart implements Serializable {
         return this;
     }
 
-    public PartCategory getPartCategory() {
-        return this.partCategory;
-    }
-
-    public void setPartCategory(PartCategory partCategory) {
-        this.partCategory = partCategory;
-    }
-
     public MegaPart partCategory(PartCategory partCategory) {
         this.setPartCategory(partCategory);
         return this;
-    }
-
-    public Set<PartSubCategory> getPartSubCategories() {
-        return this.partSubCategories;
-    }
-
-    public void setPartSubCategories(Set<PartSubCategory> partSubCategories) {
-        this.partSubCategories = partSubCategories;
     }
 
     public MegaPart partSubCategories(Set<PartSubCategory> partSubCategories) {

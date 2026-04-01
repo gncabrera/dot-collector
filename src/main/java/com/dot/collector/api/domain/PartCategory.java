@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A PartCategory.
@@ -11,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "part_category")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class PartCategory implements Serializable {
 
     @Serial
@@ -31,21 +35,9 @@ public class PartCategory implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public PartCategory id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public PartCategory name(String name) {
@@ -53,21 +45,9 @@ public class PartCategory implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
     public PartCategory description(String description) {
         this.setDescription(description);
         return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

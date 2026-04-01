@@ -3,6 +3,8 @@ package com.dot.collector.api.domain;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A Profile.
@@ -10,6 +12,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "profile")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Profile implements Serializable {
 
     @Serial
@@ -33,21 +37,9 @@ public class Profile implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public Profile id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return this.username;
     }
 
     public Profile username(String username) {
@@ -55,29 +47,9 @@ public class Profile implements Serializable {
         return this;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullName() {
-        return this.fullName;
-    }
-
     public Profile fullName(String fullName) {
         this.setFullName(fullName);
         return this;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Profile user(User user) {

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaAsset.
@@ -13,6 +15,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "mega_asset")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaAsset implements Serializable {
 
     @Serial
@@ -49,21 +53,9 @@ public class MegaAsset implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaAsset id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public MegaAsset name(String name) {
@@ -71,25 +63,9 @@ public class MegaAsset implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
     public MegaAsset description(String description) {
         this.setDescription(description);
         return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPath() {
-        return this.path;
     }
 
     public MegaAsset path(String path) {
@@ -97,42 +73,14 @@ public class MegaAsset implements Serializable {
         return this;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public AssetType getType() {
-        return this.type;
-    }
-
     public MegaAsset type(AssetType type) {
         this.setType(type);
         return this;
     }
 
-    public void setType(AssetType type) {
-        this.type = type;
-    }
-
-    public MegaSet getSet() {
-        return this.set;
-    }
-
-    public void setSet(MegaSet megaSet) {
-        this.set = megaSet;
-    }
-
     public MegaAsset set(MegaSet megaSet) {
         this.setSet(megaSet);
         return this;
-    }
-
-    public MegaPart getPart() {
-        return this.part;
-    }
-
-    public void setPart(MegaPart megaPart) {
-        this.part = megaPart;
     }
 
     public MegaAsset part(MegaPart megaPart) {

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A BlockedProfile.
@@ -12,6 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "blocked_profile")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class BlockedProfile implements Serializable {
 
     @Serial
@@ -39,21 +43,9 @@ public class BlockedProfile implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public BlockedProfile id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getReason() {
-        return this.reason;
     }
 
     public BlockedProfile reason(String reason) {
@@ -61,42 +53,14 @@ public class BlockedProfile implements Serializable {
         return this;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDate getDateBlocked() {
-        return this.dateBlocked;
-    }
-
     public BlockedProfile dateBlocked(LocalDate dateBlocked) {
         this.setDateBlocked(dateBlocked);
         return this;
     }
 
-    public void setDateBlocked(LocalDate dateBlocked) {
-        this.dateBlocked = dateBlocked;
-    }
-
-    public Profile getProfile() {
-        return this.profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
     public BlockedProfile profile(Profile profile) {
         this.setProfile(profile);
         return this;
-    }
-
-    public Profile getBlockedProfile() {
-        return this.blockedProfile;
-    }
-
-    public void setBlockedProfile(Profile profile) {
-        this.blockedProfile = profile;
     }
 
     public BlockedProfile blockedProfile(Profile profile) {

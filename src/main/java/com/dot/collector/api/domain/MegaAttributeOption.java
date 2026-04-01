@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaAttributeOption.
@@ -11,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "mega_attribute_option")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaAttributeOption implements Serializable {
 
     @Serial
@@ -37,21 +41,9 @@ public class MegaAttributeOption implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaAttributeOption id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLabel() {
-        return this.label;
     }
 
     public MegaAttributeOption label(String label) {
@@ -59,42 +51,14 @@ public class MegaAttributeOption implements Serializable {
         return this;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
     public MegaAttributeOption value(String value) {
         this.setValue(value);
         return this;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
     public MegaAttributeOption description(String description) {
         this.setDescription(description);
         return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public MegaAttribute getAttribute() {
-        return this.attribute;
-    }
-
-    public void setAttribute(MegaAttribute megaAttribute) {
-        this.attribute = megaAttribute;
     }
 
     public MegaAttributeOption attribute(MegaAttribute megaAttribute) {

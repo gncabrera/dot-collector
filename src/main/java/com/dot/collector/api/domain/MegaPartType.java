@@ -7,6 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaPartType.
@@ -14,6 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "mega_part_type")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaPartType implements Serializable {
 
     @Serial
@@ -50,21 +54,9 @@ public class MegaPartType implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaPartType id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public MegaPartType name(String name) {
@@ -72,25 +64,9 @@ public class MegaPartType implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getVersion() {
-        return this.version;
-    }
-
     public MegaPartType version(Integer version) {
         this.setVersion(version);
         return this;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Boolean getActive() {
-        return this.active;
     }
 
     public MegaPartType active(Boolean active) {
@@ -98,29 +74,9 @@ public class MegaPartType implements Serializable {
         return this;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Boolean getIsLatest() {
-        return this.isLatest;
-    }
-
     public MegaPartType isLatest(Boolean isLatest) {
         this.setIsLatest(isLatest);
         return this;
-    }
-
-    public void setIsLatest(Boolean isLatest) {
-        this.isLatest = isLatest;
-    }
-
-    public Set<MegaAttribute> getAttributes() {
-        return this.attributes;
-    }
-
-    public void setAttributes(Set<MegaAttribute> megaAttributes) {
-        this.attributes = megaAttributes;
     }
 
     public MegaPartType attributes(Set<MegaAttribute> megaAttributes) {

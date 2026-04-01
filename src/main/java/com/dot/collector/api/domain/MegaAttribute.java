@@ -9,6 +9,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaAttribute.
@@ -16,6 +19,8 @@ import java.util.Set;
 @Entity
 @Table(name = "mega_attribute")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaAttribute implements Serializable {
 
     @Serial
@@ -82,29 +87,19 @@ public class MegaAttribute implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attributes")
     @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
+    @Setter(AccessLevel.NONE)
     private Set<MegaSetType> setTypes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attributes")
     @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
+    @Setter(AccessLevel.NONE)
     private Set<MegaPartType> partTypes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaAttribute id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public MegaAttribute name(String name) {
@@ -112,25 +107,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return this.label;
-    }
-
     public MegaAttribute label(String label) {
         this.setLabel(label);
         return this;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public MegaAttribute description(String description) {
@@ -138,25 +117,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public UIComponent getUiComponent() {
-        return this.uiComponent;
-    }
-
     public MegaAttribute uiComponent(UIComponent uiComponent) {
         this.setUiComponent(uiComponent);
         return this;
-    }
-
-    public void setUiComponent(UIComponent uiComponent) {
-        this.uiComponent = uiComponent;
-    }
-
-    public AttributeType getType() {
-        return this.type;
     }
 
     public MegaAttribute type(AttributeType type) {
@@ -164,25 +127,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setType(AttributeType type) {
-        this.type = type;
-    }
-
-    public Boolean getRequired() {
-        return this.required;
-    }
-
     public MegaAttribute required(Boolean required) {
         this.setRequired(required);
         return this;
-    }
-
-    public void setRequired(Boolean required) {
-        this.required = required;
-    }
-
-    public Boolean getMultiple() {
-        return this.multiple;
     }
 
     public MegaAttribute multiple(Boolean multiple) {
@@ -190,25 +137,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setMultiple(Boolean multiple) {
-        this.multiple = multiple;
-    }
-
-    public String getDefaultValue() {
-        return this.defaultValue;
-    }
-
     public MegaAttribute defaultValue(String defaultValue) {
         this.setDefaultValue(defaultValue);
         return this;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public Double getMinNumber() {
-        return this.minNumber;
     }
 
     public MegaAttribute minNumber(Double minNumber) {
@@ -216,25 +147,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setMinNumber(Double minNumber) {
-        this.minNumber = minNumber;
-    }
-
-    public Double getMaxNumber() {
-        return this.maxNumber;
-    }
-
     public MegaAttribute maxNumber(Double maxNumber) {
         this.setMaxNumber(maxNumber);
         return this;
-    }
-
-    public void setMaxNumber(Double maxNumber) {
-        this.maxNumber = maxNumber;
-    }
-
-    public Integer getMinLength() {
-        return this.minLength;
     }
 
     public MegaAttribute minLength(Integer minLength) {
@@ -242,25 +157,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
-    }
-
-    public Integer getMaxLength() {
-        return this.maxLength;
-    }
-
     public MegaAttribute maxLength(Integer maxLength) {
         this.setMaxLength(maxLength);
         return this;
-    }
-
-    public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
-    }
-
-    public String getRegex() {
-        return this.regex;
     }
 
     public MegaAttribute regex(String regex) {
@@ -268,25 +167,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setRegex(String regex) {
-        this.regex = regex;
-    }
-
-    public Integer getOrder() {
-        return this.order;
-    }
-
     public MegaAttribute order(Integer order) {
         this.setOrder(order);
         return this;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
-    public String getAttributeGroup() {
-        return this.attributeGroup;
     }
 
     public MegaAttribute attributeGroup(String attributeGroup) {
@@ -294,25 +177,9 @@ public class MegaAttribute implements Serializable {
         return this;
     }
 
-    public void setAttributeGroup(String attributeGroup) {
-        this.attributeGroup = attributeGroup;
-    }
-
-    public Boolean getActive() {
-        return this.active;
-    }
-
     public MegaAttribute active(Boolean active) {
         this.setActive(active);
         return this;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Set<MegaSetType> getSetTypes() {
-        return this.setTypes;
     }
 
     public void setSetTypes(Set<MegaSetType> megaSetTypes) {
@@ -340,10 +207,6 @@ public class MegaAttribute implements Serializable {
         this.setTypes.remove(megaSetType);
         megaSetType.getAttributes().remove(this);
         return this;
-    }
-
-    public Set<MegaPartType> getPartTypes() {
-        return this.partTypes;
     }
 
     public void setPartTypes(Set<MegaPartType> megaPartTypes) {

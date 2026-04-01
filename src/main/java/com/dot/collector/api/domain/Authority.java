@@ -6,6 +6,9 @@ import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Persistable;
 @Table(name = "jhi_authority")
 @JsonIgnoreProperties(value = { "new", "id" })
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class Authority implements Serializable, Persistable<String> {
 
     @Serial
@@ -28,21 +33,15 @@ public class Authority implements Serializable, Persistable<String> {
 
     @org.springframework.data.annotation.Transient
     @Transient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private boolean isPersisted;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public String getName() {
-        return this.name;
-    }
-
     public Authority name(String name) {
         this.setName(name);
         return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @PostLoad

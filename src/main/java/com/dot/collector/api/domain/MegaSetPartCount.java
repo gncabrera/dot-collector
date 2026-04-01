@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A MegaSetPartCount.
@@ -11,6 +13,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "mega_set_part_count")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaSetPartCount implements Serializable {
 
     @Serial
@@ -35,21 +39,9 @@ public class MegaSetPartCount implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public MegaSetPartCount id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getCount() {
-        return this.count;
     }
 
     public MegaSetPartCount count(Integer count) {
@@ -57,29 +49,9 @@ public class MegaSetPartCount implements Serializable {
         return this;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public MegaSet getSet() {
-        return this.set;
-    }
-
-    public void setSet(MegaSet megaSet) {
-        this.set = megaSet;
-    }
-
     public MegaSetPartCount set(MegaSet megaSet) {
         this.setSet(megaSet);
         return this;
-    }
-
-    public MegaPart getPart() {
-        return this.part;
-    }
-
-    public void setPart(MegaPart megaPart) {
-        this.part = megaPart;
     }
 
     public MegaSetPartCount part(MegaPart megaPart) {

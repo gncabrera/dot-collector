@@ -5,11 +5,15 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A DTO for the {@link com.dot.collector.api.domain.MegaPartType} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class MegaPartTypeDTO implements Serializable {
 
     private Long id;
@@ -25,54 +29,6 @@ public class MegaPartTypeDTO implements Serializable {
     private Boolean isLatest;
 
     private Set<MegaAttributeDTO> attributes = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Boolean getIsLatest() {
-        return isLatest;
-    }
-
-    public void setIsLatest(Boolean isLatest) {
-        this.isLatest = isLatest;
-    }
-
-    public Set<MegaAttributeDTO> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<MegaAttributeDTO> attributes) {
-        this.attributes = attributes;
-    }
 
     @Override
     public boolean equals(Object o) {

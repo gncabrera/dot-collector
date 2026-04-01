@@ -1,9 +1,10 @@
 package com.dot.collector.api.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A EnvironmentVariable.
@@ -11,6 +12,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "environment_variable")
 @SuppressWarnings("common-java:DuplicatedBlocks")
+@Getter
+@Setter
 public class EnvironmentVariable implements Serializable {
 
     @Serial
@@ -36,21 +39,9 @@ public class EnvironmentVariable implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Long getId() {
-        return this.id;
-    }
-
     public EnvironmentVariable id(Long id) {
         this.setId(id);
         return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getKey() {
-        return this.key;
     }
 
     public EnvironmentVariable key(String key) {
@@ -58,25 +49,9 @@ public class EnvironmentVariable implements Serializable {
         return this;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
     public EnvironmentVariable value(String value) {
         this.setValue(value);
         return this;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public EnvironmentVariable description(String description) {
@@ -84,21 +59,9 @@ public class EnvironmentVariable implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
     public EnvironmentVariable type(String type) {
         this.setType(type);
         return this;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
