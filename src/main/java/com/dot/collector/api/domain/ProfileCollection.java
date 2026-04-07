@@ -39,6 +39,10 @@ public class ProfileCollection implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private CloneInformation cloneInformation;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public ProfileCollection id(Long id) {
