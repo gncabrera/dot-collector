@@ -35,6 +35,19 @@ public class ProfileCollection implements Serializable {
     @Column(name = "is_public")
     private Boolean isPublic;
 
+    @Column(name = "show_price", nullable = false)
+    private boolean showPrice;
+
+    @Column(name = "show_checkbox", nullable = false)
+    private boolean showCheckbox;
+
+    @Column(name = "show_comment", nullable = false)
+    private boolean showComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(allowSetters = true)
+    private Currency currency;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
@@ -62,6 +75,26 @@ public class ProfileCollection implements Serializable {
 
     public ProfileCollection isPublic(Boolean isPublic) {
         this.setIsPublic(isPublic);
+        return this;
+    }
+
+    public ProfileCollection showPrice(boolean showPrice) {
+        this.setShowPrice(showPrice);
+        return this;
+    }
+
+    public ProfileCollection showCheckbox(boolean showCheckbox) {
+        this.setShowCheckbox(showCheckbox);
+        return this;
+    }
+
+    public ProfileCollection showComment(boolean showComment) {
+        this.setShowComment(showComment);
+        return this;
+    }
+
+    public ProfileCollection currency(Currency currency) {
+        this.setCurrency(currency);
         return this;
     }
 
@@ -97,6 +130,10 @@ public class ProfileCollection implements Serializable {
             ", title='" + getTitle() + "'" +
             ", description='" + getDescription() + "'" +
             ", isPublic='" + getIsPublic() + "'" +
+            ", showPrice=" + isShowPrice() +
+            ", showCheckbox=" + isShowCheckbox() +
+            ", showComment=" + isShowComment() +
+            ", currency=" + getCurrency() +
             "}";
     }
 }

@@ -23,6 +23,18 @@
             <column name="is_public" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="show_price" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="show_checkbox" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="show_comment" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="currency_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <column name="profile_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -53,6 +65,10 @@
             <column name="title" type="string"/>
             <column name="description" type="string"/>
             <column name="is_public" type="boolean"/>
+            <column name="show_price" type="boolean"/>
+            <column name="show_checkbox" type="boolean"/>
+            <column name="show_comment" type="boolean"/>
+            <column name="currency_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>
