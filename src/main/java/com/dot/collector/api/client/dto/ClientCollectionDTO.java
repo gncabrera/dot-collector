@@ -1,5 +1,6 @@
 package com.dot.collector.api.client.dto;
 
+import com.dot.collector.api.domain.enumeration.ProfileCollectionType;
 import java.util.List;
 import lombok.Data;
 import lombok.Getter;
@@ -11,8 +12,9 @@ public class ClientCollectionDTO {
     private Long id;
     private String title;
     private String description;
-    private String collectionType;
+    private ProfileCollectionType collectionType;
     private List<String> sets;
     private String createdBy;
     private ClientCollectionCommunityDTO community;
+    private ClientCollectionSettingsDTO settings;
 }

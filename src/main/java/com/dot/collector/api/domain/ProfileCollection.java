@@ -1,7 +1,10 @@
 package com.dot.collector.api.domain;
 
+import com.dot.collector.api.domain.enumeration.AttributeType;
+import com.dot.collector.api.domain.enumeration.ProfileCollectionType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.Getter;
@@ -55,6 +58,11 @@ public class ProfileCollection implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private CloneInformation cloneInformation;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ProfileCollectionType type;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

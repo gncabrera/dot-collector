@@ -41,6 +41,9 @@
             <column name="clone_information_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_profile_collection__clone_information_id" />
             </column>
+          <column name="type" type="varchar(255)">
+            <constraints nullable="false" />
+          </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
