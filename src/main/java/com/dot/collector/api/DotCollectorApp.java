@@ -2,6 +2,7 @@ package com.dot.collector.api;
 
 import com.dot.collector.api.config.ApplicationProperties;
 import com.dot.collector.api.config.CRLFLogConverter;
+import com.dot.collector.api.config.RandomizedSpringBanner;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -72,6 +73,7 @@ public class DotCollectorApp {
      */
     public static void main(String[] args) {
         var app = new SpringApplication(DotCollectorApp.class);
+        app.setBanner(new RandomizedSpringBanner());
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);

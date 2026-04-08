@@ -1,0 +1,11 @@
+  _   _  ____   ____  _  ____   __
+ | \ | |/ __ \ / __ \| |/ /\ \ / /
+ |  \| | |  | | |  | | ' /  \ V /
+ | . ` | |  | | |  | |  <    > <
+ | |\  | |__| | |__| | . \  / . \
+ |_| \_|\____/ \____/|_|\_\/_/ \_\
+
+{{TAGLINE}}
+
+${AnsiColor.BRIGHT_BLUE}:: NOOKX :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
+:: If it compiles on your machine, we are already proud of you. ::${AnsiColor.DEFAULT}

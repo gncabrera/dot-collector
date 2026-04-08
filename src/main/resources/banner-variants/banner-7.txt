@@ -1,0 +1,23 @@
+
+
+NNNNNNNN        NNNNNNNN     OOOOOOOOO          OOOOOOOOO     KKKKKKKKK    KKKKKKKXXXXXXX       XXXXXXX
+N:::::::N       N::::::N   OO:::::::::OO      OO:::::::::OO   K:::::::K    K:::::KX:::::X       X:::::X
+N::::::::N      N::::::N OO:::::::::::::OO  OO:::::::::::::OO K:::::::K    K:::::KX:::::X       X:::::X
+N:::::::::N     N::::::NO:::::::OOO:::::::OO:::::::OOO:::::::OK:::::::K   K::::::KX::::::X     X::::::X
+N::::::::::N    N::::::NO::::::O   O::::::OO::::::O   O::::::OKK::::::K  K:::::KKKXXX:::::X   X:::::XXX
+N:::::::::::N   N::::::NO:::::O     O:::::OO:::::O     O:::::O  K:::::K K:::::K      X:::::X X:::::X
+N:::::::N::::N  N::::::NO:::::O     O:::::OO:::::O     O:::::O  K::::::K:::::K        X:::::X:::::X
+N::::::N N::::N N::::::NO:::::O     O:::::OO:::::O     O:::::O  K:::::::::::K          X:::::::::X
+N::::::N  N::::N:::::::NO:::::O     O:::::OO:::::O     O:::::O  K:::::::::::K          X:::::::::X
+N::::::N   N:::::::::::NO:::::O     O:::::OO:::::O     O:::::O  K::::::K:::::K        X:::::X:::::X
+N::::::N    N::::::::::NO:::::O     O:::::OO:::::O     O:::::O  K:::::K K:::::K      X:::::X X:::::X
+N::::::N     N:::::::::NO::::::O   O::::::OO::::::O   O::::::OKK::::::K  K:::::KKKXXX:::::X   X:::::XXX
+N::::::N      N::::::::NO:::::::OOO:::::::OO:::::::OOO:::::::OK:::::::K   K::::::KX::::::X     X::::::X
+N::::::N       N:::::::N OO:::::::::::::OO  OO:::::::::::::OO K:::::::K    K:::::KX:::::X       X:::::X
+N::::::N        N::::::N   OO:::::::::OO      OO:::::::::OO   K:::::::K    K:::::KX:::::X       X:::::X
+NNNNNNNN         NNNNNNN     OOOOOOOOO          OOOOOOOOO     KKKKKKKKK    KKKKKKKXXXXXXX       XXXXXXX
+
+{{TAGLINE}}
+
+${AnsiColor.BRIGHT_BLUE}:: NOOKX :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
+:: If it compiles on your machine, we are already proud of you. ::${AnsiColor.DEFAULT}
