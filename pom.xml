@@ -45,6 +45,8 @@
         <jib-maven-plugin.architecture>amd64</jib-maven-plugin.architecture>
         <jib-maven-plugin.image>eclipse-temurin:21-jre-noble</jib-maven-plugin.image>
         <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
+        <!-- CI: export DOCKER_GITHUB_PAT (GitHub PAT with write:packages) for jib:build → ghcr.io -->
+        <jib.to.auth.password>${env.DOCKER_GITHUB_PAT}</jib.to.auth.password>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <liquibase-plugin.password/>
         <liquibase-plugin.url/>
@@ -652,6 +654,7 @@
                         <image>ghcr.io/gncabrera/nookx-api:latest</image>
                         <auth>
                           <username>gncabrera</username>
+                          <password>${jib.to.auth.password}</password>
                         </auth>
                       </to>
                         <container>
