@@ -1,12 +1,12 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: dotcollector
+name: nookx
 services:
   postgresql:
     image: postgres:18.3
     # volumes:
     #   - ~/volumes/jhipster/DotCollector/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=DotCollector
+      - POSTGRES_USER=nookx
       - POSTGRES_HOST_AUTH_METHOD=trust
       - TZ=UTC
       - PGTZ=UTC

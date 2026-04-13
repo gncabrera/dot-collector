@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dot-collector": {
+    "nookx": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -93,17 +93,17 @@
         "serve": {
           "builder": "@angular-builders/custom-esbuild:dev-server",
           "options": {
-            "buildTarget": "dot-collector:build:development",
+            "buildTarget": "nookx:build:development",
             "open": true,
             "proxyConfig": "proxy.config.mjs",
             "port": 4200
           },
           "configurations": {
             "production": {
-              "buildTarget": "dot-collector:build:production"
+              "buildTarget": "nookx:build:production"
             },
             "development": {
-              "buildTarget": "dot-collector:build:development"
+              "buildTarget": "nookx:build:development"
             }
           },
           "defaultConfiguration": "development"
