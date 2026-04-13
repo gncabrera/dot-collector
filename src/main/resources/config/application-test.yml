@@ -26,8 +26,6 @@ management:
         enabled: false
 
 spring:
-  profiles:
-    include: secret-samples
   docker:
     compose:
       enabled: false
@@ -39,6 +37,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/nookx
+    username: nookx
+    password:
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -91,6 +91,7 @@ jhipster:
   security:
     authentication:
       jwt:
+        base64-secret: OTU1NWU2MmQ2Y2U0Zjc1YzMxMjAzOWFhOTg5ZDA1YjkyMjhjZmVhNDg1ZTk0ZjAwNzdiODA2YzM5OGVlOTI3MDEyM2Q3MmRhOTlhMDk2ZGE3NTJhMjUzMThmOGQ2Y2JkZGNlMGE1ODQ3NTdlZjBiZjU0MGJjYjRjNzI1NjQxYzk=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
