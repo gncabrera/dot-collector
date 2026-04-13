@@ -307,6 +307,13 @@
         <groupId>com.github.javafaker</groupId>
         <artifactId>javafaker</artifactId>
         <version>1.0.2</version>
+        <exclusions>
+            <!-- javafaker pulls snakeyaml-android 1.23, which shadows Spring Boot's snakeyaml 2.x and breaks YAML loading. -->
+            <exclusion>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+            </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
 
