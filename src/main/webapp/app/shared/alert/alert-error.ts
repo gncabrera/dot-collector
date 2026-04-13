@@ -24,12 +24,12 @@ export class AlertError implements OnDestroy {
   private readonly eventManager = inject(EventManager);
 
   constructor() {
-    this.errorListener = this.eventManager.subscribe('dotCollectorApp.error', (response: EventWithContent<unknown> | string) => {
+    this.errorListener = this.eventManager.subscribe('nookxApp.error', (response: EventWithContent<unknown> | string) => {
       const errorResponse = (response as EventWithContent<AlertErrorModel>).content;
       this.addErrorAlert(errorResponse.message);
     });
 
-    this.httpErrorListener = this.eventManager.subscribe('dotCollectorApp.httpError', (response: EventWithContent<unknown> | string) => {
+    this.httpErrorListener = this.eventManager.subscribe('nookxApp.httpError', (response: EventWithContent<unknown> | string) => {
       this.handleHttpError(response);
     });
   }

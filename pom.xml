@@ -3,12 +3,12 @@
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dot.collector.api</groupId>
+    <groupId>com.nookx.api</groupId>
     <artifactId>nookx</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Dot Collector</name>
-    <description>Description for Dot Collector</description>
+    <name>Nookx</name>
+    <description>Description for Nookx</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -31,7 +31,7 @@
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <start-class>com.dot.collector.api.DotCollectorApp</start-class>
+        <start-class>com.nookx.api.NookxApp</start-class>
         <argLine>-Xmx1G</argLine>
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>
         <run.addResources>false</run.addResources>
@@ -811,7 +811,7 @@
                         <defaultSchemaName/>
                         <username>${liquibase-plugin.username}</username>
                         <password>${liquibase-plugin.password}</password>
-                        <referenceUrl>hibernate:spring:com.dot.collector.api.domain?dialect=org.hibernate.dialect.PostgreSQLDialect&amp;hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                        <referenceUrl>hibernate:spring:com.nookx.api.domain?dialect=org.hibernate.dialect.PostgreSQLDialect&amp;hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                         <verbose>true</verbose>
                         <contexts>!test</contexts>
                     </configuration>
@@ -872,8 +872,8 @@
             <properties>
                 <!-- default Spring profiles -->
                 <liquibase-plugin.password/>
-                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/DotCollector</liquibase-plugin.url>
-                <liquibase-plugin.username>DotCollector</liquibase-plugin.username>
+                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/Nookx</liquibase-plugin.url>
+                <liquibase-plugin.username>Nookx</liquibase-plugin.username>
                 <profile.test>test,testdev</profile.test>
                 <spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
             </properties>
@@ -889,8 +889,8 @@
             <id>test</id>
             <properties>
                 <liquibase-plugin.password/>
-                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/DotCollector</liquibase-plugin.url>
-                <liquibase-plugin.username>DotCollector</liquibase-plugin.username>
+                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/Nookx</liquibase-plugin.url>
+                <liquibase-plugin.username>Nookx</liquibase-plugin.username>
                 <profile.test>test</profile.test>
                 <spring.profiles.active>test${profile.tls}${profile.no-liquibase}</spring.profiles.active>
             </properties>
@@ -1007,8 +1007,8 @@
             <properties>
                 <!-- default Spring profiles -->
                 <liquibase-plugin.password/>
-                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/DotCollector</liquibase-plugin.url>
-                <liquibase-plugin.username>DotCollector</liquibase-plugin.username>
+                <liquibase-plugin.url>jdbc:postgresql://localhost:5432/Nookx</liquibase-plugin.url>
+                <liquibase-plugin.username>Nookx</liquibase-plugin.username>
                 <profile.test>test,testprod</profile.test>
                 <spring.profiles.active>prod${profile.api-docs}${profile.tls}${profile.e2e}${profile.no-liquibase}</spring.profiles.active>
             </properties>

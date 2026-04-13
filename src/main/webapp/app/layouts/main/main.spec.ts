@@ -44,7 +44,7 @@ describe('Main', () => {
   });
 
   describe('page title', () => {
-    const defaultPageTitle = 'Dot Collector';
+    const defaultPageTitle = 'Nookx';
     const parentRoutePageTitle = 'parentTitle';
     const childRoutePageTitle = 'childTitle';
 

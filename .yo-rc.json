@@ -2,7 +2,7 @@
   "generator-jhipster": {
     "applicationType": "monolith",
     "authenticationType": "jwt",
-    "baseName": "DotCollector",
+    "baseName": "Nookx",
     "buildTool": "maven",
     "cacheProvider": "no",
     "clientFramework": "angular",
@@ -42,7 +42,7 @@
     "microfrontend": null,
     "microfrontends": [],
     "nativeLanguage": "en",
-    "packageName": "com.dot.collector.api",
+    "packageName": "com.nookx.api",
     "prodDatabaseType": "postgresql",
     "reactive": false,
     "serverPort": null,

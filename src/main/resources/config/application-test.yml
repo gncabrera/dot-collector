@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: DEBUG
     tech.jhipster: DEBUG
-    com.dot.collector.api: DEBUG
+    com.nookx.api: DEBUG
 
 management:
   prometheus:
@@ -53,7 +53,7 @@ spring:
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
-# keytool -genkey -alias dotcollector -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
+# keytool -genkey -alias nookx -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
 #
 # You can also use Let's Encrypt:
 # See details in topic "Create a Java Keystore (.JKS) from Let's Encrypt Certificates" on https://maximilian-boehm.com/en-gb/blog

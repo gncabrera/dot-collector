@@ -91,7 +91,7 @@ management:
 
 spring:
   application:
-    name: DotCollector
+    name: Nookx
   docker:
     compose:
       enabled: true
@@ -188,7 +188,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'dotCollectorApp'
+    name: 'nookxApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -198,12 +198,12 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: DotCollector@localhost
+    from: Nookx@localhost
   api-docs:
     default-include-pattern: /api/**
     management-include-pattern: /management/**
-    title: Dot Collector API
-    description: Dot Collector API documentation
+    title: Nookx API
+    description: Nookx API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

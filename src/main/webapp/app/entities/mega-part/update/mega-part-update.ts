@@ -79,7 +79,7 @@ export class MegaPartUpdate implements OnInit {
   setFileData(event: Event, field: string, isImage: boolean): void {
     this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
       error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertErrorModel>('dotCollectorApp.error', { message: err.message })),
+        this.eventManager.broadcast(new EventWithContent<AlertErrorModel>('nookxApp.error', { message: err.message })),
     });
   }
 
