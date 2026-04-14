@@ -43,7 +43,6 @@
     <include file="config/liquibase/changelog/20260331175645_added_entity_constraints_MegaPartType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175646_added_entity_constraints_MegaPart.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175647_added_entity_constraints_MegaPartSubPartCount.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260331175648_added_entity_constraints_MegaAsset.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175652_added_entity_constraints_MegaAttributeOption.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175653_added_entity_constraints_Profile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175654_added_entity_constraints_FollowingProfile.xml" relativeToChangelogFile="false"/>

@@ -26,20 +26,7 @@
     }
   ],
   "name": "MegaAsset",
-  "relationships": [
-    {
-      "otherEntityName": "megaSet",
-      "relationshipName": "set",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
-      "otherEntityName": "megaPart",
-      "relationshipName": "part",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    }
-  ],
+  "relationships": [],
   "searchEngine": "no",
   "service": "serviceClass"
 }

@@ -23,7 +23,6 @@ public class MegaAssetAsserts {
      */
     public static void assertMegaAssetAllUpdatablePropertiesEquals(MegaAsset expected, MegaAsset actual) {
         assertMegaAssetUpdatableFieldsEquals(expected, actual);
-        assertMegaAssetUpdatableRelationshipsEquals(expected, actual);
     }
 
     /**
@@ -51,18 +50,5 @@ public class MegaAssetAsserts {
             .satisfies(a -> assertThat(a.getDescription()).as("check description").isEqualTo(expected.getDescription()))
             .satisfies(a -> assertThat(a.getPath()).as("check path").isEqualTo(expected.getPath()))
             .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()));
-    }
-
-    /**
-     * Asserts that the entity has all the updatable relationships set.
-     *
-     * @param expected the expected entity
-     * @param actual the actual entity
-     */
-    public static void assertMegaAssetUpdatableRelationshipsEquals(MegaAsset expected, MegaAsset actual) {
-        assertThat(actual)
-            .as("Verify MegaAsset relationships")
-            .satisfies(a -> assertThat(a.getSet()).as("check set").isEqualTo(expected.getSet()))
-            .satisfies(a -> assertThat(a.getPart()).as("check part").isEqualTo(expected.getPart()));
     }
 }

@@ -175,9 +175,6 @@ relationship ManyToOne {
   MegaPartSubPartCount{part} to MegaPart
   MegaPartSubPartCount{parentPart} to MegaPart
 
-  MegaAsset{set} to MegaSet
-  MegaAsset{part} to MegaPart
-
   MegaAttributeOption{attribute} to MegaAttribute
 
   ProfileRequest{type} to ProfileRequestType

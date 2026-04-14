@@ -28,10 +28,6 @@ public class MegaAssetDTO implements Serializable {
 
     private AssetType type;
 
-    private MegaSetDTO set;
-
-    private MegaPartDTO part;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,8 +58,6 @@ public class MegaAssetDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", path='" + getPath() + "'" +
             ", type='" + getType() + "'" +
-            ", set=" + getSet() +
-            ", part=" + getPart() +
             "}";
     }
 }

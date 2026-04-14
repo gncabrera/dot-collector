@@ -1,6 +1,5 @@
 package com.nookx.api.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nookx.api.domain.enumeration.AssetType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -43,14 +42,6 @@ public class MegaAsset implements Serializable {
     @Column(name = "type")
     private AssetType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "type", "profileCollectionSets" }, allowSetters = true)
-    private MegaSet set;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "type", "partCategory", "partSubCategories" }, allowSetters = true)
-    private MegaPart part;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public MegaAsset id(Long id) {
@@ -75,16 +66,6 @@ public class MegaAsset implements Serializable {
 
     public MegaAsset type(AssetType type) {
         this.setType(type);
-        return this;
-    }
-
-    public MegaAsset set(MegaSet megaSet) {
-        this.setSet(megaSet);
-        return this;
-    }
-
-    public MegaAsset part(MegaPart megaPart) {
-        this.setPart(megaPart);
         return this;
     }
 
