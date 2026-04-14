@@ -7,16 +7,19 @@ import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link MegaAsset}.
@@ -65,11 +68,28 @@ public class MegaAssetResource {
             .body(megaAssetDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MegaAssetDTO> getMegaAsset(@PathVariable("id") Long id) {
-        LOG.debug("REST request to get MegaAsset : {}", id);
-        Optional<MegaAssetDTO> megaAssetDTO = megaAssetService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(megaAssetDTO);
+    @GetMapping("/dl/{uuid}")
+    public ResponseEntity<Resource> downloadMegaAsset(@PathVariable("uuid") String uuid) {
+        LOG.debug("REST request to download MegaAsset file : {}", uuid);
+        return megaAssetService
+            .findFileForDownload(uuid)
+            .map(dl -> {
+                MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+                if (StringUtils.hasText(dl.asset().getContentType())) {
+                    try {
+                        mediaType = MediaType.parseMediaType(dl.asset().getContentType());
+                    } catch (IllegalArgumentException ex) {
+                        LOG.debug("Ignoring invalid content type for asset {}: {}", uuid, dl.asset().getContentType());
+                    }
+                }
+                String filename = StringUtils.hasText(dl.asset().getName()) ? dl.asset().getName() : "download";
+                ContentDisposition disposition = ContentDisposition.attachment().filename(filename, StandardCharsets.UTF_8).build();
+                return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                    .body(dl.resource());
+            })
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

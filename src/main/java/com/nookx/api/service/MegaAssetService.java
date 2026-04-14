@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -113,8 +115,34 @@ public class MegaAssetService {
         return megaAssetRepository.findById(id).map(megaAssetMapper::toDto);
     }
 
+    /**
+     * Resolves the stored file for download if the entity exists and the file is on disk.
+     */
+    @Transactional(readOnly = true)
+    public Optional<MegaAssetFileDownload> findFileForDownload(String uuid) {
+        LOG.debug("Request to get MegaAsset file stream : {}", uuid);
+        Optional<MegaAssetDTO> dtoOpt = megaAssetRepository.findByPath(uuid).map(megaAssetMapper::toDto);
+        if (dtoOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        MegaAssetDTO dto = dtoOpt.get();
+        if (!StringUtils.hasText(dto.getPath())) {
+            return Optional.empty();
+        }
+        Path baseDir = Paths.get(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
+        Path filePath = baseDir.resolve(dto.getPath()).normalize();
+        if (!filePath.startsWith(baseDir) || !Files.isRegularFile(filePath)) {
+            LOG.warn("Asset id {} file not found at {}", uuid, filePath);
+            return Optional.empty();
+        }
+        Resource resource = new FileSystemResource(filePath);
+        return Optional.of(new MegaAssetFileDownload(dto, resource));
+    }
+
     public void delete(Long id) {
         LOG.debug("Request to delete MegaAsset : {}", id);
         megaAssetRepository.deleteById(id);
     }
+
+    public record MegaAssetFileDownload(MegaAssetDTO asset, Resource resource) {}
 }

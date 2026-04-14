@@ -1,9 +1,8 @@
 package com.nookx.api.web.rest;
 
 import static com.nookx.api.domain.MegaAssetAsserts.*;
-import static com.nookx.api.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -14,7 +13,6 @@ import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.repository.MegaAssetRepository;
 import com.nookx.api.service.dto.MegaAssetDTO;
 import com.nookx.api.service.mapper.MegaAssetMapper;
-import jakarta.persistence.EntityManager;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -48,7 +47,7 @@ class MegaAssetResourceIT {
     private static final AssetType DEFAULT_TYPE = AssetType.IMAGE;
     private static final AssetType UPDATED_TYPE = AssetType.FILE;
 
-    private static final String ENTITY_API_URL = "/api/mega-assets";
+    private static final String ENTITY_API_URL = "/api/client/assets";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static Random random = new Random();
@@ -62,9 +61,6 @@ class MegaAssetResourceIT {
 
     @Autowired
     private MegaAssetMapper megaAssetMapper;
-
-    @Autowired
-    private EntityManager em;
 
     @Autowired
     private MockMvc restMegaAssetMockMvc;
@@ -220,37 +216,38 @@ class MegaAssetResourceIT {
     @Test
     @Transactional
     void getAllMegaAssets() throws Exception {
-        // Initialize the database
-        insertedMegaAsset = megaAssetRepository.saveAndFlush(megaAsset);
-
-        // Get all the megaAssetList
-        restMegaAssetMockMvc
-            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(megaAsset.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+        // List endpoint is not exposed under /api/client/assets
+        restMegaAssetMockMvc.perform(get(ENTITY_API_URL + "?sort=id,desc")).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    void getMegaAsset() throws Exception {
-        // Initialize the database
-        insertedMegaAsset = megaAssetRepository.saveAndFlush(megaAsset);
+    void downloadMegaAsset() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "hello".getBytes());
+        MegaAssetDTO uploaded = om.readValue(
+            restMegaAssetMockMvc
+                .perform(multipart(ENTITY_API_URL + "/upload").file(file))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            MegaAssetDTO.class
+        );
+        insertedMegaAsset = megaAssetMapper.toEntity(uploaded);
 
-        // Get the megaAsset
         restMegaAssetMockMvc
-            .perform(get(ENTITY_API_URL_ID, megaAsset.getId()))
+            .perform(get(ENTITY_API_URL_ID, uploaded.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(megaAsset.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.path").value(DEFAULT_PATH))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
+            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("hello.txt")))
+            .andExpect(content().bytes("hello".getBytes()));
+    }
+
+    @Test
+    @Transactional
+    void downloadMegaAssetNotFoundWhenFileMissing() throws Exception {
+        insertedMegaAsset = megaAssetRepository.saveAndFlush(megaAsset);
+        restMegaAssetMockMvc.perform(get(ENTITY_API_URL_ID, megaAsset.getId())).andExpect(status().isNotFound());
     }
 
     @Test
@@ -263,29 +260,17 @@ class MegaAssetResourceIT {
     @Test
     @Transactional
     void putExistingMegaAsset() throws Exception {
-        // Initialize the database
         insertedMegaAsset = megaAssetRepository.saveAndFlush(megaAsset);
-
         long databaseSizeBeforeUpdate = getRepositoryCount();
-
-        // Update the megaAsset
-        MegaAsset updatedMegaAsset = megaAssetRepository.findById(megaAsset.getId()).orElseThrow();
-        // Disconnect from session so that the updates on updatedMegaAsset are not directly saved in db
-        em.detach(updatedMegaAsset);
-        updatedMegaAsset.name(UPDATED_NAME).description(UPDATED_DESCRIPTION).path(UPDATED_PATH).type(UPDATED_TYPE);
-        MegaAssetDTO megaAssetDTO = megaAssetMapper.toDto(updatedMegaAsset);
-
+        MegaAssetDTO megaAssetDTO = megaAssetMapper.toDto(megaAsset);
         restMegaAssetMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, megaAssetDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(om.writeValueAsBytes(megaAssetDTO))
             )
-            .andExpect(status().isOk());
-
-        // Validate the MegaAsset in the database
+            .andExpect(status().isMethodNotAllowed());
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertPersistedMegaAssetToMatchAllProperties(updatedMegaAsset);
     }
 
     @Test
@@ -304,9 +289,8 @@ class MegaAssetResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(om.writeValueAsBytes(megaAssetDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
-        // Validate the MegaAsset in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -326,9 +310,8 @@ class MegaAssetResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(om.writeValueAsBytes(megaAssetDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
-        // Validate the MegaAsset in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -370,15 +353,9 @@ class MegaAssetResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(om.writeValueAsBytes(partialUpdatedMegaAsset))
             )
-            .andExpect(status().isOk());
-
-        // Validate the MegaAsset in the database
+            .andExpect(status().isMethodNotAllowed());
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertMegaAssetUpdatableFieldsEquals(
-            createUpdateProxyForBean(partialUpdatedMegaAsset, megaAsset),
-            getPersistedMegaAsset(megaAsset)
-        );
     }
 
     @Test
@@ -401,12 +378,9 @@ class MegaAssetResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(om.writeValueAsBytes(partialUpdatedMegaAsset))
             )
-            .andExpect(status().isOk());
-
-        // Validate the MegaAsset in the database
+            .andExpect(status().isMethodNotAllowed());
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
-        assertMegaAssetUpdatableFieldsEquals(partialUpdatedMegaAsset, getPersistedMegaAsset(partialUpdatedMegaAsset));
     }
 
     @Test
@@ -425,9 +399,8 @@ class MegaAssetResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(om.writeValueAsBytes(megaAssetDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
-        // Validate the MegaAsset in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
@@ -447,9 +420,8 @@ class MegaAssetResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(om.writeValueAsBytes(megaAssetDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isMethodNotAllowed());
 
-        // Validate the MegaAsset in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
