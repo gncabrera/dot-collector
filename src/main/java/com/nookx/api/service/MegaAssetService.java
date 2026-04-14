@@ -31,12 +31,6 @@ public class MegaAssetService {
         this.megaAssetMapper = megaAssetMapper;
     }
 
-    /**
-     * Save a megaAsset.
-     *
-     * @param megaAssetDTO the entity to save.
-     * @return the persisted entity.
-     */
     public MegaAssetDTO save(MegaAssetDTO megaAssetDTO) {
         LOG.debug("Request to save MegaAsset : {}", megaAssetDTO);
         MegaAsset megaAsset = megaAssetMapper.toEntity(megaAssetDTO);
@@ -44,67 +38,12 @@ public class MegaAssetService {
         return megaAssetMapper.toDto(megaAsset);
     }
 
-    /**
-     * Update a megaAsset.
-     *
-     * @param megaAssetDTO the entity to save.
-     * @return the persisted entity.
-     */
-    public MegaAssetDTO update(MegaAssetDTO megaAssetDTO) {
-        LOG.debug("Request to update MegaAsset : {}", megaAssetDTO);
-        MegaAsset megaAsset = megaAssetMapper.toEntity(megaAssetDTO);
-        megaAsset = megaAssetRepository.save(megaAsset);
-        return megaAssetMapper.toDto(megaAsset);
-    }
-
-    /**
-     * Partially update a megaAsset.
-     *
-     * @param megaAssetDTO the entity to update partially.
-     * @return the persisted entity.
-     */
-    public Optional<MegaAssetDTO> partialUpdate(MegaAssetDTO megaAssetDTO) {
-        LOG.debug("Request to partially update MegaAsset : {}", megaAssetDTO);
-
-        return megaAssetRepository
-            .findById(megaAssetDTO.getId())
-            .map(existingMegaAsset -> {
-                megaAssetMapper.partialUpdate(existingMegaAsset, megaAssetDTO);
-
-                return existingMegaAsset;
-            })
-            .map(megaAssetRepository::save)
-            .map(megaAssetMapper::toDto);
-    }
-
-    /**
-     * Get all the megaAssets.
-     *
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<MegaAssetDTO> findAll() {
-        LOG.debug("Request to get all MegaAssets");
-        return megaAssetRepository.findAll().stream().map(megaAssetMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
-     * Get one megaAsset by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Transactional(readOnly = true)
     public Optional<MegaAssetDTO> findOne(Long id) {
         LOG.debug("Request to get MegaAsset : {}", id);
         return megaAssetRepository.findById(id).map(megaAssetMapper::toDto);
     }
 
-    /**
-     * Delete the megaAsset by id.
-     *
-     * @param id the id of the entity.
-     */
     public void delete(Long id) {
         LOG.debug("Request to delete MegaAsset : {}", id);
         megaAssetRepository.deleteById(id);
