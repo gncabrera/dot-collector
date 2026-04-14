@@ -1,22 +1,20 @@
 package com.nookx.api.web.rest;
 
-import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.repository.MegaAssetRepository;
 import com.nookx.api.service.MegaAssetService;
 import com.nookx.api.service.dto.MegaAssetDTO;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -24,7 +22,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link MegaAsset}.
  */
 @RestController
-@RequestMapping("/api/mega-assets")
+@RequestMapping("/api/client/assets")
 public class MegaAssetResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(MegaAssetResource.class);
@@ -50,7 +48,19 @@ public class MegaAssetResource {
             throw new BadRequestAlertException("A new megaAsset cannot already have an ID", ENTITY_NAME, "idexists");
         }
         megaAssetDTO = megaAssetService.save(megaAssetDTO);
-        return ResponseEntity.created(new URI("/api/mega-assets/" + megaAssetDTO.getId()))
+        return ResponseEntity.created(new URI("/api/assets/" + megaAssetDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, megaAssetDTO.getId().toString()))
+            .body(megaAssetDTO);
+    }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MegaAssetDTO> uploadMegaAsset(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(value = "description", required = false) String description
+    ) throws URISyntaxException {
+        LOG.debug("REST request to upload MegaAsset file");
+        MegaAssetDTO megaAssetDTO = megaAssetService.upload(file, description);
+        return ResponseEntity.created(new URI("/api/assets/" + megaAssetDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, megaAssetDTO.getId().toString()))
             .body(megaAssetDTO);
     }

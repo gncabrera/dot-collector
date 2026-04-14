@@ -90,6 +90,10 @@ management:
       application: ${spring.application.name}
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 105MB
   application:
     name: Nookx
   docker:
@@ -226,4 +230,6 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  mega-asset:
+    upload-directory: ${java.io.tmpdir}/nookx-mega-assets

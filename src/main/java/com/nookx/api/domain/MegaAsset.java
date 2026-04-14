@@ -42,6 +42,12 @@ public class MegaAsset implements Serializable {
     @Column(name = "type")
     private AssetType type;
 
+    @Column(name = "content_type", length = 255)
+    private String contentType;
+
+    @Column(name = "size_bytes")
+    private Long sizeBytes;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public MegaAsset id(Long id) {
@@ -66,6 +72,16 @@ public class MegaAsset implements Serializable {
 
     public MegaAsset type(AssetType type) {
         this.setType(type);
+        return this;
+    }
+
+    public MegaAsset contentType(String contentType) {
+        this.setContentType(contentType);
+        return this;
+    }
+
+    public MegaAsset sizeBytes(Long sizeBytes) {
+        this.setSizeBytes(sizeBytes);
         return this;
     }
 
@@ -97,6 +113,8 @@ public class MegaAsset implements Serializable {
             ", description='" + getDescription() + "'" +
             ", path='" + getPath() + "'" +
             ", type='" + getType() + "'" +
+            ", contentType='" + getContentType() + "'" +
+            ", sizeBytes=" + getSizeBytes() +
             "}";
     }
 }

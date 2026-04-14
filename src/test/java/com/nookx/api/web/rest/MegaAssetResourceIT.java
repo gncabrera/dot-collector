@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +128,41 @@ class MegaAssetResourceIT {
         assertMegaAssetUpdatableFieldsEquals(returnedMegaAsset, getPersistedMegaAsset(returnedMegaAsset));
 
         insertedMegaAsset = returnedMegaAsset;
+    }
+
+    @Test
+    @Transactional
+    void uploadMegaAsset() throws Exception {
+        long databaseSizeBeforeCreate = getRepositoryCount();
+        MockMultipartFile file = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "hello".getBytes());
+        MegaAssetDTO returnedMegaAssetDTO = om.readValue(
+            restMegaAssetMockMvc
+                .perform(multipart(ENTITY_API_URL + "/upload").file(file).param("description", "my doc"))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            MegaAssetDTO.class
+        );
+
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        assertThat(returnedMegaAssetDTO.getName()).isEqualTo("hello.txt");
+        assertThat(returnedMegaAssetDTO.getDescription()).isEqualTo("my doc");
+        assertThat(returnedMegaAssetDTO.getType()).isEqualTo(AssetType.FILE);
+        assertThat(returnedMegaAssetDTO.getContentType()).isEqualTo(MediaType.TEXT_PLAIN_VALUE);
+        assertThat(returnedMegaAssetDTO.getSizeBytes()).isEqualTo(5L);
+        assertThat(returnedMegaAssetDTO.getPath()).endsWith(".txt");
+
+        insertedMegaAsset = megaAssetMapper.toEntity(returnedMegaAssetDTO);
+    }
+
+    @Test
+    @Transactional
+    void uploadMegaAssetEmptyFile() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        MockMultipartFile file = new MockMultipartFile("file", "empty.txt", MediaType.TEXT_PLAIN_VALUE, new byte[0]);
+        restMegaAssetMockMvc.perform(multipart(ENTITY_API_URL + "/upload").file(file)).andExpect(status().isBadRequest());
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test

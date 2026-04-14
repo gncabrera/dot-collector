@@ -1,6 +1,5 @@
 package com.nookx.api.service.dto;
 
-import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.enumeration.AssetType;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -27,6 +26,10 @@ public class MegaAssetDTO implements Serializable {
     private String path;
 
     private AssetType type;
+
+    private String contentType;
+
+    private Long sizeBytes;
 
     @Override
     public boolean equals(Object o) {
@@ -58,6 +61,8 @@ public class MegaAssetDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", path='" + getPath() + "'" +
             ", type='" + getType() + "'" +
+            ", contentType='" + getContentType() + "'" +
+            ", sizeBytes=" + getSizeBytes() +
             "}";
     }
 }

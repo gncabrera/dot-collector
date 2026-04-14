@@ -49,6 +49,8 @@ public class MegaAssetAsserts {
             .satisfies(a -> assertThat(a.getName()).as("check name").isEqualTo(expected.getName()))
             .satisfies(a -> assertThat(a.getDescription()).as("check description").isEqualTo(expected.getDescription()))
             .satisfies(a -> assertThat(a.getPath()).as("check path").isEqualTo(expected.getPath()))
-            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()));
+            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()))
+            .satisfies(a -> assertThat(a.getContentType()).as("check contentType").isEqualTo(expected.getContentType()))
+            .satisfies(a -> assertThat(a.getSizeBytes()).as("check sizeBytes").isEqualTo(expected.getSizeBytes()));
     }
 }

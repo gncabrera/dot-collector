@@ -10,11 +10,11 @@ public class MegaAssetTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static MegaAsset getMegaAssetSample1() {
-        return new MegaAsset().id(1L).name("name1").description("description1").path("path1");
+        return new MegaAsset().id(1L).name("name1").description("description1").path("path1").contentType("text/plain").sizeBytes(1L);
     }
 
     public static MegaAsset getMegaAssetSample2() {
-        return new MegaAsset().id(2L).name("name2").description("description2").path("path2");
+        return new MegaAsset().id(2L).name("name2").description("description2").path("path2").contentType("image/png").sizeBytes(2L);
     }
 
     public static MegaAsset getMegaAssetRandomSampleGenerator() {
@@ -22,6 +22,8 @@ public class MegaAssetTestSamples {
             .id(longCount.incrementAndGet())
             .name(UUID.randomUUID().toString())
             .description(UUID.randomUUID().toString())
-            .path(UUID.randomUUID().toString());
+            .path(UUID.randomUUID().toString())
+            .contentType("application/octet-stream")
+            .sizeBytes(random.nextLong());
     }
 }

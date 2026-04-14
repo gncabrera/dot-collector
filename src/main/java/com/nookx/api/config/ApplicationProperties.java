@@ -13,10 +13,16 @@ public class ApplicationProperties {
 
     private final Liquibase liquibase = new Liquibase();
 
+    private final MegaAsset megaAsset = new MegaAsset();
+
     // jhipster-needle-application-properties-property
 
     public Liquibase getLiquibase() {
         return liquibase;
+    }
+
+    public MegaAsset getMegaAsset() {
+        return megaAsset;
     }
 
     // jhipster-needle-application-properties-property-getter
@@ -31,6 +37,19 @@ public class ApplicationProperties {
 
         public void setAsyncStart(Boolean asyncStart) {
             this.asyncStart = asyncStart;
+        }
+    }
+
+    public static class MegaAsset {
+
+        private String uploadDirectory = System.getProperty("java.io.tmpdir") + "/nookx-mega-assets";
+
+        public String getUploadDirectory() {
+            return uploadDirectory;
+        }
+
+        public void setUploadDirectory(String uploadDirectory) {
+            this.uploadDirectory = uploadDirectory;
         }
     }
 
