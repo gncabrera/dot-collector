@@ -61,7 +61,6 @@ public class ProfileCollectionAsserts {
     public static void assertProfileCollectionUpdatableRelationshipsEquals(ProfileCollection expected, ProfileCollection actual) {
         assertThat(actual)
             .as("Verify ProfileCollection relationships")
-            .satisfies(a -> assertThat(a.getProfile()).as("check profile").isEqualTo(expected.getProfile()))
-            .satisfies(a -> assertThat(a.getImage()).as("check image").isEqualTo(expected.getImage()));
+            .satisfies(a -> assertThat(a.getProfile()).as("check profile").isEqualTo(expected.getProfile()));
     }
 }

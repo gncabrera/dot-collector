@@ -24,8 +24,6 @@ public class ProfileCollectionDTO implements Serializable {
 
     private ProfileDTO profile;
 
-    private MegaAssetDTO image;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -56,7 +54,6 @@ public class ProfileCollectionDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", isPublic='" + getIsPublic() + "'" +
             ", profile=" + getProfile() +
-            ", image=" + getImage() +
             "}";
     }
 }
