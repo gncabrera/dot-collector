@@ -62,22 +62,27 @@ public class ClientCollectionService {
             .map(this::toClientCollectionLiteDTO)
             .toList();
         for (ClientCollectionLiteDTO dto : collections) {
-            Optional<ProfileCollectionImage> byProfileCollectionId = profileCollectionImageRepository.findByProfileCollection_Id(
-                dto.getId()
-            );
-            if (byProfileCollectionId.isPresent()) {
-                ProfileCollectionImage profileCollectionImage = byProfileCollectionId.orElse(null);
-                String url =
-                    applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/" + profileCollectionImage.getAsset().getUuid();
-                ClientImageDTO imageDTO = new ClientImageDTO();
-                imageDTO.setOriginal(url.replace("_SIZE_", MegaAssetImageSize.ORIGINAL.suffix()));
-                imageDTO.setThumb(url.replace("_SIZE_", MegaAssetImageSize.THUMB.suffix()));
-                imageDTO.setMedium(url.replace("_SIZE_", MegaAssetImageSize.MEDIUM.suffix()));
-                dto.setImage(imageDTO);
-            }
+            Long collectionId = dto.getId();
+            ClientImageDTO clientImageDto = getClientImageDto(collectionId);
+            dto.setImage(clientImageDto);
         }
 
         return collections;
+    }
+
+    private ClientImageDTO getClientImageDto(Long collectionId) {
+        Optional<ProfileCollectionImage> byProfileCollectionId = profileCollectionImageRepository.findByProfileCollection_Id(collectionId);
+        if (byProfileCollectionId.isPresent()) {
+            ProfileCollectionImage profileCollectionImage = byProfileCollectionId.orElse(null);
+            String url =
+                applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/" + profileCollectionImage.getAsset().getUuid();
+            ClientImageDTO imageDTO = new ClientImageDTO();
+            imageDTO.setOriginal(url.replace("_SIZE_", MegaAssetImageSize.ORIGINAL.suffix()));
+            imageDTO.setThumb(url.replace("_SIZE_", MegaAssetImageSize.THUMB.suffix()));
+            imageDTO.setMedium(url.replace("_SIZE_", MegaAssetImageSize.MEDIUM.suffix()));
+            return imageDTO;
+        }
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -160,6 +165,10 @@ public class ClientCollectionService {
             communityDTO.setClone(clone);
         }
         dto.setCommunity(communityDTO);
+
+        ClientImageDTO clientImageDto = getClientImageDto(profileCollection.getId());
+        dto.setImage(clientImageDto);
+
         return dto;
     }
 

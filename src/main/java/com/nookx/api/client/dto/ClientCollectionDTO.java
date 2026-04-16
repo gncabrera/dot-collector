@@ -15,4 +15,5 @@ public class ClientCollectionDTO {
     private String createdBy;
     private ClientCollectionCommunityDTO community;
     private ClientCollectionSettingsDTO settings;
+    private ClientImageDTO image;
 }
