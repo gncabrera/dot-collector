@@ -40,22 +40,20 @@ public class ProfileCollectionAssetUploadLinkHandler implements AssetUploadLinkH
     }
 
     @Override
-    public void assertCanUpload(Long entityId) {
+    public boolean canUpload(Long entityId) {
         ProfileCollection collection = profileCollectionRepository
             .findById(entityId)
             .orElseThrow(() -> new BadRequestAlertException("ProfileCollection not found", ENTITY_NAME, "idnotfound"));
 
         if (SecurityUtils.currentUserIsAdmin()) {
-            return;
+            return true;
         }
 
         User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new AccessDeniedException("Not authenticated"));
         if (collection.getProfile() == null || collection.getProfile().getUser() == null) {
-            throw new AccessDeniedException("ProfileCollection has no owning user");
+            return false;
         }
-        if (!Objects.equals(collection.getProfile().getUser().getId(), currentUser.getId())) {
-            throw new AccessDeniedException("Not allowed to modify this profile collection");
-        }
+        return Objects.equals(collection.getProfile().getUser().getId(), currentUser.getId());
     }
 
     @Override

@@ -31,13 +31,11 @@ public class MegaPartAssetUploadLinkHandler implements AssetUploadLinkHandler {
     }
 
     @Override
-    public void assertCanUpload(Long entityId) {
+    public boolean canUpload(Long entityId) {
         megaPartRepository
             .findById(entityId)
             .orElseThrow(() -> new BadRequestAlertException("MegaPart not found", ENTITY_NAME, "idnotfound"));
-        if (!SecurityUtils.currentUserIsAdmin()) {
-            throw new AccessDeniedException("Only administrators can attach images to MegaPart");
-        }
+        return SecurityUtils.currentUserIsAdmin();
     }
 
     @Override

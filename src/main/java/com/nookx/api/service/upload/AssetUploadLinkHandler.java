@@ -14,7 +14,7 @@ public interface AssetUploadLinkHandler {
      * Validates that the target entity exists and the current user may attach an asset to it.
      * Invoked before the file is written and before the {@link MegaAsset} row is created.
      */
-    void assertCanUpload(Long entityId);
+    boolean canUpload(Long entityId);
 
     /**
      * Persists the link between the saved asset and the target entity.

@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -85,7 +86,9 @@ public class MegaAssetService {
     ) {
         LOG.debug("Request to upload MegaAsset and link to {} id {}", attachmentType, entityId);
         AssetUploadLinkHandler handler = assetUploadLinkHandlerRegistry.getHandler(attachmentType);
-        handler.assertCanUpload(entityId);
+        if (!handler.canUpload(entityId)) {
+            throw new AccessDeniedException("Access denied");
+        }
 
         MegaAsset megaAsset = null;
         try {

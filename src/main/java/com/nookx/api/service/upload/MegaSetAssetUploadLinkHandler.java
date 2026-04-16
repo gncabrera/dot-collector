@@ -31,13 +31,11 @@ public class MegaSetAssetUploadLinkHandler implements AssetUploadLinkHandler {
     }
 
     @Override
-    public void assertCanUpload(Long entityId) {
+    public boolean canUpload(Long entityId) {
         megaSetRepository
             .findById(entityId)
             .orElseThrow(() -> new BadRequestAlertException("MegaSet not found", ENTITY_NAME, "idnotfound"));
-        if (!SecurityUtils.currentUserIsAdmin()) {
-            throw new AccessDeniedException("Only administrators can attach images to MegaSet");
-        }
+        return SecurityUtils.currentUserIsAdmin();
     }
 
     @Override
