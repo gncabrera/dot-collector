@@ -56,7 +56,6 @@ public class ProfileService {
     public ProfileDTO save(ProfileDTO profileDTO) {
         LOG.debug("Request to save Profile : {}", profileDTO);
         Profile profile = profileMapper.toEntity(profileDTO);
-        syncProfileInterests(profile, profileDTO);
         profile = profileRepository.save(profile);
         return profileMapper.toDto(profile);
     }
@@ -70,7 +69,6 @@ public class ProfileService {
     public ProfileDTO update(ProfileDTO profileDTO) {
         LOG.debug("Request to update Profile : {}", profileDTO);
         Profile profile = profileMapper.toEntity(profileDTO);
-        syncProfileInterests(profile, profileDTO);
         profile = profileRepository.save(profile);
         return profileMapper.toDto(profile);
     }
@@ -88,10 +86,6 @@ public class ProfileService {
             .findById(profileDTO.getId())
             .map(existingProfile -> {
                 profileMapper.partialUpdate(existingProfile, profileDTO);
-                if (profileDTO.getInterests() != null) {
-                    syncProfileInterests(existingProfile, profileDTO);
-                }
-
                 return existingProfile;
             })
             .map(profileRepository::save)
@@ -140,22 +134,5 @@ public class ProfileService {
                     .orElseThrow(() -> new RuntimeException("Profile for user " + user + " not found"))
             )
             .orElse(null);
-    }
-
-    private void syncProfileInterests(Profile profile, ProfileDTO dto) {
-        if (dto.getInterests() == null) {
-            return;
-        }
-        profile.getProfileInterests().clear();
-        Set<Long> seen = new HashSet<>();
-        for (InterestDTO interestDTO : dto.getInterests()) {
-            if (interestDTO == null || interestDTO.getId() == null || !seen.add(interestDTO.getId())) {
-                continue;
-            }
-            ProfileInterest link = new ProfileInterest();
-            link.setProfile(profile);
-            link.setInterest(interestRepository.getReferenceById(interestDTO.getId()));
-            profile.getProfileInterests().add(link);
-        }
     }
 }

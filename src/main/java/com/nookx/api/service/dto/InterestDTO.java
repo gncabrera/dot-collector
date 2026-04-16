@@ -22,6 +22,13 @@ public class InterestDTO implements Serializable {
 
     private String description;
 
+    private boolean isPublic;
+
+    private boolean isSystem;
+
+    @NotNull
+    private Integer order;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -50,6 +57,9 @@ public class InterestDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", isPublic=" + isPublic() +
+            ", isSystem=" + isSystem() +
+            ", order=" + getOrder() +
             "}";
     }
 }

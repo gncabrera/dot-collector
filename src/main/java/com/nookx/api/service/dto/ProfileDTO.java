@@ -24,8 +24,6 @@ public class ProfileDTO implements Serializable {
 
     private UserDTO user;
 
-    private Set<InterestDTO> interests = new HashSet<>();
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,8 +33,15 @@ public class Interest implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "interest")
-    private Set<ProfileInterest> profileInterests = new HashSet<>();
+    @Column(name = "is_public", nullable = false)
+    private boolean isPublic;
+
+    @Column(name = "is_system", nullable = false)
+    private boolean isSystem;
+
+    @NotNull
+    @Column(name = "sort_order", nullable = false)
+    private Integer order;
 
     public Interest id(Long id) {
         this.setId(id);
@@ -50,6 +55,11 @@ public class Interest implements Serializable {
 
     public Interest description(String description) {
         this.setDescription(description);
+        return this;
+    }
+
+    public Interest order(Integer order) {
+        this.setOrder(order);
         return this;
     }
 
@@ -76,6 +86,9 @@ public class Interest implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", isPublic=" + isPublic() +
+            ", isSystem=" + isSystem() +
+            ", order=" + getOrder() +
             "}";
     }
 }

@@ -17,7 +17,31 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="is_public" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_system" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="sort_order" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="20260416120000-0-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/interest.csv"
+                  separator=";"
+                  tableName="interest"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="description" type="string"/>
+            <column name="is_public" type="boolean"/>
+            <column name="is_system" type="boolean"/>
+            <column name="sort_order" type="numeric"/>
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

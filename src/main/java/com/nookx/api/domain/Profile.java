@@ -38,12 +38,6 @@ public class Profile implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties(value = { "profile" }, allowSetters = true)
-    private Set<ProfileInterest> profileInterests = new HashSet<>();
-
-    // jhipster-needle-entity-add-field - JHipster will add fields here
-
     public Profile id(Long id) {
         this.setId(id);
         return this;
