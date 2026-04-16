@@ -14,4 +14,5 @@ public class ClientCollectionLiteDTO {
     private List<String> sets;
     private String createdBy;
     private ClientCollectionCommunityDTO community;
+    private ClientImageDTO image;
 }

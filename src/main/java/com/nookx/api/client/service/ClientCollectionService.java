@@ -2,11 +2,15 @@ package com.nookx.api.client.service;
 
 import com.nookx.api.client.dto.*;
 import com.nookx.api.client.dto.*;
+import com.nookx.api.config.ApplicationProperties;
 import com.nookx.api.domain.CloneInformation;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
+import com.nookx.api.domain.ProfileCollectionImage;
+import com.nookx.api.domain.enumeration.MegaAssetImageSize;
 import com.nookx.api.repository.CloneInformationRepository;
 import com.nookx.api.repository.CurrencyRepository;
+import com.nookx.api.repository.ProfileCollectionImageRepository;
 import com.nookx.api.repository.ProfileCollectionRepository;
 import com.nookx.api.service.ProfileCollectionService;
 import com.nookx.api.service.ProfileService;
@@ -27,6 +31,8 @@ public class ClientCollectionService {
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
     private final CloneInformationRepository cloneInformationRepository;
+    private final ProfileCollectionImageRepository profileCollectionImageRepository;
+    private final ApplicationProperties applicationProperties;
 
     public ClientCollectionService(
         ProfileService profileService,
@@ -34,7 +40,9 @@ public class ClientCollectionService {
         ProfileCollectionRepository profileCollectionRepository,
         CurrencyRepository currencyRepository,
         CurrencyMapper currencyMapper,
-        CloneInformationRepository cloneInformationRepository
+        CloneInformationRepository cloneInformationRepository,
+        ProfileCollectionImageRepository profileCollectionImageRepository,
+        ApplicationProperties applicationProperties
     ) {
         this.profileService = profileService;
         this.profileCollectionService = profileCollectionService;
@@ -42,11 +50,34 @@ public class ClientCollectionService {
         this.currencyRepository = currencyRepository;
         this.currencyMapper = currencyMapper;
         this.cloneInformationRepository = cloneInformationRepository;
+        this.profileCollectionImageRepository = profileCollectionImageRepository;
+        this.applicationProperties = applicationProperties;
     }
 
     @Transactional(readOnly = true)
     public List<ClientCollectionLiteDTO> getUserCollections() {
-        return profileCollectionRepository.findAll().stream().map(this::toClientCollectionLiteDTO).toList();
+        List<ClientCollectionLiteDTO> collections = profileCollectionRepository
+            .findAll()
+            .stream()
+            .map(this::toClientCollectionLiteDTO)
+            .toList();
+        for (ClientCollectionLiteDTO dto : collections) {
+            Optional<ProfileCollectionImage> byProfileCollectionId = profileCollectionImageRepository.findByProfileCollection_Id(
+                dto.getId()
+            );
+            if (byProfileCollectionId.isPresent()) {
+                ProfileCollectionImage profileCollectionImage = byProfileCollectionId.orElse(null);
+                String url =
+                    applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/c2ba304b-f22f-45d1-8d63-cfa55bbfde61.jpg";
+                ClientImageDTO imageDTO = new ClientImageDTO();
+                imageDTO.setOriginal(url.replace("_SIZE_", MegaAssetImageSize.ORIGINAL.suffix()));
+                imageDTO.setThumb(url.replace("_SIZE_", MegaAssetImageSize.THUMB.suffix()));
+                imageDTO.setMedium(url.replace("_SIZE_", MegaAssetImageSize.MEDIUM.suffix()));
+                dto.setImage(imageDTO);
+            }
+        }
+
+        return collections;
     }
 
     @Transactional(readOnly = true)

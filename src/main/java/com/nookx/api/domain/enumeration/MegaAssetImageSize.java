@@ -34,10 +34,11 @@ public enum MegaAssetImageSize {
      * Suffix for variant filenames, e.g. {@code _thumb}; empty for {@link #ORIGINAL}.
      */
     public String filenameSuffix() {
-        if (this == ORIGINAL) {
-            return "";
-        }
-        return "_" + name().toLowerCase(Locale.ROOT);
+        return "_" + suffix();
+    }
+
+    public String suffix() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static MegaAssetImageSize fromApiValue(String raw) {

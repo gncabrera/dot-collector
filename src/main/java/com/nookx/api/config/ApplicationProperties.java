@@ -11,6 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
 
+    private String baseUrl = "sarasa.update.me";
+
     private final Liquibase liquibase = new Liquibase();
 
     private final MegaAsset megaAsset = new MegaAsset();
@@ -23,6 +25,14 @@ public class ApplicationProperties {
 
     public MegaAsset getMegaAsset() {
         return megaAsset;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     // jhipster-needle-application-properties-property-getter

@@ -109,5 +109,6 @@ jhipster:
 # ===================================================================
 
 application:
+  base-url: 'https://api.nookx.app'
   mega-asset:
     upload-directory: /data/assets
