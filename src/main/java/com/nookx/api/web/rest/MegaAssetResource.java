@@ -1,15 +1,14 @@
 package com.nookx.api.web.rest;
 
-import com.nookx.api.domain.User;
-import com.nookx.api.repository.MegaAssetRepository;
+import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.service.MegaAssetService;
-import com.nookx.api.service.UserService;
 import com.nookx.api.service.dto.MegaAssetDTO;
+import com.nookx.api.service.upload.AssetUploadLinkContext;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tech.jhipster.web.util.HeaderUtil;
 
 /**
- * REST controller for managing {@link MegaAsset}.
+ * REST controller for managing {@link com.nookx.api.domain.MegaAsset}.
  */
 @RestController
 @RequestMapping("/api/client/assets")
@@ -39,25 +38,37 @@ public class MegaAssetResource {
 
     private final MegaAssetService megaAssetService;
 
-    private final MegaAssetRepository megaAssetRepository;
-
-    private final UserService userService;
-
-    public MegaAssetResource(MegaAssetService megaAssetService, MegaAssetRepository megaAssetRepository, UserService userService) {
+    public MegaAssetResource(MegaAssetService megaAssetService) {
         this.megaAssetService = megaAssetService;
-        this.megaAssetRepository = megaAssetRepository;
-        this.userService = userService;
     }
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<MegaAssetDTO> uploadMegaAsset(
+    @PostMapping(value = "/upload/{type}/{entityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MegaAssetDTO> uploadMegaAssetForTarget(
+        @PathVariable("type") String type,
+        @PathVariable("entityId") Long entityId,
         @RequestParam("file") MultipartFile file,
         @RequestParam(value = "description", required = false) String description,
-        @RequestParam(value = "isPublic", required = false, defaultValue = "false") boolean isPublic
+        @RequestParam(value = "isPublic", required = false, defaultValue = "false") boolean isPublic,
+        @RequestParam(value = "sortOrder", required = false) Integer sortOrder,
+        @RequestParam(value = "label", required = false) String label,
+        @RequestParam(value = "isPrimary", required = false) Boolean isPrimary
     ) throws URISyntaxException {
-        LOG.debug("REST request to upload MegaAsset file");
-
-        MegaAssetDTO megaAssetDTO = megaAssetService.upload(file, description, isPublic);
+        LOG.debug("REST request to upload MegaAsset file for target type {} entityId {}", type, entityId);
+        AttachmentType attachmentType;
+        try {
+            attachmentType = AttachmentType.valueOf(type.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestAlertException("Unknown attachment type: " + type, ENTITY_NAME, "invalidattachmenttype");
+        }
+        AssetUploadLinkContext linkContext = new AssetUploadLinkContext(sortOrder, label, isPrimary);
+        MegaAssetDTO megaAssetDTO = megaAssetService.uploadAndLinkToEntity(
+            attachmentType,
+            entityId,
+            file,
+            description,
+            isPublic,
+            linkContext
+        );
         return ResponseEntity.created(new URI("/api/assets/" + megaAssetDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, megaAssetDTO.getId().toString()))
             .body(megaAssetDTO);

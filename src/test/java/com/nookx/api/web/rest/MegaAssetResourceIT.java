@@ -9,8 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nookx.api.IntegrationTest;
 import com.nookx.api.domain.MegaAsset;
+import com.nookx.api.domain.MegaPart;
 import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.repository.MegaAssetRepository;
+import com.nookx.api.repository.MegaPartImageRepository;
+import com.nookx.api.repository.MegaPartRepository;
 import com.nookx.api.repository.UserRepository;
 import com.nookx.api.service.dto.MegaAssetDTO;
 import com.nookx.api.service.mapper.MegaAssetMapper;
@@ -33,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(username = "admin", roles = { "ADMIN", "USER" })
 class MegaAssetResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
@@ -69,11 +72,19 @@ class MegaAssetResourceIT {
     private UserRepository userRepository;
 
     @Autowired
+    private MegaPartRepository megaPartRepository;
+
+    @Autowired
+    private MegaPartImageRepository megaPartImageRepository;
+
+    @Autowired
     private MockMvc restMegaAssetMockMvc;
 
     private MegaAsset megaAsset;
 
     private MegaAsset insertedMegaAsset;
+
+    private Long megaPartId;
 
     /**
      * Create an entity for this test.
@@ -98,13 +109,22 @@ class MegaAssetResourceIT {
     @BeforeEach
     void initTest() {
         megaAsset = createEntity();
+        MegaPart part = new MegaPart().partNumber("it-mega-part-" + longCount.incrementAndGet()).nameEN("IT MegaPart");
+        megaPartId = megaPartRepository.saveAndFlush(part).getId();
     }
 
     @AfterEach
     void cleanup() {
+        if (megaPartId != null) {
+            megaPartImageRepository.deleteAll(megaPartImageRepository.findByPart_IdOrderBySortOrderAsc(megaPartId));
+        }
         if (insertedMegaAsset != null) {
             megaAssetRepository.delete(insertedMegaAsset);
             insertedMegaAsset = null;
+        }
+        if (megaPartId != null) {
+            megaPartRepository.deleteById(megaPartId);
+            megaPartId = null;
         }
     }
 
@@ -137,10 +157,16 @@ class MegaAssetResourceIT {
     void uploadMegaAsset() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         MockMultipartFile file = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "hello".getBytes());
-        long userId = userRepository.findOneByLogin("user").orElseThrow().getId();
+        long userId = userRepository.findOneByLogin("admin").orElseThrow().getId();
         MegaAssetDTO returnedMegaAssetDTO = om.readValue(
             restMegaAssetMockMvc
-                .perform(multipart(ENTITY_API_URL + "/upload").file(file).param("description", "my doc").param("isPublic", "true"))
+                .perform(
+                    multipart(ENTITY_API_URL + "/upload/MEGA_PART")
+                        .file(file)
+                        .param("entityId", String.valueOf(megaPartId))
+                        .param("description", "my doc")
+                        .param("isPublic", "true")
+                )
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
@@ -167,7 +193,7 @@ class MegaAssetResourceIT {
         MockMultipartFile file = new MockMultipartFile("file", "x.txt", MediaType.TEXT_PLAIN_VALUE, "x".getBytes());
         MegaAssetDTO dto = om.readValue(
             restMegaAssetMockMvc
-                .perform(multipart(ENTITY_API_URL + "/upload").file(file))
+                .perform(multipart(ENTITY_API_URL + "/upload/MEGA_PART").file(file).param("entityId", String.valueOf(megaPartId)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
@@ -183,7 +209,9 @@ class MegaAssetResourceIT {
     void uploadMegaAssetEmptyFile() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         MockMultipartFile file = new MockMultipartFile("file", "empty.txt", MediaType.TEXT_PLAIN_VALUE, new byte[0]);
-        restMegaAssetMockMvc.perform(multipart(ENTITY_API_URL + "/upload").file(file)).andExpect(status().isBadRequest());
+        restMegaAssetMockMvc
+            .perform(multipart(ENTITY_API_URL + "/upload/MEGA_PART").file(file).param("entityId", String.valueOf(megaPartId)))
+            .andExpect(status().isBadRequest());
         assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
@@ -252,7 +280,7 @@ class MegaAssetResourceIT {
         MockMultipartFile file = new MockMultipartFile("file", "hello.txt", MediaType.TEXT_PLAIN_VALUE, "hello".getBytes());
         MegaAssetDTO uploaded = om.readValue(
             restMegaAssetMockMvc
-                .perform(multipart(ENTITY_API_URL + "/upload").file(file))
+                .perform(multipart(ENTITY_API_URL + "/upload/MEGA_PART").file(file).param("entityId", String.valueOf(megaPartId)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()

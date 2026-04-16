@@ -31,14 +31,17 @@ sudo docker compose up -d
 Prompt for one Image
 
 ```
-Add MyEntityImage following the example  @src/main/java/com/nookx/api/domain/ProfileCollection.java with dto, mapper, liquibase migrations, repository
-
-Also add the field MyEntity { MyEntityImage image} so it has only one image
+- Add MyEntityImage following the example  @src/main/java/com/nookx/api/domain/ProfileCollection.java with dto, mapper, liquibase migrations, repository
+- Add the field MyEntity { MyEntityImage image} so it has only one image
+- Create the UploadLinkHandler and add to the AttachmentType
+- Add update anything you deem necessary
 ```
 
 Prompt for multiple Images
 
 ```
-Add MyEntityImage following the example  @src/main/java/com/nookx/api/domain/MegaPartImage.java with dto, mapper, liquibase migrations, repository
+- Add MyEntityImage following the example  @src/main/java/com/nookx/api/domain/MegaPartImage.java with dto, mapper, liquibase migrations, repository
+- Create the UploadLinkHandler and add to the AttachmentType
+- Add update anything you deem necessary
 
 ```

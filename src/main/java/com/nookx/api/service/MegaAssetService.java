@@ -4,10 +4,14 @@ import com.nookx.api.config.ApplicationProperties;
 import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.User;
 import com.nookx.api.domain.enumeration.AssetType;
+import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.repository.MegaAssetRepository;
 import com.nookx.api.security.SecurityUtils;
 import com.nookx.api.service.dto.MegaAssetDTO;
 import com.nookx.api.service.mapper.MegaAssetMapper;
+import com.nookx.api.service.upload.AssetUploadLinkContext;
+import com.nookx.api.service.upload.AssetUploadLinkHandler;
+import com.nookx.api.service.upload.AssetUploadLinkHandlerRegistry;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -45,20 +49,59 @@ public class MegaAssetService {
 
     private final UserService userService;
 
+    private final AssetUploadLinkHandlerRegistry assetUploadLinkHandlerRegistry;
+
     public MegaAssetService(
         MegaAssetRepository megaAssetRepository,
         MegaAssetMapper megaAssetMapper,
         ApplicationProperties applicationProperties,
-        UserService userService
+        UserService userService,
+        AssetUploadLinkHandlerRegistry assetUploadLinkHandlerRegistry
     ) {
         this.megaAssetRepository = megaAssetRepository;
         this.megaAssetMapper = megaAssetMapper;
         this.applicationProperties = applicationProperties;
         this.userService = userService;
+        this.assetUploadLinkHandlerRegistry = assetUploadLinkHandlerRegistry;
     }
 
     public MegaAssetDTO upload(MultipartFile file, String description, boolean isPublic) {
         LOG.debug("Request to upload MegaAsset file");
+        MegaAsset megaAsset = persistUploadedFile(file, description, isPublic);
+        return megaAssetMapper.toDto(megaAsset);
+    }
+
+    /**
+     * Stores the file, persists {@link MegaAsset}, and links it to the target entity in one transaction.
+     * If linking fails after the file was written, the asset row and file on disk are removed.
+     */
+    public MegaAssetDTO uploadAndLinkToEntity(
+        AttachmentType attachmentType,
+        Long entityId,
+        MultipartFile file,
+        String description,
+        boolean isPublic,
+        AssetUploadLinkContext linkContext
+    ) {
+        LOG.debug("Request to upload MegaAsset and link to {} id {}", attachmentType, entityId);
+        AssetUploadLinkHandler handler = assetUploadLinkHandlerRegistry.getHandler(attachmentType);
+        handler.assertCanUpload(entityId);
+
+        MegaAsset megaAsset = null;
+        try {
+            megaAsset = persistUploadedFile(file, description, isPublic);
+            handler.linkMegaAsset(megaAsset, entityId, linkContext);
+            return megaAssetMapper.toDto(megaAsset);
+        } catch (RuntimeException ex) {
+            if (megaAsset != null && megaAsset.getId() != null) {
+                megaAssetRepository.delete(megaAsset);
+                deleteStoredFile(megaAsset);
+            }
+            throw ex;
+        }
+    }
+
+    private MegaAsset persistUploadedFile(MultipartFile file, String description, boolean isPublic) {
         if (file == null || file.isEmpty()) {
             throw new BadRequestAlertException("A file is required", ENTITY_NAME, "filerequired");
         }
@@ -111,8 +154,7 @@ public class MegaAssetService {
             .sizeBytes(file.getSize())
             .uploadedBy(uploadedBy);
         megaAsset.setPublic(isPublic);
-        megaAsset = megaAssetRepository.save(megaAsset);
-        return megaAssetMapper.toDto(megaAsset);
+        return megaAssetRepository.save(megaAsset);
     }
 
     /**
