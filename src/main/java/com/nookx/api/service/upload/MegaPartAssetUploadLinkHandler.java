@@ -3,6 +3,7 @@ package com.nookx.api.service.upload;
 import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.MegaPart;
 import com.nookx.api.domain.MegaPartImage;
+import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.repository.MegaPartImageRepository;
 import com.nookx.api.repository.MegaPartRepository;
@@ -28,6 +29,11 @@ public class MegaPartAssetUploadLinkHandler implements AssetUploadLinkHandler {
     @Override
     public AttachmentType getAttachmentType() {
         return AttachmentType.PARTS;
+    }
+
+    @Override
+    public boolean assetTypeIsValid(AssetType assetType) {
+        return assetType == AssetType.IMAGE;
     }
 
     @Override

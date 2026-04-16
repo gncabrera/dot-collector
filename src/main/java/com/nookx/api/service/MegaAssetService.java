@@ -89,6 +89,10 @@ public class MegaAssetService {
         if (!handler.canUpload(entityId)) {
             throw new AccessDeniedException("Access denied");
         }
+        AssetType assetType = getAssetType(file.getContentType());
+        if (!handler.assetTypeIsValid(assetType)) {
+            throw new BadRequestAlertException("File type not allowed for this attachment", ENTITY_NAME, "invalidassettype");
+        }
 
         MegaAsset megaAsset = null;
         try {
@@ -141,8 +145,7 @@ public class MegaAssetService {
         String displayName = safeName.length() > 255 ? safeName.substring(0, 255) : safeName;
         String relativePath = storedFilename;
         String contentType = file.getContentType(); //TODO: find content-type from file directly
-        AssetType assetType =
-            StringUtils.hasText(contentType) && contentType.toLowerCase().startsWith("image/") ? AssetType.IMAGE : AssetType.FILE;
+        AssetType assetType = getAssetType(contentType);
 
         User uploadedBy = userService
             .getUserWithAuthorities()
@@ -158,6 +161,10 @@ public class MegaAssetService {
             .uploadedBy(uploadedBy);
         megaAsset.setPublic(isPublic);
         return megaAssetRepository.save(megaAsset);
+    }
+
+    private static AssetType getAssetType(String contentType) {
+        return StringUtils.hasText(contentType) && contentType.toLowerCase().startsWith("image/") ? AssetType.IMAGE : AssetType.FILE;
     }
 
     /**

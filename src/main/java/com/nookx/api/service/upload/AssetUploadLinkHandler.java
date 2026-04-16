@@ -1,6 +1,7 @@
 package com.nookx.api.service.upload;
 
 import com.nookx.api.domain.MegaAsset;
+import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.domain.enumeration.AttachmentType;
 
 /**
@@ -15,6 +16,11 @@ public interface AssetUploadLinkHandler {
      * Invoked before the file is written and before the {@link MegaAsset} row is created.
      */
     boolean canUpload(Long entityId);
+
+    /**
+     * Whether an upload classified as {@link AssetType} (e.g. from {@code image/*} content type) is allowed for this attachment.
+     */
+    boolean assetTypeIsValid(AssetType assetType);
 
     /**
      * Persists the link between the saved asset and the target entity.

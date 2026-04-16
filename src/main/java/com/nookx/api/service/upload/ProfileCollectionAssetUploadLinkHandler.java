@@ -4,6 +4,7 @@ import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionImage;
 import com.nookx.api.domain.User;
+import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.repository.ProfileCollectionImageRepository;
 import com.nookx.api.repository.ProfileCollectionRepository;
@@ -37,6 +38,11 @@ public class ProfileCollectionAssetUploadLinkHandler implements AssetUploadLinkH
     @Override
     public AttachmentType getAttachmentType() {
         return AttachmentType.COLLECTIONS;
+    }
+
+    @Override
+    public boolean assetTypeIsValid(AssetType assetType) {
+        return assetType == AssetType.IMAGE;
     }
 
     @Override

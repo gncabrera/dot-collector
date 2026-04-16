@@ -3,6 +3,7 @@ package com.nookx.api.service.upload;
 import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.MegaSet;
 import com.nookx.api.domain.MegaSetImage;
+import com.nookx.api.domain.enumeration.AssetType;
 import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.repository.MegaSetImageRepository;
 import com.nookx.api.repository.MegaSetRepository;
@@ -28,6 +29,11 @@ public class MegaSetAssetUploadLinkHandler implements AssetUploadLinkHandler {
     @Override
     public AttachmentType getAttachmentType() {
         return AttachmentType.SETS;
+    }
+
+    @Override
+    public boolean assetTypeIsValid(AssetType assetType) {
+        return assetType == AssetType.IMAGE;
     }
 
     @Override
