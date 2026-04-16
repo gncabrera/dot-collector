@@ -1,47 +1,41 @@
 package com.nookx.api.service.dto;
 
-import com.nookx.api.domain.ProfileCollection;
+import com.nookx.api.domain.Interest;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * A DTO for the {@link ProfileCollection} entity.
+ * A DTO for the {@link Interest} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class ProfileCollectionDTO implements Serializable {
+public class InterestDTO implements Serializable {
 
     private Long id;
 
-    private String title;
+    @NotNull
+    private String name;
 
     private String description;
-
-    private Boolean isPublic;
-
-    private ProfileDTO profile;
-
-    private InterestDTO interest;
-
-    private ProfileCollectionImageDTO image;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ProfileCollectionDTO)) {
+        if (!(o instanceof InterestDTO)) {
             return false;
         }
 
-        ProfileCollectionDTO profileCollectionDTO = (ProfileCollectionDTO) o;
+        InterestDTO interestDTO = (InterestDTO) o;
         if (this.id == null) {
             return false;
         }
-        return Objects.equals(this.id, profileCollectionDTO.id);
+        return Objects.equals(this.id, interestDTO.id);
     }
 
     @Override
@@ -52,13 +46,10 @@ public class ProfileCollectionDTO implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "ProfileCollectionDTO{" +
+        return "InterestDTO{" +
             "id=" + getId() +
-            ", title='" + getTitle() + "'" +
+            ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", isPublic='" + getIsPublic() + "'" +
-            ", profile=" + getProfile() +
-            ", image=" + getImage() +
             "}";
     }
 }

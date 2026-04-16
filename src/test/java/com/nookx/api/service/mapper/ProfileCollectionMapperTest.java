@@ -12,7 +12,10 @@ class ProfileCollectionMapperTest {
 
     @BeforeEach
     void setUp() {
-        profileCollectionMapper = new ProfileCollectionMapperImpl();
+        profileCollectionMapper = new ProfileCollectionMapperImpl(
+            new ProfileCollectionImageMapperImpl(new MegaAssetMapperImpl(new UserMapper())),
+            new InterestMapperImpl()
+        );
     }
 
     @Test

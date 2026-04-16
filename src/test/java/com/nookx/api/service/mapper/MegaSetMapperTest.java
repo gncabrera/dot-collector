@@ -12,7 +12,7 @@ class MegaSetMapperTest {
 
     @BeforeEach
     void setUp() {
-        megaSetMapper = new MegaSetMapperImpl();
+        megaSetMapper = new MegaSetMapperImpl(new InterestMapperImpl());
     }
 
     @Test

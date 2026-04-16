@@ -14,6 +14,7 @@
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175642_added_entity_MegaSetType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260416120000_added_entity_Interest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175643_added_entity_MegaSet.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175644_added_entity_MegaSetPartCount.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175645_added_entity_MegaPartType.xml" relativeToChangelogFile="false"/>
@@ -25,6 +26,7 @@
     <include file="config/liquibase/changelog/20260331175651_added_entity_MegaAttribute.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175652_added_entity_MegaAttributeOption.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175653_added_entity_Profile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260416120100_added_entity_ProfileInterest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175654_added_entity_FollowingProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175655_added_entity_BlockedProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175656_added_entity_ProfileCollection.xml" relativeToChangelogFile="false"/>
@@ -48,6 +50,7 @@
     <include file="config/liquibase/changelog/20260331175647_added_entity_constraints_MegaPartSubPartCount.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175652_added_entity_constraints_MegaAttributeOption.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175653_added_entity_constraints_Profile.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260416120101_added_entity_constraints_ProfileInterest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175654_added_entity_constraints_FollowingProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175655_added_entity_constraints_BlockedProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175656_added_entity_constraints_ProfileCollection.xml" relativeToChangelogFile="false"/>

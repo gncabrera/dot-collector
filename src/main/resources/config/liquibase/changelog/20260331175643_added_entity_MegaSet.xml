@@ -56,6 +56,9 @@
             <column name="type_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="interest_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>

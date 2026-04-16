@@ -55,6 +55,10 @@ public class ProfileCollection implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "profileInterests" }, allowSetters = true)
+    private Interest interest;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private CloneInformation cloneInformation;

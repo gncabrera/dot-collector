@@ -1,8 +1,11 @@
 package com.nookx.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +37,10 @@ public class Profile implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User user;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties(value = { "profile" }, allowSetters = true)
+    private Set<ProfileInterest> profileInterests = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

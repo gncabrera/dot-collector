@@ -38,6 +38,9 @@
             <column name="profile_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="interest_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <column name="clone_information_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_profile_collection__clone_information_id" />
             </column>

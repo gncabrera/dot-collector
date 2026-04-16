@@ -5,23 +5,18 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <!--
-        Added the constraints for entity MegaSet.
-    -->
-    <changeSet id="20260331175643-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="type_id"
-                                 baseTableName="mega_set"
-                                 constraintName="fk_mega_set__type_id"
+    <changeSet id="20260416120101-1" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="profile_id"
+                                 baseTableName="profile_interest"
+                                 constraintName="fk_profile_interest__profile_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="mega_set_type"
+                                 referencedTableName="profile"
                                  />
-    </changeSet>
 
-    <changeSet id="20260416120000-ms-interest-fk" author="jhipster">
         <addForeignKeyConstraint baseColumnNames="interest_id"
-                                 baseTableName="mega_set"
-                                 constraintName="fk_mega_set__interest_id"
+                                 baseTableName="profile_interest"
+                                 constraintName="fk_profile_interest__interest_id"
                                  referencedColumnNames="id"
                                  referencedTableName="interest"
                                  />

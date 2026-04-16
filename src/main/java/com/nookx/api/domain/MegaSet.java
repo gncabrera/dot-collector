@@ -81,6 +81,10 @@ public class MegaSet implements Serializable {
     @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
     private MegaSetType type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "profileInterests" }, allowSetters = true)
+    private Interest interest;
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "sets")
     @JsonIgnoreProperties(value = { "collection", "sets" }, allowSetters = true)
     @Setter(AccessLevel.NONE)

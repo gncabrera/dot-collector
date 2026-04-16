@@ -26,4 +26,13 @@
                                  referencedTableName="clone_information"
                                  />
     </changeSet>
+
+    <changeSet id="20260416120000-2" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="interest_id"
+                                 baseTableName="profile_collection"
+                                 constraintName="fk_profile_collection__interest_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="interest"
+                                 />
+    </changeSet>
 </databaseChangeLog>

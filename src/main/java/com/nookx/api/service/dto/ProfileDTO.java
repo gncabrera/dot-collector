@@ -2,7 +2,9 @@ package com.nookx.api.service.dto;
 
 import com.nookx.api.domain.Profile;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +23,8 @@ public class ProfileDTO implements Serializable {
     private String fullName;
 
     private UserDTO user;
+
+    private Set<InterestDTO> interests = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

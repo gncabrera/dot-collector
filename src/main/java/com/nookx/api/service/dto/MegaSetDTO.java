@@ -52,6 +52,8 @@ public class MegaSetDTO implements Serializable {
 
     private MegaSetTypeDTO type;
 
+    private InterestDTO interest;
+
     private Set<ProfileCollectionSetDTO> profileCollectionSets = new HashSet<>();
 
     @Override

@@ -12,7 +12,7 @@ class ProfileMapperTest {
 
     @BeforeEach
     void setUp() {
-        profileMapper = new ProfileMapperImpl();
+        profileMapper = new ProfileMapperImpl(new InterestMapperImpl());
     }
 
     @Test

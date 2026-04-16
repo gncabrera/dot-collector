@@ -1,12 +1,17 @@
 package com.nookx.api.service;
 
 import com.nookx.api.domain.Profile;
+import com.nookx.api.domain.ProfileInterest;
+import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileRepository;
+import com.nookx.api.service.dto.InterestDTO;
 import com.nookx.api.service.dto.ProfileDTO;
 import com.nookx.api.service.mapper.ProfileMapper;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +33,18 @@ public class ProfileService {
 
     private final UserService userService;
 
-    public ProfileService(ProfileRepository profileRepository, ProfileMapper profileMapper, UserService userService) {
+    private final InterestRepository interestRepository;
+
+    public ProfileService(
+        ProfileRepository profileRepository,
+        ProfileMapper profileMapper,
+        UserService userService,
+        InterestRepository interestRepository
+    ) {
         this.profileRepository = profileRepository;
         this.profileMapper = profileMapper;
         this.userService = userService;
+        this.interestRepository = interestRepository;
     }
 
     /**
@@ -43,6 +56,7 @@ public class ProfileService {
     public ProfileDTO save(ProfileDTO profileDTO) {
         LOG.debug("Request to save Profile : {}", profileDTO);
         Profile profile = profileMapper.toEntity(profileDTO);
+        syncProfileInterests(profile, profileDTO);
         profile = profileRepository.save(profile);
         return profileMapper.toDto(profile);
     }
@@ -56,6 +70,7 @@ public class ProfileService {
     public ProfileDTO update(ProfileDTO profileDTO) {
         LOG.debug("Request to update Profile : {}", profileDTO);
         Profile profile = profileMapper.toEntity(profileDTO);
+        syncProfileInterests(profile, profileDTO);
         profile = profileRepository.save(profile);
         return profileMapper.toDto(profile);
     }
@@ -73,6 +88,9 @@ public class ProfileService {
             .findById(profileDTO.getId())
             .map(existingProfile -> {
                 profileMapper.partialUpdate(existingProfile, profileDTO);
+                if (profileDTO.getInterests() != null) {
+                    syncProfileInterests(existingProfile, profileDTO);
+                }
 
                 return existingProfile;
             })
@@ -122,5 +140,22 @@ public class ProfileService {
                     .orElseThrow(() -> new RuntimeException("Profile for user " + user + " not found"))
             )
             .orElse(null);
+    }
+
+    private void syncProfileInterests(Profile profile, ProfileDTO dto) {
+        if (dto.getInterests() == null) {
+            return;
+        }
+        profile.getProfileInterests().clear();
+        Set<Long> seen = new HashSet<>();
+        for (InterestDTO interestDTO : dto.getInterests()) {
+            if (interestDTO == null || interestDTO.getId() == null || !seen.add(interestDTO.getId())) {
+                continue;
+            }
+            ProfileInterest link = new ProfileInterest();
+            link.setProfile(profile);
+            link.setInterest(interestRepository.getReferenceById(interestDTO.getId()));
+            profile.getProfileInterests().add(link);
+        }
     }
 }
