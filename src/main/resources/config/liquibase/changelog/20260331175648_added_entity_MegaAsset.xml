@@ -20,8 +20,11 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="path" type="varchar(255)">
-                <constraints nullable="false" />
+            <column name="uuid" type="varchar(36)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_mega_asset__uuid"/>
+            </column>
+            <column name="extension" type="varchar(32)">
+                <constraints nullable="false"/>
             </column>
             <column name="type" type="varchar(255)">
                 <constraints nullable="true" />

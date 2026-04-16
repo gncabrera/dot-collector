@@ -52,7 +52,8 @@ entity MegaPartSubPartCount {
 entity MegaAsset {
   name String required,
   description String,
-  path String required,
+  uuid UUID required unique,
+  extension String required,
   type AssetType
 }
 

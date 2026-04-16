@@ -15,7 +15,12 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "path",
+      "fieldName": "uuid",
+      "fieldType": "UUID",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "extension",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
     },

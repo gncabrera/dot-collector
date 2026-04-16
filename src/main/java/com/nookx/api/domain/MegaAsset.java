@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,8 +36,12 @@ public class MegaAsset implements Serializable {
     private String description;
 
     @NotNull
-    @Column(name = "path", nullable = false)
-    private String path;
+    @Column(name = "uuid", nullable = false, unique = true, length = 36)
+    private String uuid;
+
+    @NotNull
+    @Column(name = "extension", nullable = false, length = 32)
+    private String extension = "";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
@@ -73,8 +78,13 @@ public class MegaAsset implements Serializable {
         return this;
     }
 
-    public MegaAsset path(String path) {
-        this.setPath(path);
+    public MegaAsset uuid(String uuid) {
+        this.setUuid(uuid);
+        return this;
+    }
+
+    public MegaAsset extension(String extension) {
+        this.setExtension(extension);
         return this;
     }
 
@@ -124,7 +134,8 @@ public class MegaAsset implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", path='" + getPath() + "'" +
+            ", uuid=" + getUuid() +
+            ", extension='" + getExtension() + "'" +
             ", type='" + getType() + "'" +
             ", contentType='" + getContentType() + "'" +
             ", sizeBytes=" + getSizeBytes() +

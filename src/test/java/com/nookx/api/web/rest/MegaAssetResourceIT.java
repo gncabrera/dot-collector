@@ -18,6 +18,7 @@ import com.nookx.api.repository.UserRepository;
 import com.nookx.api.service.dto.MegaAssetDTO;
 import com.nookx.api.service.mapper.MegaAssetMapper;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,8 +46,10 @@ class MegaAssetResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PATH = "AAAAAAAAAA";
-    private static final String UPDATED_PATH = "BBBBBBBBBB";
+    private static final UUID DEFAULT_UUID = UUID.fromString("10000000-0000-0000-0000-000000000001");
+    private static final UUID UPDATED_UUID = UUID.fromString("20000000-0000-0000-0000-000000000002");
+    private static final String DEFAULT_EXTENSION = "";
+    private static final String UPDATED_EXTENSION = ".bin";
 
     private static final AssetType DEFAULT_TYPE = AssetType.IMAGE;
     private static final AssetType UPDATED_TYPE = AssetType.FILE;
@@ -93,7 +96,12 @@ class MegaAssetResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static MegaAsset createEntity() {
-        return new MegaAsset().name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION).path(DEFAULT_PATH).type(DEFAULT_TYPE);
+        return new MegaAsset()
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .uuid(DEFAULT_UUID)
+            .extension(DEFAULT_EXTENSION)
+            .type(DEFAULT_TYPE);
     }
 
     /**
@@ -103,7 +111,12 @@ class MegaAssetResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static MegaAsset createUpdatedEntity() {
-        return new MegaAsset().name(UPDATED_NAME).description(UPDATED_DESCRIPTION).path(UPDATED_PATH).type(UPDATED_TYPE);
+        return new MegaAsset()
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .uuid(UPDATED_UUID)
+            .extension(UPDATED_EXTENSION)
+            .type(UPDATED_TYPE);
     }
 
     @BeforeEach
@@ -180,7 +193,7 @@ class MegaAssetResourceIT {
         assertThat(returnedMegaAssetDTO.getType()).isEqualTo(AssetType.FILE);
         assertThat(returnedMegaAssetDTO.getContentType()).isEqualTo(MediaType.TEXT_PLAIN_VALUE);
         assertThat(returnedMegaAssetDTO.getSizeBytes()).isEqualTo(5L);
-        assertThat(returnedMegaAssetDTO.getPath()).endsWith(".txt");
+        assertThat(returnedMegaAssetDTO.getExtension()).isEqualTo(".txt");
         assertThat(returnedMegaAssetDTO.getUploadedById()).isEqualTo(userId);
         assertThat(returnedMegaAssetDTO.isPublic()).isTrue();
 
@@ -252,10 +265,10 @@ class MegaAssetResourceIT {
 
     @Test
     @Transactional
-    void checkPathIsRequired() throws Exception {
+    void checkUuidIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
-        megaAsset.setPath(null);
+        megaAsset.setUuid(null);
 
         // Create the MegaAsset, which fails.
         MegaAssetDTO megaAssetDTO = megaAssetMapper.toDto(megaAsset);
@@ -290,7 +303,7 @@ class MegaAssetResourceIT {
         insertedMegaAsset = megaAssetMapper.toEntity(uploaded);
 
         restMegaAssetMockMvc
-            .perform(get(ENTITY_API_URL_DL, uploaded.getPath()))
+            .perform(get(ENTITY_API_URL_DL, uploaded.getUuid().toString()))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("hello.txt")))
@@ -301,7 +314,7 @@ class MegaAssetResourceIT {
     @Transactional
     void downloadMegaAssetNotFoundWhenFileMissing() throws Exception {
         insertedMegaAsset = megaAssetRepository.saveAndFlush(megaAsset);
-        restMegaAssetMockMvc.perform(get(ENTITY_API_URL_DL, megaAsset.getPath())).andExpect(status().isNotFound());
+        restMegaAssetMockMvc.perform(get(ENTITY_API_URL_DL, megaAsset.getUuid().toString())).andExpect(status().isNotFound());
     }
 
     @Test
@@ -399,7 +412,7 @@ class MegaAssetResourceIT {
         MegaAsset partialUpdatedMegaAsset = new MegaAsset();
         partialUpdatedMegaAsset.setId(megaAsset.getId());
 
-        partialUpdatedMegaAsset.name(UPDATED_NAME).path(UPDATED_PATH).type(UPDATED_TYPE);
+        partialUpdatedMegaAsset.name(UPDATED_NAME).uuid(UPDATED_UUID).extension(UPDATED_EXTENSION).type(UPDATED_TYPE);
 
         restMegaAssetMockMvc
             .perform(
@@ -424,7 +437,12 @@ class MegaAssetResourceIT {
         MegaAsset partialUpdatedMegaAsset = new MegaAsset();
         partialUpdatedMegaAsset.setId(megaAsset.getId());
 
-        partialUpdatedMegaAsset.name(UPDATED_NAME).description(UPDATED_DESCRIPTION).path(UPDATED_PATH).type(UPDATED_TYPE);
+        partialUpdatedMegaAsset
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .uuid(UPDATED_UUID)
+            .extension(UPDATED_EXTENSION)
+            .type(UPDATED_TYPE);
 
         restMegaAssetMockMvc
             .perform(
@@ -507,7 +525,7 @@ class MegaAssetResourceIT {
 
         // Delete the megaAsset
         restMegaAssetMockMvc
-            .perform(delete(ENTITY_API_URL_UUID, megaAsset.getPath()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_UUID, megaAsset.getUuid().toString()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

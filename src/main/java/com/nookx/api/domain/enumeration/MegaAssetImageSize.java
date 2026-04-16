@@ -4,7 +4,7 @@ import java.util.Locale;
 
 /**
  * Stored image variant for {@link com.nookx.api.domain.MegaAsset} images.
- * Files use the pattern {@code {stem}_{nameInLowercase}.{ext}} (e.g. {@code uuid_thumb.jpg}).
+ * Files use the pattern {@code {uuid}{ext}} for the original and {@code {uuid}_{size}{ext}} for variants (e.g. {@code ..._thumb.jpg}).
  */
 public enum MegaAssetImageSize {
     /** 200×200 max (fit inside, aspect ratio preserved, no upscaling). */

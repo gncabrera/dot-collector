@@ -14,7 +14,8 @@ public class MegaAssetTestSamples {
             .id(1L)
             .name("name1")
             .description("description1")
-            .path("path1")
+            .uuid(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+            .extension(".txt")
             .contentType("text/plain")
             .sizeBytes(1L);
         m.setPublic(false);
@@ -22,7 +23,14 @@ public class MegaAssetTestSamples {
     }
 
     public static MegaAsset getMegaAssetSample2() {
-        MegaAsset m = new MegaAsset().id(2L).name("name2").description("description2").path("path2").contentType("image/png").sizeBytes(2L);
+        MegaAsset m = new MegaAsset()
+            .id(2L)
+            .name("name2")
+            .description("description2")
+            .uuid(UUID.fromString("00000000-0000-0000-0000-000000000002"))
+            .extension(".png")
+            .contentType("image/png")
+            .sizeBytes(2L);
         m.setPublic(true);
         return m;
     }
@@ -32,7 +40,8 @@ public class MegaAssetTestSamples {
             .id(longCount.incrementAndGet())
             .name(UUID.randomUUID().toString())
             .description(UUID.randomUUID().toString())
-            .path(UUID.randomUUID().toString())
+            .uuid(UUID.randomUUID())
+            .extension(".bin")
             .contentType("application/octet-stream")
             .sizeBytes(random.nextLong());
         m.setPublic(random.nextBoolean());

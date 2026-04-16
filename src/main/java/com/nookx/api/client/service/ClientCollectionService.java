@@ -68,7 +68,7 @@ public class ClientCollectionService {
             if (byProfileCollectionId.isPresent()) {
                 ProfileCollectionImage profileCollectionImage = byProfileCollectionId.orElse(null);
                 String url =
-                    applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/c2ba304b-f22f-45d1-8d63-cfa55bbfde61.jpg";
+                    applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/" + profileCollectionImage.getAsset().getUuid();
                 ClientImageDTO imageDTO = new ClientImageDTO();
                 imageDTO.setOriginal(url.replace("_SIZE_", MegaAssetImageSize.ORIGINAL.suffix()));
                 imageDTO.setThumb(url.replace("_SIZE_", MegaAssetImageSize.THUMB.suffix()));

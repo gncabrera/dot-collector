@@ -4,6 +4,7 @@ import com.nookx.api.domain.enumeration.AssetType;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,10 @@ public class MegaAssetDTO implements Serializable {
     private String description;
 
     @NotNull
-    private String path;
+    private UUID uuid;
+
+    @NotNull
+    private String extension = "";
 
     private AssetType type;
 
@@ -63,7 +67,8 @@ public class MegaAssetDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", path='" + getPath() + "'" +
+            ", uuid=" + getUuid() +
+            ", extension='" + getExtension() + "'" +
             ", type='" + getType() + "'" +
             ", contentType='" + getContentType() + "'" +
             ", sizeBytes=" + getSizeBytes() +

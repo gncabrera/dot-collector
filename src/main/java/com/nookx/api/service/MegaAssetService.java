@@ -131,17 +131,25 @@ public class MegaAssetService {
             safeName = "upload";
         }
 
-        String extension = "";
+        String extensionPart = "";
         int dot = safeName.lastIndexOf('.');
         if (dot >= 0 && dot < safeName.length() - 1) {
-            extension = safeName.substring(dot);
-            if (extension.length() > 32) {
-                extension = "";
+            extensionPart = safeName.substring(dot);
+            if (extensionPart.length() > 32) {
+                extensionPart = "";
             }
         }
+        extensionPart = extensionPart.toLowerCase(Locale.ROOT);
 
-        String storedFilename = UUID.randomUUID() + extension.toLowerCase();
-        Path baseDir = Path.of(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
+        boolean isImage = getAssetType(file.getContentType()) == AssetType.IMAGE;
+        UUID assetUuid = UUID.randomUUID();
+        String storedFilename = assetUuid + extensionPart;
+
+        if (isImage) {
+            storedFilename = buildImageFilename(assetUuid, extensionPart, MegaAssetImageSize.ORIGINAL);
+        }
+
+        Path baseDir = getBaseDir();
 
         try {
             Files.createDirectories(baseDir);
@@ -150,15 +158,14 @@ public class MegaAssetService {
                 throw new BadRequestAlertException("Invalid file path", ENTITY_NAME, "invalidpath");
             }
             file.transferTo(target.toFile());
-            if (getAssetType(file.getContentType()) == AssetType.IMAGE) {
-                writeImageVariants(baseDir, storedFilename);
+            if (isImage) {
+                writeImageVariants(baseDir, assetUuid, extensionPart);
             }
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to store uploaded file", e);
         }
 
         String displayName = safeName.length() > 255 ? safeName.substring(0, 255) : safeName;
-        String relativePath = storedFilename;
         String contentType = file.getContentType(); //TODO: find content-type from file directly
         AssetType assetType = getAssetType(contentType);
 
@@ -169,7 +176,8 @@ public class MegaAssetService {
         MegaAsset megaAsset = new MegaAsset()
             .name(displayName)
             .description(description)
-            .path(relativePath)
+            .uuid(assetUuid.toString())
+            .extension(extensionPart)
             .type(assetType)
             .contentType(contentType)
             .sizeBytes(file.getSize())
@@ -178,7 +186,15 @@ public class MegaAssetService {
         return megaAssetRepository.save(megaAsset);
     }
 
-    private static AssetType getAssetType(String contentType) {
+    private String buildImageFilename(UUID assetUuid, String extensionPart, MegaAssetImageSize size) {
+        return buildImageFilename(assetUuid.toString(), extensionPart, size);
+    }
+
+    private String buildImageFilename(String assetUuid, String extensionPart, MegaAssetImageSize size) {
+        return assetUuid + size.filenameSuffix() + extensionPart;
+    }
+
+    private AssetType getAssetType(String contentType) {
         return StringUtils.hasText(contentType) && contentType.toLowerCase().startsWith("image/") ? AssetType.IMAGE : AssetType.FILE;
     }
 
@@ -188,7 +204,7 @@ public class MegaAssetService {
     @Transactional(readOnly = true)
     public Optional<MegaAssetFileDownload> findFileForDownload(String uuid) {
         LOG.debug("Request to get MegaAsset file stream : {}", uuid);
-        Optional<MegaAsset> dtoOpt = megaAssetRepository.findByPath(uuid);
+        Optional<MegaAsset> dtoOpt = parseAssetUuid(uuid).flatMap(megaAssetRepository::findByUuid);
         if (dtoOpt.isEmpty()) {
             return Optional.empty();
         }
@@ -198,11 +214,12 @@ public class MegaAssetService {
         if (!canAccessMegaAsset(entity)) {
             return Optional.empty();
         }
-        if (!StringUtils.hasText(entity.getPath())) {
+        String storedName = storedObjectName(entity);
+        if (!StringUtils.hasText(storedName)) {
             return Optional.empty();
         }
-        Path baseDir = Path.of(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
-        Path filePath = baseDir.resolve(entity.getPath()).normalize();
+        Path baseDir = getBaseDir();
+        Path filePath = baseDir.resolve(storedName).normalize();
         if (!filePath.startsWith(baseDir) || !Files.isRegularFile(filePath)) {
             LOG.warn("Asset id {} file not found at {}", uuid, filePath);
             return Optional.empty();
@@ -212,12 +229,12 @@ public class MegaAssetService {
     }
 
     /**
-     * Resolves an image file (original, thumb, or medium) by stored path key and variant.
+     * Resolves an image file (original, thumb, or medium) by asset UUID and variant.
      */
     @Transactional(readOnly = true)
-    public Optional<MegaAssetFileDownload> findImageFileForDownload(String pathKey, MegaAssetImageSize size) {
-        LOG.debug("Request to get MegaAsset image stream : {} size {}", pathKey, size);
-        Optional<MegaAsset> dtoOpt = megaAssetRepository.findByPath(pathKey);
+    public Optional<MegaAssetFileDownload> findImageFileForDownload(String uuid, MegaAssetImageSize size) {
+        LOG.debug("Request to get MegaAsset image stream : {} size {}", uuid, size);
+        Optional<MegaAsset> dtoOpt = parseAssetUuid(uuid).flatMap(megaAssetRepository::findByUuid);
         if (dtoOpt.isEmpty()) {
             return Optional.empty();
         }
@@ -230,23 +247,28 @@ public class MegaAssetService {
         if (entity.getType() != AssetType.IMAGE) {
             return Optional.empty();
         }
-        if (!StringUtils.hasText(entity.getPath())) {
+        String storedName = storedObjectName(entity);
+        if (!StringUtils.hasText(storedName)) {
             return Optional.empty();
         }
 
-        String relative = size == MegaAssetImageSize.ORIGINAL ? entity.getPath() : variantRelativePath(entity.getPath(), size);
-        Path baseDir = Path.of(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
+        String relative = buildImageFilename(entity.getUuid(), entity.getExtension(), size);
+        Path baseDir = getBaseDir();
         Path filePath = baseDir.resolve(relative).normalize();
         if (!filePath.startsWith(baseDir) || !Files.isRegularFile(filePath)) {
-            LOG.warn("Asset {} size {} file not found at {}", pathKey, size, filePath);
+            LOG.warn("Asset {} size {} file not found at {}", uuid, size, filePath);
             return Optional.empty();
         }
         Resource resource = new FileSystemResource(filePath);
         return Optional.of(new MegaAssetFileDownload(megaAssetMapper.toDto(entity), resource));
     }
 
+    private Path getBaseDir() {
+        return Path.of(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
+    }
+
     /**
-     * Deletes a mega asset by stored path key (same value as in {@code /dl/{uuid}}).
+     * Deletes a mega asset by UUID (same value as in {@code /dl/{uuid}}).
      * Removes the row and the file on disk when permitted.
      *
      * @return true if deleted, false if not found or access denied
@@ -254,7 +276,7 @@ public class MegaAssetService {
     @Transactional
     public boolean deleteByUuid(String uuid) {
         LOG.debug("Request to delete MegaAsset : {}", uuid);
-        Optional<MegaAsset> opt = megaAssetRepository.findByPath(uuid);
+        Optional<MegaAsset> opt = parseAssetUuid(uuid).flatMap(megaAssetRepository::findByUuid);
         if (opt.isEmpty()) {
             return false;
         }
@@ -283,15 +305,40 @@ public class MegaAssetService {
     }
 
     private void deleteStoredFile(MegaAsset entity) {
-        if (!StringUtils.hasText(entity.getPath())) {
+        String storedName = storedObjectName(entity);
+        if (!StringUtils.hasText(storedName)) {
             return;
         }
-        Path baseDir = Path.of(applicationProperties.getMegaAsset().getUploadDirectory()).toAbsolutePath().normalize();
-        deleteFileIfUnderBase(baseDir, entity.getPath());
-        if (entity.getType() == AssetType.IMAGE) {
-            deleteFileIfUnderBase(baseDir, variantRelativePath(entity.getPath(), MegaAssetImageSize.THUMB));
-            deleteFileIfUnderBase(baseDir, variantRelativePath(entity.getPath(), MegaAssetImageSize.MEDIUM));
+        boolean isImage = entity.getType() == AssetType.IMAGE;
+
+        if (isImage) {
+            storedName = buildImageFilename(entity.getUuid(), entity.getExtension(), MegaAssetImageSize.ORIGINAL);
         }
+        Path baseDir = getBaseDir();
+        deleteFileIfUnderBase(baseDir, storedName);
+        if (isImage) {
+            deleteFileIfUnderBase(baseDir, buildImageFilename(entity.getUuid(), entity.getExtension(), MegaAssetImageSize.THUMB));
+            deleteFileIfUnderBase(baseDir, buildImageFilename(entity.getUuid(), entity.getExtension(), MegaAssetImageSize.MEDIUM));
+        }
+    }
+
+    private static Optional<String> parseAssetUuid(String raw) {
+        if (!StringUtils.hasText(raw)) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(UUID.fromString(raw.trim()).toString());
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+    }
+
+    private static String storedObjectName(MegaAsset entity) {
+        if (entity.getUuid() == null) {
+            return "";
+        }
+        String ext = entity.getExtension() != null ? entity.getExtension() : "";
+        return entity.getUuid().toString() + ext;
     }
 
     private void deleteFileIfUnderBase(Path baseDir, String relativePath) {
@@ -310,21 +357,10 @@ public class MegaAssetService {
         }
     }
 
-    private static String variantRelativePath(String originalPath, MegaAssetImageSize size) {
-        if (size == MegaAssetImageSize.ORIGINAL) {
-            return originalPath;
-        }
-        int dot = originalPath.lastIndexOf('.');
-        if (dot <= 0) {
-            return originalPath + size.filenameSuffix();
-        }
-        String stem = originalPath.substring(0, dot);
-        String ext = originalPath.substring(dot);
-        return stem + size.filenameSuffix() + ext;
-    }
+    private void writeImageVariants(Path baseDir, UUID assetUuid, String extension) {
+        String originalFilename = buildImageFilename(assetUuid, extension, MegaAssetImageSize.ORIGINAL);
 
-    private void writeImageVariants(Path baseDir, String storedFilename) {
-        Path source = baseDir.resolve(storedFilename).normalize();
+        Path source = baseDir.resolve(originalFilename).normalize();
         if (!source.startsWith(baseDir) || !Files.isRegularFile(source)) {
             LOG.warn("Skipping variants, source missing: {}", source);
             return;
@@ -333,28 +369,30 @@ public class MegaAssetService {
         try {
             src = ImageIO.read(source.toFile());
         } catch (IOException e) {
-            LOG.warn("Could not read image for variants {}: {}", storedFilename, e.getMessage());
+            LOG.warn("Could not read image for variants {}: {}", originalFilename, e.getMessage());
             return;
         }
         if (src == null) {
-            LOG.warn("ImageIO could not decode image for variants: {}", storedFilename);
+            LOG.warn("ImageIO could not decode image for variants: {}", originalFilename);
             return;
         }
         try {
-            writeScaledVariant(src, baseDir, storedFilename, MegaAssetImageSize.THUMB);
+            writeScaledVariant(src, baseDir, assetUuid, extension, MegaAssetImageSize.THUMB);
         } catch (IOException e) {
-            LOG.warn("Failed to write THUMB variant for {}: {}", storedFilename, e.getMessage());
+            LOG.warn("Failed to write THUMB variant for {}: {}", originalFilename, e.getMessage());
         }
         try {
-            writeScaledVariant(src, baseDir, storedFilename, MegaAssetImageSize.MEDIUM);
+            writeScaledVariant(src, baseDir, assetUuid, extension, MegaAssetImageSize.MEDIUM);
         } catch (IOException e) {
-            LOG.warn("Failed to write MEDIUM variant for {}: {}", storedFilename, e.getMessage());
+            LOG.warn("Failed to write MEDIUM variant for {}: {}", originalFilename, e.getMessage());
         }
     }
 
-    private void writeScaledVariant(BufferedImage src, Path baseDir, String storedFilename, MegaAssetImageSize variant) throws IOException {
-        String relative = variantRelativePath(storedFilename, variant);
-        Path dest = baseDir.resolve(relative).normalize();
+    private void writeScaledVariant(BufferedImage src, Path baseDir, UUID assetUuid, String extension, MegaAssetImageSize variant)
+        throws IOException {
+        String variantFilename = buildImageFilename(assetUuid, extension, variant);
+        String originalFilename = buildImageFilename(assetUuid, extension, MegaAssetImageSize.ORIGINAL);
+        Path dest = baseDir.resolve(variantFilename).normalize();
         if (!dest.startsWith(baseDir)) {
             throw new IOException("Invalid variant path");
         }
@@ -370,7 +408,7 @@ public class MegaAssetService {
         }
         BufferedImage scaled = scaleImage(src, dim.width, dim.height);
         try {
-            writeRasterImage(dest, scaled, storedFilename);
+            writeRasterImage(dest, scaled, originalFilename);
         } finally {
             scaled.flush();
         }
