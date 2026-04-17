@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,9 +104,19 @@ public class InterestService {
 
     public InterestDTO update(InterestDTO interestDTO) {
         LOG.debug("Request to update Interest : {}", interestDTO);
-        Interest interest = interestMapper.toEntity(interestDTO);
-        interest = interestRepository.save(interest);
-        return interestMapper.toDto(interest);
+
+        Interest existing = interestRepository
+            .findById(interestDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "interest", "idnotfound"));
+
+        assertInterestUpdatableByCurrentProfile(existing);
+
+        existing.setName(interestDTO.getName());
+        existing.setDescription(interestDTO.getDescription());
+        existing.setPublic(interestDTO.isPublic());
+
+        existing = interestRepository.save(existing);
+        return interestMapper.toDto(existing);
     }
 
     public Optional<InterestDTO> partialUpdate(InterestDTO interestDTO) {
@@ -114,12 +125,23 @@ public class InterestService {
         return interestRepository
             .findById(interestDTO.getId())
             .map(existingInterest -> {
+                assertInterestUpdatableByCurrentProfile(existingInterest);
                 interestMapper.partialUpdate(existingInterest, interestDTO);
 
                 return existingInterest;
             })
             .map(interestRepository::save)
             .map(interestMapper::toDto);
+    }
+
+    private void assertInterestUpdatableByCurrentProfile(Interest interest) {
+        if (interest.isSystem()) {
+            throw new BadRequestAlertException("System interests cannot be updated", "interest", "systeminterest");
+        }
+        Profile currentProfile = profileService.getCurrentProfile();
+        if (!profileInterestRepository.existsByProfile_IdAndInterest_Id(currentProfile.getId(), interest.getId())) {
+            throw new AccessDeniedException("Current profile is not linked to this interest");
+        }
     }
 
     @Transactional(readOnly = true)

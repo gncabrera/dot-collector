@@ -26,7 +26,6 @@ public class InterestDTO implements Serializable {
 
     private boolean isSystem;
 
-    @NotNull
     private Integer order;
 
     @Override
