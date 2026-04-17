@@ -27,4 +27,10 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
             "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId))"
     )
     Optional<Interest> findByIdLinkedToProfileOrSystem(@Param("id") Long id, @Param("profileId") Long profileId);
+
+    @Query(
+        "SELECT i FROM Interest i WHERE i.deleted = false AND EXISTS (" +
+            "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId) ORDER BY i.order"
+    )
+    List<Interest> findAllLinkedToProfile(@Param("profileId") Long profileId);
 }

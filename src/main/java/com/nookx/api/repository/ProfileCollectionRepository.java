@@ -1,6 +1,7 @@
 package com.nookx.api.repository;
 
 import com.nookx.api.domain.ProfileCollection;
+import com.nookx.api.domain.enumeration.ProfileCollectionType;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProfileCollectionRepository extends JpaRepository<ProfileCollection, Long> {}
+public interface ProfileCollectionRepository extends JpaRepository<ProfileCollection, Long> {
+    long countByProfile_IdAndType(Long profileId, ProfileCollectionType type);
+}

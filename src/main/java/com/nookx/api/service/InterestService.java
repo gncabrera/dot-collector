@@ -148,6 +148,17 @@ public class InterestService {
     }
 
     @Transactional(readOnly = true)
+    public List<ClientInterestDTO> findAllForCurrentProfile() {
+        LOG.debug("Request to get Interests linked to current profile only");
+        Long profileId = profileService.getCurrentProfile().getId();
+        return interestRepository
+            .findAllLinkedToProfile(profileId)
+            .stream()
+            .map(interestMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Transactional(readOnly = true)
     public Optional<ClientInterestDTO> findOne(Long id) {
         LOG.debug("Request to get Interest : {} for current profile", id);
         Long profileId = profileService.getCurrentProfile().getId();
