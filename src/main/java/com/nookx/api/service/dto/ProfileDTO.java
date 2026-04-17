@@ -22,6 +22,16 @@ public class ProfileDTO implements Serializable {
 
     private String fullName;
 
+    private String location;
+
+    private String email;
+
+    private String instagram;
+
+    private String facebook;
+
+    private String whatsapp;
+
     private UserDTO user;
 
     @Override
@@ -52,6 +62,11 @@ public class ProfileDTO implements Serializable {
             "id=" + getId() +
             ", username='" + getUsername() + "'" +
             ", fullName='" + getFullName() + "'" +
+            ", location='" + getLocation() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", instagram='" + getInstagram() + "'" +
+            ", facebook='" + getFacebook() + "'" +
+            ", whatsapp='" + getWhatsapp() + "'" +
             ", user=" + getUser() +
             "}";
     }

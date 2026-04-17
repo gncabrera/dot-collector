@@ -126,7 +126,12 @@ enum UIComponent {
 // User Data
 entity Profile {
   username String,
-  fullName String
+  fullName String,
+  location String,
+  email String,
+  instagram String,
+  facebook String,
+  whatsapp String
 }
 
 entity FollowingProfile {

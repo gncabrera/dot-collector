@@ -48,7 +48,12 @@ public class ProfileAsserts {
         assertThat(actual)
             .as("Verify Profile relevant properties")
             .satisfies(a -> assertThat(a.getUsername()).as("check username").isEqualTo(expected.getUsername()))
-            .satisfies(a -> assertThat(a.getFullName()).as("check fullName").isEqualTo(expected.getFullName()));
+            .satisfies(a -> assertThat(a.getFullName()).as("check fullName").isEqualTo(expected.getFullName()))
+            .satisfies(a -> assertThat(a.getLocation()).as("check location").isEqualTo(expected.getLocation()))
+            .satisfies(a -> assertThat(a.getEmail()).as("check email").isEqualTo(expected.getEmail()))
+            .satisfies(a -> assertThat(a.getInstagram()).as("check instagram").isEqualTo(expected.getInstagram()))
+            .satisfies(a -> assertThat(a.getFacebook()).as("check facebook").isEqualTo(expected.getFacebook()))
+            .satisfies(a -> assertThat(a.getWhatsapp()).as("check whatsapp").isEqualTo(expected.getWhatsapp()));
     }
 
     /**

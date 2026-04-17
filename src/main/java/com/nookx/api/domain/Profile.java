@@ -34,6 +34,21 @@ public class Profile implements Serializable {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "instagram")
+    private String instagram;
+
+    @Column(name = "facebook")
+    private String facebook;
+
+    @Column(name = "whatsapp")
+    private String whatsapp;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User user;
@@ -50,6 +65,31 @@ public class Profile implements Serializable {
 
     public Profile fullName(String fullName) {
         this.setFullName(fullName);
+        return this;
+    }
+
+    public Profile location(String location) {
+        this.setLocation(location);
+        return this;
+    }
+
+    public Profile email(String email) {
+        this.setEmail(email);
+        return this;
+    }
+
+    public Profile instagram(String instagram) {
+        this.setInstagram(instagram);
+        return this;
+    }
+
+    public Profile facebook(String facebook) {
+        this.setFacebook(facebook);
+        return this;
+    }
+
+    public Profile whatsapp(String whatsapp) {
+        this.setWhatsapp(whatsapp);
         return this;
     }
 
@@ -84,6 +124,11 @@ public class Profile implements Serializable {
             "id=" + getId() +
             ", username='" + getUsername() + "'" +
             ", fullName='" + getFullName() + "'" +
+            ", location='" + getLocation() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", instagram='" + getInstagram() + "'" +
+            ", facebook='" + getFacebook() + "'" +
+            ", whatsapp='" + getWhatsapp() + "'" +
             "}";
     }
 }

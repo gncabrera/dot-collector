@@ -20,6 +20,21 @@
             <column name="full_name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="location" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="instagram" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="facebook" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="whatsapp" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_profile__user_id" />
             </column>

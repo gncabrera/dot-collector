@@ -41,6 +41,21 @@ class ProfileResourceIT {
     private static final String DEFAULT_FULL_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FULL_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_LOCATION = "AAAAAAAAAA";
+    private static final String UPDATED_LOCATION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
+    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+
+    private static final String DEFAULT_INSTAGRAM = "AAAAAAAAAA";
+    private static final String UPDATED_INSTAGRAM = "BBBBBBBBBB";
+
+    private static final String DEFAULT_FACEBOOK = "AAAAAAAAAA";
+    private static final String UPDATED_FACEBOOK = "BBBBBBBBBB";
+
+    private static final String DEFAULT_WHATSAPP = "AAAAAAAAAA";
+    private static final String UPDATED_WHATSAPP = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/profiles";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -76,7 +91,14 @@ class ProfileResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Profile createEntity() {
-        return new Profile().username(DEFAULT_USERNAME).fullName(DEFAULT_FULL_NAME);
+        return new Profile()
+            .username(DEFAULT_USERNAME)
+            .fullName(DEFAULT_FULL_NAME)
+            .location(DEFAULT_LOCATION)
+            .email(DEFAULT_EMAIL)
+            .instagram(DEFAULT_INSTAGRAM)
+            .facebook(DEFAULT_FACEBOOK)
+            .whatsapp(DEFAULT_WHATSAPP);
     }
 
     /**
@@ -86,7 +108,14 @@ class ProfileResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Profile createUpdatedEntity() {
-        return new Profile().username(UPDATED_USERNAME).fullName(UPDATED_FULL_NAME);
+        return new Profile()
+            .username(UPDATED_USERNAME)
+            .fullName(UPDATED_FULL_NAME)
+            .location(UPDATED_LOCATION)
+            .email(UPDATED_EMAIL)
+            .instagram(UPDATED_INSTAGRAM)
+            .facebook(UPDATED_FACEBOOK)
+            .whatsapp(UPDATED_WHATSAPP);
     }
 
     @BeforeEach
@@ -157,7 +186,12 @@ class ProfileResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(profile.getId().intValue())))
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
-            .andExpect(jsonPath("$.[*].fullName").value(hasItem(DEFAULT_FULL_NAME)));
+            .andExpect(jsonPath("$.[*].fullName").value(hasItem(DEFAULT_FULL_NAME)))
+            .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].instagram").value(hasItem(DEFAULT_INSTAGRAM)))
+            .andExpect(jsonPath("$.[*].facebook").value(hasItem(DEFAULT_FACEBOOK)))
+            .andExpect(jsonPath("$.[*].whatsapp").value(hasItem(DEFAULT_WHATSAPP)));
     }
 
     @Test
@@ -173,7 +207,12 @@ class ProfileResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(profile.getId().intValue()))
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
-            .andExpect(jsonPath("$.fullName").value(DEFAULT_FULL_NAME));
+            .andExpect(jsonPath("$.fullName").value(DEFAULT_FULL_NAME))
+            .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
+            .andExpect(jsonPath("$.instagram").value(DEFAULT_INSTAGRAM))
+            .andExpect(jsonPath("$.facebook").value(DEFAULT_FACEBOOK))
+            .andExpect(jsonPath("$.whatsapp").value(DEFAULT_WHATSAPP));
     }
 
     @Test
@@ -195,7 +234,14 @@ class ProfileResourceIT {
         Profile updatedProfile = profileRepository.findById(profile.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedProfile are not directly saved in db
         em.detach(updatedProfile);
-        updatedProfile.username(UPDATED_USERNAME).fullName(UPDATED_FULL_NAME);
+        updatedProfile
+            .username(UPDATED_USERNAME)
+            .fullName(UPDATED_FULL_NAME)
+            .location(UPDATED_LOCATION)
+            .email(UPDATED_EMAIL)
+            .instagram(UPDATED_INSTAGRAM)
+            .facebook(UPDATED_FACEBOOK)
+            .whatsapp(UPDATED_WHATSAPP);
         ProfileDTO profileDTO = profileMapper.toDto(updatedProfile);
 
         restProfileMockMvc
@@ -307,7 +353,14 @@ class ProfileResourceIT {
         Profile partialUpdatedProfile = new Profile();
         partialUpdatedProfile.setId(profile.getId());
 
-        partialUpdatedProfile.username(UPDATED_USERNAME).fullName(UPDATED_FULL_NAME);
+        partialUpdatedProfile
+            .username(UPDATED_USERNAME)
+            .fullName(UPDATED_FULL_NAME)
+            .location(UPDATED_LOCATION)
+            .email(UPDATED_EMAIL)
+            .instagram(UPDATED_INSTAGRAM)
+            .facebook(UPDATED_FACEBOOK)
+            .whatsapp(UPDATED_WHATSAPP);
 
         restProfileMockMvc
             .perform(
