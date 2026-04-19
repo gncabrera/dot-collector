@@ -214,23 +214,6 @@ class MegaSetTypeResourceIT {
             .andExpect(jsonPath("$.[*].isLatest").value(hasItem(DEFAULT_IS_LATEST)));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllMegaSetTypesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(megaSetTypeServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMegaSetTypeMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(megaSetTypeServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllMegaSetTypesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(megaSetTypeServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMegaSetTypeMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(megaSetTypeRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getMegaSetType() throws Exception {

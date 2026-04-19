@@ -4,6 +4,7 @@ import com.nookx.api.domain.MegaSet;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.service.dto.MegaSetDTO;
 import com.nookx.api.service.mapper.MegaSetMapper;
+import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link MegaSet}.
+ *
+ * <p>Every write path validates the {@code attributes} JSON payload against the schema of the
+ * {@link com.nookx.api.domain.MegaSetType} that the row points to. This guarantees that
+ * what hits the JSONB column always matches the (versioned) dynamic schema, while old rows
+ * keep being valid against their own (older) version of the type.</p>
  */
 @Service
 @Transactional
@@ -22,13 +28,18 @@ public class MegaSetService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MegaSetService.class);
 
+    private static final String ENTITY_NAME = "megaSet";
+
     private final MegaSetRepository megaSetRepository;
 
     private final MegaSetMapper megaSetMapper;
 
-    public MegaSetService(MegaSetRepository megaSetRepository, MegaSetMapper megaSetMapper) {
+    private final MegaSetTypeService megaSetTypeService;
+
+    public MegaSetService(MegaSetRepository megaSetRepository, MegaSetMapper megaSetMapper, MegaSetTypeService megaSetTypeService) {
         this.megaSetRepository = megaSetRepository;
         this.megaSetMapper = megaSetMapper;
+        this.megaSetTypeService = megaSetTypeService;
     }
 
     /**
@@ -40,6 +51,7 @@ public class MegaSetService {
     public MegaSetDTO save(MegaSetDTO megaSetDTO) {
         LOG.debug("Request to save MegaSet : {}", megaSetDTO);
         MegaSet megaSet = megaSetMapper.toEntity(megaSetDTO);
+        validateAgainstType(megaSet);
         megaSet = megaSetRepository.save(megaSet);
         return megaSetMapper.toDto(megaSet);
     }
@@ -53,6 +65,7 @@ public class MegaSetService {
     public MegaSetDTO update(MegaSetDTO megaSetDTO) {
         LOG.debug("Request to update MegaSet : {}", megaSetDTO);
         MegaSet megaSet = megaSetMapper.toEntity(megaSetDTO);
+        validateAgainstType(megaSet);
         megaSet = megaSetRepository.save(megaSet);
         return megaSetMapper.toDto(megaSet);
     }
@@ -70,7 +83,7 @@ public class MegaSetService {
             .findById(megaSetDTO.getId())
             .map(existingMegaSet -> {
                 megaSetMapper.partialUpdate(existingMegaSet, megaSetDTO);
-
+                validateAgainstType(existingMegaSet);
                 return existingMegaSet;
             })
             .map(megaSetRepository::save)
@@ -108,5 +121,18 @@ public class MegaSetService {
     public void delete(Long id) {
         LOG.debug("Request to delete MegaSet : {}", id);
         megaSetRepository.deleteById(id);
+    }
+
+    /**
+     * Validate the JSON {@code attributes} payload of a {@link MegaSet} against the schema
+     * declared by its {@link com.nookx.api.domain.MegaSetType}. The validation is delegated
+     * to {@link MegaSetTypeService#validateAttributes} so the same rules apply in every
+     * write path (save, update, partial update) and in the standalone validate endpoint.
+     */
+    private void validateAgainstType(MegaSet megaSet) {
+        if (megaSet.getType() == null || megaSet.getType().getId() == null) {
+            throw new BadRequestAlertException("MegaSet must reference a MegaSetType", ENTITY_NAME, "typerequired");
+        }
+        megaSetTypeService.validateAttributes(megaSet.getType().getId(), megaSet.getAttributes());
     }
 }
