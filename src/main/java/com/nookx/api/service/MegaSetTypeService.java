@@ -1,6 +1,7 @@
 package com.nookx.api.service;
 
 import com.nookx.api.domain.MegaSetType;
+import com.nookx.api.repository.MegaAttributeRepository;
 import com.nookx.api.repository.MegaSetTypeRepository;
 import com.nookx.api.service.dto.MegaSetTypeDTO;
 import com.nookx.api.service.mapper.MegaSetTypeMapper;
@@ -28,9 +29,16 @@ public class MegaSetTypeService {
 
     private final MegaSetTypeMapper megaSetTypeMapper;
 
-    public MegaSetTypeService(MegaSetTypeRepository megaSetTypeRepository, MegaSetTypeMapper megaSetTypeMapper) {
+    private final MegaAttributeRepository megaAttributeRepository;
+
+    public MegaSetTypeService(
+        MegaSetTypeRepository megaSetTypeRepository,
+        MegaSetTypeMapper megaSetTypeMapper,
+        MegaAttributeRepository megaAttributeRepository
+    ) {
         this.megaSetTypeRepository = megaSetTypeRepository;
         this.megaSetTypeMapper = megaSetTypeMapper;
+        this.megaAttributeRepository = megaAttributeRepository;
     }
 
     /**

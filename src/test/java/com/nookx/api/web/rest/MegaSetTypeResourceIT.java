@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nookx.api.IntegrationTest;
+import com.nookx.api.client.rest.MegaSetTypeResource;
 import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.repository.MegaSetTypeRepository;
 import com.nookx.api.service.MegaSetTypeService;

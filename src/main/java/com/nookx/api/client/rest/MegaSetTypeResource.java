@@ -1,4 +1,4 @@
-package com.nookx.api.web.rest;
+package com.nookx.api.client.rest;
 
 import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.repository.MegaSetTypeRepository;
@@ -43,13 +43,6 @@ public class MegaSetTypeResource {
         this.megaSetTypeRepository = megaSetTypeRepository;
     }
 
-    /**
-     * {@code POST  /mega-set-types} : Create a new megaSetType.
-     *
-     * @param megaSetTypeDTO the megaSetTypeDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new megaSetTypeDTO, or with status {@code 400 (Bad Request)} if the megaSetType has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
     @PostMapping("")
     public ResponseEntity<MegaSetTypeDTO> createMegaSetType(@Valid @RequestBody MegaSetTypeDTO megaSetTypeDTO) throws URISyntaxException {
         LOG.debug("REST request to save MegaSetType : {}", megaSetTypeDTO);
@@ -62,16 +55,6 @@ public class MegaSetTypeResource {
             .body(megaSetTypeDTO);
     }
 
-    /**
-     * {@code PUT  /mega-set-types/:id} : Updates an existing megaSetType.
-     *
-     * @param id the id of the megaSetTypeDTO to save.
-     * @param megaSetTypeDTO the megaSetTypeDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated megaSetTypeDTO,
-     * or with status {@code 400 (Bad Request)} if the megaSetTypeDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the megaSetTypeDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<MegaSetTypeDTO> updateMegaSetType(
         @PathVariable(value = "id", required = false) final Long id,
@@ -95,62 +78,6 @@ public class MegaSetTypeResource {
             .body(megaSetTypeDTO);
     }
 
-    /**
-     * {@code PATCH  /mega-set-types/:id} : Partial updates given fields of an existing megaSetType, field will ignore if it is null
-     *
-     * @param id the id of the megaSetTypeDTO to save.
-     * @param megaSetTypeDTO the megaSetTypeDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated megaSetTypeDTO,
-     * or with status {@code 400 (Bad Request)} if the megaSetTypeDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the megaSetTypeDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the megaSetTypeDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<MegaSetTypeDTO> partialUpdateMegaSetType(
-        @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody MegaSetTypeDTO megaSetTypeDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to partial update MegaSetType partially : {}, {}", id, megaSetTypeDTO);
-        if (megaSetTypeDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, megaSetTypeDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!megaSetTypeRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<MegaSetTypeDTO> result = megaSetTypeService.partialUpdate(megaSetTypeDTO);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, megaSetTypeDTO.getId().toString())
-        );
-    }
-
-    /**
-     * {@code GET  /mega-set-types} : get all the Mega Set Types.
-     *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Mega Set Types in body.
-     */
-    @GetMapping("")
-    public List<MegaSetTypeDTO> getAllMegaSetTypes(
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
-    ) {
-        LOG.debug("REST request to get all MegaSetTypes");
-        return megaSetTypeService.findAll();
-    }
-
-    /**
-     * {@code GET  /mega-set-types/:id} : get the "id" megaSetType.
-     *
-     * @param id the id of the megaSetTypeDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the megaSetTypeDTO, or with status {@code 404 (Not Found)}.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<MegaSetTypeDTO> getMegaSetType(@PathVariable("id") Long id) {
         LOG.debug("REST request to get MegaSetType : {}", id);

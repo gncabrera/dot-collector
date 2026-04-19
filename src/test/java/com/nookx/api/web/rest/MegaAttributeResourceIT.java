@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nookx.api.IntegrationTest;
+import com.nookx.api.client.rest.MegaAttributeResource;
 import com.nookx.api.domain.MegaAttribute;
 import com.nookx.api.domain.enumeration.AttributeType;
 import com.nookx.api.domain.enumeration.UIComponent;
