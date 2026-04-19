@@ -9,10 +9,12 @@ import com.nookx.api.repository.ProfileInterestRepository;
 import com.nookx.api.service.mapper.InterestMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,36 +75,32 @@ public class InterestService {
     }
 
     /**
-     * Associates existing interests with the current profile (skips pairs already linked).
+     * Synchronizes the current profile's interests with the provided list:
+     * the incoming list represents the complete desired state, so any
+     * currently linked interest not present is removed and any new one is added.
      */
     public void subscribeCurrentProfileToInterests(List<Long> interestIds) {
-        LOG.debug("Request to subscribe current profile to interests : {}", interestIds);
+        LOG.debug("Request to sync current profile interests : {}", interestIds);
         Profile currentProfile = profileService.getCurrentProfile();
         Long profileId = currentProfile.getId();
-        List<Long> distinctIds = interestIds.stream().distinct().toList();
-        for (Long interestId : distinctIds) {
+
+        Set<Long> desiredIds = interestIds == null ? new HashSet<>() : new HashSet<>(interestIds);
+        Set<Long> currentIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
+
+        Set<Long> toRemove = new HashSet<>(currentIds);
+        toRemove.removeAll(desiredIds);
+        if (!toRemove.isEmpty()) {
+            profileInterestRepository.deleteByProfile_IdAndInterest_IdIn(profileId, toRemove);
+        }
+
+        Set<Long> toAdd = new HashSet<>(desiredIds);
+        toAdd.removeAll(currentIds);
+        for (Long interestId : toAdd) {
             Interest interest = interestRepository
                 .findByIdAndDeletedFalse(interestId)
                 .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"));
-            if (profileInterestRepository.existsByProfile_IdAndInterest_Id(profileId, interestId)) {
-                continue;
-            }
             subscribeToInterest(interest, currentProfile);
         }
-    }
-
-    /**
-     * Removes links between the current profile and the given interests (ids not linked are ignored).
-     */
-    public void unsubscribeCurrentProfileFromInterests(List<Long> interestIds) {
-        LOG.debug("Request to unsubscribe current profile from interests : {}", interestIds);
-        Profile currentProfile = profileService.getCurrentProfile();
-        Long profileId = currentProfile.getId();
-        List<Long> distinctIds = interestIds.stream().filter(Objects::nonNull).distinct().toList();
-        if (distinctIds.isEmpty()) {
-            return;
-        }
-        profileInterestRepository.deleteByProfile_IdAndInterest_IdIn(profileId, distinctIds);
     }
 
     public ClientInterestDTO update(ClientInterestDTO interestDTO) {

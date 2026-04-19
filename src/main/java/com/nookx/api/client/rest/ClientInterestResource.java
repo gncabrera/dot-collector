@@ -61,13 +61,6 @@ public class ClientInterestResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/unsubscribe")
-    public ResponseEntity<Void> unsubscribeFromInterests(@Valid @RequestBody ClientInterestSubscribeDTO subscribeDTO) {
-        LOG.debug("REST request to unsubscribe current profile from interests : {}", subscribeDTO.getInterestIds());
-        interestService.unsubscribeCurrentProfileFromInterests(subscribeDTO.getInterestIds());
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<ClientInterestDTO> updateInterest(
         @PathVariable(value = "id", required = false) final Long id,
