@@ -1,6 +1,7 @@
 package com.nookx.api.client.dto;
 
 import com.nookx.api.domain.Interest;
+import com.nookx.api.service.dto.MegaSetTypeDTO;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,6 +28,8 @@ public class ClientInterestDTO implements Serializable {
     private boolean isSystem;
 
     private Integer order;
+
+    private MegaSetTypeDTO setType;
 
     @Override
     public boolean equals(Object o) {
@@ -59,6 +62,7 @@ public class ClientInterestDTO implements Serializable {
             ", isPublic=" + isPublic() +
             ", isSystem=" + isSystem() +
             ", order=" + getOrder() +
+            ", setType=" + getSetType() +
             "}";
     }
 }

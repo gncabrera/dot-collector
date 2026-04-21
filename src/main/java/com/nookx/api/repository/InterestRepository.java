@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByIdAndDeletedFalse(Long id);
 
+    List<Interest> findAllBySetType_Id(Long setTypeId);
+
     @Query(
         "SELECT i FROM Interest i WHERE i.deleted = false AND (i.isSystem = true OR EXISTS (" +
             "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId)) ORDER BY i.order"

@@ -2,11 +2,13 @@ package com.nookx.api.service;
 
 import com.nookx.api.client.dto.ClientInterestDTO;
 import com.nookx.api.domain.Interest;
+import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileInterest;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileInterestRepository;
 import com.nookx.api.service.mapper.InterestMapper;
+import com.nookx.api.service.mapper.MegaSetTypeMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -37,16 +39,20 @@ public class InterestService {
 
     private final ProfileInterestRepository profileInterestRepository;
 
+    private final MegaSetTypeService megaSetTypeService;
+
     public InterestService(
         InterestRepository interestRepository,
         InterestMapper interestMapper,
         ProfileService profileService,
-        ProfileInterestRepository profileInterestRepository
+        ProfileInterestRepository profileInterestRepository,
+        MegaSetTypeService megaSetTypeService
     ) {
         this.interestRepository = interestRepository;
         this.interestMapper = interestMapper;
         this.profileService = profileService;
         this.profileInterestRepository = profileInterestRepository;
+        this.megaSetTypeService = megaSetTypeService;
     }
 
     @Transactional
@@ -162,7 +168,27 @@ public class InterestService {
     public Optional<ClientInterestDTO> findOne(Long id) {
         LOG.debug("Request to get Interest : {} for current profile", id);
         Long profileId = profileService.getCurrentProfile().getId();
-        return interestRepository.findByIdLinkedToProfileOrSystem(id, profileId).map(interestMapper::toDto);
+        Optional<Interest> byIdLinkedToProfileOrSystem = interestRepository.findByIdLinkedToProfileOrSystem(id, profileId);
+        if (byIdLinkedToProfileOrSystem.isPresent()) {
+            Interest interest = byIdLinkedToProfileOrSystem.orElse(null);
+            ClientInterestDTO dto = interestMapper.toDto(interest);
+            dto.setSetType(megaSetTypeService.toDto(interest.getSetType()));
+            return Optional.of(dto);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Re-points an Interest to a freshly-created/versioned {@link MegaSetType} and persists the change.
+     * Used by {@link MegaSetTypeService} to keep an Interest pinned to its latest schema version.
+     */
+    public Interest updateSetType(Long interestId, MegaSetType setType) {
+        LOG.debug("Request to set MegaSetType {} on Interest {}", setType == null ? null : setType.getId(), interestId);
+        Interest interest = interestRepository
+            .findByIdAndDeletedFalse(interestId)
+            .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"));
+        interest.setSetType(setType);
+        return interestRepository.save(interest);
     }
 
     public void delete(Long id) {

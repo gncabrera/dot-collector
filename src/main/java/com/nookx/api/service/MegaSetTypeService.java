@@ -1,10 +1,12 @@
 package com.nookx.api.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaAttribute;
 import com.nookx.api.domain.MegaAttributeOption;
 import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.domain.enumeration.AttributeType;
+import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.MegaSetTypeRepository;
 import com.nookx.api.service.dto.MegaAttributeDTO;
 import com.nookx.api.service.dto.MegaSetTypeDTO;
@@ -57,17 +59,20 @@ public class MegaSetTypeService {
     private final MegaSetTypeMapper megaSetTypeMapper;
     private final MegaAttributeService megaAttributeService;
     private final MegaAttributeMapper megaAttributeMapper;
+    private final InterestRepository interestRepository;
 
     public MegaSetTypeService(
         MegaSetTypeRepository megaSetTypeRepository,
         MegaSetTypeMapper megaSetTypeMapper,
         MegaAttributeService megaAttributeService,
-        MegaAttributeMapper megaAttributeMapper
+        MegaAttributeMapper megaAttributeMapper,
+        InterestRepository interestRepository
     ) {
         this.megaSetTypeRepository = megaSetTypeRepository;
         this.megaSetTypeMapper = megaSetTypeMapper;
         this.megaAttributeService = megaAttributeService;
         this.megaAttributeMapper = megaAttributeMapper;
+        this.interestRepository = interestRepository;
     }
 
     // ---------------------------------------------------------------------
@@ -75,13 +80,13 @@ public class MegaSetTypeService {
     // ---------------------------------------------------------------------
 
     /**
-     * Create a brand new {@link MegaSetType} (version 1).
+     * Create a brand new {@link MegaSetType} (version 1) and bind it to the given {@link Interest}.
      * The supplied attribute DTOs are persisted as fresh attributes attached to the new type.
      * Fails if a type with the same name already exists – use {@link #createNewVersion} instead.
      */
     @CacheEvict(value = CACHE_NAME, allEntries = true)
-    public MegaSetTypeDTO create(MegaSetTypeDTO dto) {
-        LOG.debug("Request to create MegaSetType : {}", dto);
+    public MegaSetTypeDTO create(Long interestId, MegaSetTypeDTO dto) {
+        LOG.debug("Request to create MegaSetType for Interest {} : {}", interestId, dto);
         if (dto.getName() == null || dto.getName().isBlank()) {
             throw new BadRequestAlertException("name is required", ENTITY_NAME, "namerequired");
         }
@@ -92,6 +97,10 @@ public class MegaSetTypeService {
                 "nameexists"
             );
         }
+
+        Interest interest = interestRepository
+            .findByIdAndDeletedFalse(interestId)
+            .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"));
 
         MegaSetType type = new MegaSetType().name(dto.getName()).version(1).active(Boolean.TRUE).isLatest(Boolean.TRUE);
 
@@ -104,10 +113,13 @@ public class MegaSetTypeService {
         type.setAttributes(attrs);
         type = megaSetTypeRepository.save(type);
 
+        interest.setSetType(type);
+        interestRepository.save(interest);
+
         return toDto(type);
     }
 
-    private MegaSetTypeDTO toDto(MegaSetType type) {
+    public MegaSetTypeDTO toDto(MegaSetType type) {
         MegaSetTypeDTO result = megaSetTypeMapper.toDto(type);
 
         Set<MegaAttributeDTO> attributeDTOS = type.getAttributes().stream().map(megaAttributeMapper::toDto).collect(Collectors.toSet());
@@ -158,6 +170,16 @@ public class MegaSetTypeService {
             .attributes(merged);
 
         newVersion = megaSetTypeRepository.save(newVersion);
+
+        // Re-point any Interest that was pinned to the previous version so it always sees the latest schema.
+        List<Interest> linkedInterests = interestRepository.findAllBySetType_Id(source.getId());
+        for (Interest interest : linkedInterests) {
+            interest.setSetType(newVersion);
+        }
+        if (!linkedInterests.isEmpty()) {
+            interestRepository.saveAll(linkedInterests);
+        }
+
         return toDto(newVersion);
     }
 

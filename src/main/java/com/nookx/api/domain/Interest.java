@@ -55,11 +55,6 @@ public class Interest implements Serializable {
     @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
     private MegaSetType setType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "part_type_id")
-    @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
-    private MegaPartType partType;
-
     public Interest id(Long id) {
         this.setId(id);
         return this;
