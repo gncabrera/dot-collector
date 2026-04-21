@@ -8,6 +8,7 @@ import com.nookx.api.domain.enumeration.AttributeType;
 import com.nookx.api.repository.MegaSetTypeRepository;
 import com.nookx.api.service.dto.MegaAttributeDTO;
 import com.nookx.api.service.dto.MegaSetTypeDTO;
+import com.nookx.api.service.mapper.MegaAttributeMapper;
 import com.nookx.api.service.mapper.MegaSetTypeMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.time.LocalDate;
@@ -55,15 +56,18 @@ public class MegaSetTypeService {
     private final MegaSetTypeRepository megaSetTypeRepository;
     private final MegaSetTypeMapper megaSetTypeMapper;
     private final MegaAttributeService megaAttributeService;
+    private final MegaAttributeMapper megaAttributeMapper;
 
     public MegaSetTypeService(
         MegaSetTypeRepository megaSetTypeRepository,
         MegaSetTypeMapper megaSetTypeMapper,
-        MegaAttributeService megaAttributeService
+        MegaAttributeService megaAttributeService,
+        MegaAttributeMapper megaAttributeMapper
     ) {
         this.megaSetTypeRepository = megaSetTypeRepository;
         this.megaSetTypeMapper = megaSetTypeMapper;
         this.megaAttributeService = megaAttributeService;
+        this.megaAttributeMapper = megaAttributeMapper;
     }
 
     // ---------------------------------------------------------------------
@@ -100,7 +104,15 @@ public class MegaSetTypeService {
         type.setAttributes(attrs);
         type = megaSetTypeRepository.save(type);
 
-        return megaSetTypeMapper.toDto(type);
+        return toDto(type);
+    }
+
+    private MegaSetTypeDTO toDto(MegaSetType type) {
+        MegaSetTypeDTO result = megaSetTypeMapper.toDto(type);
+
+        Set<MegaAttributeDTO> attributeDTOS = type.getAttributes().stream().map(megaAttributeMapper::toDto).collect(Collectors.toSet());
+        result.setAttributes(attributeDTOS);
+        return result;
     }
 
     /**
@@ -146,7 +158,7 @@ public class MegaSetTypeService {
             .attributes(merged);
 
         newVersion = megaSetTypeRepository.save(newVersion);
-        return megaSetTypeMapper.toDto(newVersion);
+        return toDto(newVersion);
     }
 
     private Set<MegaAttribute> cloneAttributes(Set<MegaAttribute> attrs) {
@@ -206,13 +218,13 @@ public class MegaSetTypeService {
     @Cacheable(value = CACHE_NAME, key = "'id:' + #id")
     public Optional<MegaSetTypeDTO> findOne(Long id) {
         LOG.debug("Request to get MegaSetType : {}", id);
-        return megaSetTypeRepository.findOneWithEagerRelationships(id).map(megaSetTypeMapper::toDto);
+        return megaSetTypeRepository.findOneWithEagerRelationships(id).map(this::toDto);
     }
 
     @Transactional(readOnly = true)
     public List<MegaSetTypeDTO> findAll() {
         LOG.debug("Request to get all MegaSetTypes");
-        return megaSetTypeRepository.findAll().stream().map(megaSetTypeMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        return megaSetTypeRepository.findAll().stream().map(this::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -222,20 +234,20 @@ public class MegaSetTypeService {
     @Transactional(readOnly = true)
     public List<MegaSetTypeDTO> search(String name, Boolean isLatest, Boolean active) {
         LOG.debug("Request to search MegaSetTypes name={}, isLatest={}, active={}", name, isLatest, active);
-        return megaSetTypeRepository.search(name, isLatest, active).stream().map(megaSetTypeMapper::toDto).toList();
+        return megaSetTypeRepository.search(name, isLatest, active).stream().map(this::toDto).toList();
     }
 
     @Transactional(readOnly = true)
     @Cacheable(value = CACHE_NAME, key = "'latest:' + #name")
     public Optional<MegaSetTypeDTO> findLatestByName(String name) {
         LOG.debug("Request to get latest MegaSetType by name : {}", name);
-        return megaSetTypeRepository.findLatestByName(name).map(megaSetTypeMapper::toDto);
+        return megaSetTypeRepository.findLatestByName(name).map(this::toDto);
     }
 
     @Transactional(readOnly = true)
     public List<MegaSetTypeDTO> findVersionsByName(String name) {
         LOG.debug("Request to get all versions of MegaSetType : {}", name);
-        return megaSetTypeRepository.findByNameOrderByVersionDesc(name).stream().map(megaSetTypeMapper::toDto).toList();
+        return megaSetTypeRepository.findByNameOrderByVersionDesc(name).stream().map(this::toDto).toList();
     }
 
     // ---------------------------------------------------------------------
