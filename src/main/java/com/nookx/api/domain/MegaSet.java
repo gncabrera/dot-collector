@@ -45,30 +45,11 @@ public class MegaSet implements Serializable {
     private String notes;
 
     @NotNull
-    @Column(name = "name_en", nullable = false)
-    private String nameEN;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "name_es")
-    private String nameES;
-
-    @Column(name = "name_de")
-    private String nameDE;
-
-    @Column(name = "name_fr")
-    private String nameFR;
-
-    @NotNull
-    @Column(name = "description_en", nullable = false)
-    private String descriptionEN;
-
-    @Column(name = "description_es")
-    private String descriptionES;
-
-    @Column(name = "description_de")
-    private String descriptionDE;
-
-    @Column(name = "description_fr")
-    private String descriptionFR;
+    @Column(name = "description")
+    private String description;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "attributes", columnDefinition = "jsonb")
@@ -112,43 +93,13 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public MegaSet nameEN(String nameEN) {
-        this.setNameEN(nameEN);
+    public MegaSet name(String name) {
+        this.setName(name);
         return this;
     }
 
-    public MegaSet nameES(String nameES) {
-        this.setNameES(nameES);
-        return this;
-    }
-
-    public MegaSet nameDE(String nameDE) {
-        this.setNameDE(nameDE);
-        return this;
-    }
-
-    public MegaSet nameFR(String nameFR) {
-        this.setNameFR(nameFR);
-        return this;
-    }
-
-    public MegaSet descriptionEN(String descriptionEN) {
-        this.setDescriptionEN(descriptionEN);
-        return this;
-    }
-
-    public MegaSet descriptionES(String descriptionES) {
-        this.setDescriptionES(descriptionES);
-        return this;
-    }
-
-    public MegaSet descriptionDE(String descriptionDE) {
-        this.setDescriptionDE(descriptionDE);
-        return this;
-    }
-
-    public MegaSet descriptionFR(String descriptionFR) {
-        this.setDescriptionFR(descriptionFR);
+    public MegaSet description(String description) {
+        this.setDescription(description);
         return this;
     }
 
@@ -221,14 +172,8 @@ public class MegaSet implements Serializable {
             ", setNumber='" + getSetNumber() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
             ", notes='" + getNotes() + "'" +
-            ", nameEN='" + getNameEN() + "'" +
-            ", nameES='" + getNameES() + "'" +
-            ", nameDE='" + getNameDE() + "'" +
-            ", nameFR='" + getNameFR() + "'" +
-            ", descriptionEN='" + getDescriptionEN() + "'" +
-            ", descriptionES='" + getDescriptionES() + "'" +
-            ", descriptionDE='" + getDescriptionDE() + "'" +
-            ", descriptionFR='" + getDescriptionFR() + "'" +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", attributesContentType='" + getAttributesContentType() + "'" +
             "}";

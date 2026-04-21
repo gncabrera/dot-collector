@@ -1,5 +1,6 @@
 package com.nookx.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
@@ -48,6 +49,16 @@ public class Interest implements Serializable {
 
     @Column(name = "deleted_date")
     private Instant deletedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "set_type_id")
+    @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
+    private MegaSetType setType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "part_type_id")
+    @JsonIgnoreProperties(value = { "attributes" }, allowSetters = true)
+    private MegaPartType partType;
 
     public Interest id(Long id) {
         this.setId(id);

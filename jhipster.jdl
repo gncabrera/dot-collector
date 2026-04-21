@@ -9,14 +9,8 @@ entity MegaSet {
   setNumber String required unique,
   releaseDate LocalDate,
   notes String,
-  nameEN String required,
-  nameES String,
-  nameDE String,
-  nameFR String,
-  descriptionEN String required,
-  descriptionES String,
-  descriptionDE String,
-  descriptionFR String,
+  name String required,
+  description String,
   attributes AnyBlob  // 🔥 JSONB
 }
 

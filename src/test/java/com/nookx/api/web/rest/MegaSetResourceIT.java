@@ -48,29 +48,11 @@ class MegaSetResourceIT {
     private static final String DEFAULT_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_NOTES = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NAME_EN = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_EN = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NAME_ES = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_ES = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAME_DE = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_DE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAME_FR = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_FR = "BBBBBBBBBB";
-
-    private static final String DEFAULT_DESCRIPTION_EN = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION_EN = "BBBBBBBBBB";
-
-    private static final String DEFAULT_DESCRIPTION_ES = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION_ES = "BBBBBBBBBB";
-
-    private static final String DEFAULT_DESCRIPTION_DE = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION_DE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_DESCRIPTION_FR = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION_FR = "BBBBBBBBBB";
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final JsonNode DEFAULT_ATTRIBUTES = JsonNodeFactory.instance.objectNode().put("v", "0");
     private static final JsonNode UPDATED_ATTRIBUTES = JsonNodeFactory.instance.objectNode().put("v", "1");
@@ -113,14 +95,8 @@ class MegaSetResourceIT {
             .setNumber(DEFAULT_SET_NUMBER)
             .releaseDate(DEFAULT_RELEASE_DATE)
             .notes(DEFAULT_NOTES)
-            .nameEN(DEFAULT_NAME_EN)
-            .nameES(DEFAULT_NAME_ES)
-            .nameDE(DEFAULT_NAME_DE)
-            .nameFR(DEFAULT_NAME_FR)
-            .descriptionEN(DEFAULT_DESCRIPTION_EN)
-            .descriptionES(DEFAULT_DESCRIPTION_ES)
-            .descriptionDE(DEFAULT_DESCRIPTION_DE)
-            .descriptionFR(DEFAULT_DESCRIPTION_FR)
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
             .attributes(DEFAULT_ATTRIBUTES)
             .attributesContentType(DEFAULT_ATTRIBUTES_CONTENT_TYPE);
     }
@@ -136,14 +112,8 @@ class MegaSetResourceIT {
             .setNumber(UPDATED_SET_NUMBER)
             .releaseDate(UPDATED_RELEASE_DATE)
             .notes(UPDATED_NOTES)
-            .nameEN(UPDATED_NAME_EN)
-            .nameES(UPDATED_NAME_ES)
-            .nameDE(UPDATED_NAME_DE)
-            .nameFR(UPDATED_NAME_FR)
-            .descriptionEN(UPDATED_DESCRIPTION_EN)
-            .descriptionES(UPDATED_DESCRIPTION_ES)
-            .descriptionDE(UPDATED_DESCRIPTION_DE)
-            .descriptionFR(UPDATED_DESCRIPTION_FR)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
     }
@@ -222,27 +192,10 @@ class MegaSetResourceIT {
 
     @Test
     @Transactional
-    void checkNameENIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
-        megaSet.setNameEN(null);
-
-        // Create the MegaSet, which fails.
-        MegaSetDTO megaSetDTO = megaSetMapper.toDto(megaSet);
-
-        restMegaSetMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(megaSetDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkDescriptionENIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        megaSet.setDescriptionEN(null);
+        megaSet.setName(null);
 
         // Create the MegaSet, which fails.
         MegaSetDTO megaSetDTO = megaSetMapper.toDto(megaSet);
@@ -269,14 +222,8 @@ class MegaSetResourceIT {
             .andExpect(jsonPath("$.[*].setNumber").value(hasItem(DEFAULT_SET_NUMBER)))
             .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(DEFAULT_RELEASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)))
-            .andExpect(jsonPath("$.[*].nameEN").value(hasItem(DEFAULT_NAME_EN)))
-            .andExpect(jsonPath("$.[*].nameES").value(hasItem(DEFAULT_NAME_ES)))
-            .andExpect(jsonPath("$.[*].nameDE").value(hasItem(DEFAULT_NAME_DE)))
-            .andExpect(jsonPath("$.[*].nameFR").value(hasItem(DEFAULT_NAME_FR)))
-            .andExpect(jsonPath("$.[*].descriptionEN").value(hasItem(DEFAULT_DESCRIPTION_EN)))
-            .andExpect(jsonPath("$.[*].descriptionES").value(hasItem(DEFAULT_DESCRIPTION_ES)))
-            .andExpect(jsonPath("$.[*].descriptionDE").value(hasItem(DEFAULT_DESCRIPTION_DE)))
-            .andExpect(jsonPath("$.[*].descriptionFR").value(hasItem(DEFAULT_DESCRIPTION_FR)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].attributesContentType").value(hasItem(DEFAULT_ATTRIBUTES_CONTENT_TYPE)));
     }
 
@@ -295,14 +242,8 @@ class MegaSetResourceIT {
             .andExpect(jsonPath("$.setNumber").value(DEFAULT_SET_NUMBER))
             .andExpect(jsonPath("$.releaseDate").value(DEFAULT_RELEASE_DATE.toString()))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES))
-            .andExpect(jsonPath("$.nameEN").value(DEFAULT_NAME_EN))
-            .andExpect(jsonPath("$.nameES").value(DEFAULT_NAME_ES))
-            .andExpect(jsonPath("$.nameDE").value(DEFAULT_NAME_DE))
-            .andExpect(jsonPath("$.nameFR").value(DEFAULT_NAME_FR))
-            .andExpect(jsonPath("$.descriptionEN").value(DEFAULT_DESCRIPTION_EN))
-            .andExpect(jsonPath("$.descriptionES").value(DEFAULT_DESCRIPTION_ES))
-            .andExpect(jsonPath("$.descriptionDE").value(DEFAULT_DESCRIPTION_DE))
-            .andExpect(jsonPath("$.descriptionFR").value(DEFAULT_DESCRIPTION_FR))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.attributesContentType").value(DEFAULT_ATTRIBUTES_CONTENT_TYPE));
     }
 
@@ -329,14 +270,8 @@ class MegaSetResourceIT {
             .setNumber(UPDATED_SET_NUMBER)
             .releaseDate(UPDATED_RELEASE_DATE)
             .notes(UPDATED_NOTES)
-            .nameEN(UPDATED_NAME_EN)
-            .nameES(UPDATED_NAME_ES)
-            .nameDE(UPDATED_NAME_DE)
-            .nameFR(UPDATED_NAME_FR)
-            .descriptionEN(UPDATED_DESCRIPTION_EN)
-            .descriptionES(UPDATED_DESCRIPTION_ES)
-            .descriptionDE(UPDATED_DESCRIPTION_DE)
-            .descriptionFR(UPDATED_DESCRIPTION_FR)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
         MegaSetDTO megaSetDTO = megaSetMapper.toDto(updatedMegaSet);
@@ -428,9 +363,7 @@ class MegaSetResourceIT {
             .setNumber(UPDATED_SET_NUMBER)
             .releaseDate(UPDATED_RELEASE_DATE)
             .notes(UPDATED_NOTES)
-            .nameEN(UPDATED_NAME_EN)
-            .nameDE(UPDATED_NAME_DE)
-            .descriptionFR(UPDATED_DESCRIPTION_FR)
+            .name(UPDATED_NAME)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
 
@@ -464,14 +397,8 @@ class MegaSetResourceIT {
             .setNumber(UPDATED_SET_NUMBER)
             .releaseDate(UPDATED_RELEASE_DATE)
             .notes(UPDATED_NOTES)
-            .nameEN(UPDATED_NAME_EN)
-            .nameES(UPDATED_NAME_ES)
-            .nameDE(UPDATED_NAME_DE)
-            .nameFR(UPDATED_NAME_FR)
-            .descriptionEN(UPDATED_DESCRIPTION_EN)
-            .descriptionES(UPDATED_DESCRIPTION_ES)
-            .descriptionDE(UPDATED_DESCRIPTION_DE)
-            .descriptionFR(UPDATED_DESCRIPTION_FR)
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
 

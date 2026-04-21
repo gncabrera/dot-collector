@@ -8,14 +8,8 @@ export interface IMegaSet {
   setNumber?: string | null;
   releaseDate?: dayjs.Dayjs | null;
   notes?: string | null;
-  nameEN?: string | null;
-  nameES?: string | null;
-  nameDE?: string | null;
-  nameFR?: string | null;
-  descriptionEN?: string | null;
-  descriptionES?: string | null;
-  descriptionDE?: string | null;
-  descriptionFR?: string | null;
+  name?: string | null;
+  description?: string | null;
   attributes?: string | null;
   attributesContentType?: string | null;
   type?: Pick<IMegaSetType, 'id'> | null;

@@ -30,22 +30,9 @@ public class MegaSetDTO implements Serializable {
     private String notes;
 
     @NotNull
-    private String nameEN;
+    private String name;
 
-    private String nameES;
-
-    private String nameDE;
-
-    private String nameFR;
-
-    @NotNull
-    private String descriptionEN;
-
-    private String descriptionES;
-
-    private String descriptionDE;
-
-    private String descriptionFR;
+    private String description;
 
     private JsonNode attributes;
 
@@ -86,14 +73,8 @@ public class MegaSetDTO implements Serializable {
             ", setNumber='" + getSetNumber() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
             ", notes='" + getNotes() + "'" +
-            ", nameEN='" + getNameEN() + "'" +
-            ", nameES='" + getNameES() + "'" +
-            ", nameDE='" + getNameDE() + "'" +
-            ", nameFR='" + getNameFR() + "'" +
-            ", descriptionEN='" + getDescriptionEN() + "'" +
-            ", descriptionES='" + getDescriptionES() + "'" +
-            ", descriptionDE='" + getDescriptionDE() + "'" +
-            ", descriptionFR='" + getDescriptionFR() + "'" +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", type=" + getType() +
             ", profileCollectionSets=" + getProfileCollectionSets() +

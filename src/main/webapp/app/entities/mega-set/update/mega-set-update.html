@@ -48,13 +48,13 @@
           <input type="text" class="form-control" name="notes" id="field_notes" data-cy="notes" formControlName="notes" />
         </div>
 
-        @let nameENRef = editForm.get('nameEN')!;
+        @let nameRef = editForm.get('name')!;
         <div class="mb-3">
-          <label class="form-label" for="field_nameEN">Name EN</label>
-          <input type="text" class="form-control" name="nameEN" id="field_nameEN" data-cy="nameEN" formControlName="nameEN" />
-          @if (nameENRef.invalid && (nameENRef.dirty || nameENRef.touched)) {
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
             <div>
-              @if (editForm.get('nameEN')?.errors?.required) {
+              @if (editForm.get('name')?.errors?.required) {
                 <small class="form-text text-danger">This field is required.</small>
               }
             </div>
@@ -62,73 +62,14 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_nameES">Name ES</label>
-          <input type="text" class="form-control" name="nameES" id="field_nameES" data-cy="nameES" formControlName="nameES" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_nameDE">Name DE</label>
-          <input type="text" class="form-control" name="nameDE" id="field_nameDE" data-cy="nameDE" formControlName="nameDE" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_nameFR">Name FR</label>
-          <input type="text" class="form-control" name="nameFR" id="field_nameFR" data-cy="nameFR" formControlName="nameFR" />
-        </div>
-
-        @let descriptionENRef = editForm.get('descriptionEN')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_descriptionEN">Description EN</label>
+          <label class="form-label" for="field_description">Description</label>
           <input
             type="text"
             class="form-control"
-            name="descriptionEN"
-            id="field_descriptionEN"
-            data-cy="descriptionEN"
-            formControlName="descriptionEN"
-          />
-          @if (descriptionENRef.invalid && (descriptionENRef.dirty || descriptionENRef.touched)) {
-            <div>
-              @if (editForm.get('descriptionEN')?.errors?.required) {
-                <small class="form-text text-danger">This field is required.</small>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_descriptionES">Description ES</label>
-          <input
-            type="text"
-            class="form-control"
-            name="descriptionES"
-            id="field_descriptionES"
-            data-cy="descriptionES"
-            formControlName="descriptionES"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_descriptionDE">Description DE</label>
-          <input
-            type="text"
-            class="form-control"
-            name="descriptionDE"
-            id="field_descriptionDE"
-            data-cy="descriptionDE"
-            formControlName="descriptionDE"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_descriptionFR">Description FR</label>
-          <input
-            type="text"
-            class="form-control"
-            name="descriptionFR"
-            id="field_descriptionFR"
-            data-cy="descriptionFR"
-            formControlName="descriptionFR"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
           />
         </div>
 
