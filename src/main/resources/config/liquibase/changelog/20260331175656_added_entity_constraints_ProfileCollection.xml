@@ -27,10 +27,17 @@
                                  />
     </changeSet>
 
-    <changeSet id="20260416120000-2" author="jhipster">
+    <changeSet id="20260331175656-3" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="profile_collection_id"
+                                 baseTableName="rel_profile_collection__interest"
+                                 constraintName="fk_rel_profile_collection__interest__profile_collection_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile_collection"
+                                 />
+
         <addForeignKeyConstraint baseColumnNames="interest_id"
-                                 baseTableName="profile_collection"
-                                 constraintName="fk_profile_collection__interest_id"
+                                 baseTableName="rel_profile_collection__interest"
+                                 constraintName="fk_rel_profile_collection__interest__interest_id"
                                  referencedColumnNames="id"
                                  referencedTableName="interest"
                                  />

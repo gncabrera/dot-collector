@@ -38,9 +38,6 @@
             <column name="profile_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="interest_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <column name="clone_information_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_profile_collection__clone_information_id" />
             </column>
@@ -49,6 +46,20 @@
           </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+    </changeSet>
+
+    <changeSet id="20260331175656-1-relations" author="jhipster">
+
+        <createTable tableName="rel_profile_collection__interest">
+            <column name="interest_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_collection_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="profile_collection_id, interest_id" tableName="rel_profile_collection__interest"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

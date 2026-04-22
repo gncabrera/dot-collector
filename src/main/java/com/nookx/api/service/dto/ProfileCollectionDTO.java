@@ -3,7 +3,9 @@ package com.nookx.api.service.dto;
 import com.nookx.api.client.dto.ClientInterestDTO;
 import com.nookx.api.domain.ProfileCollection;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +27,7 @@ public class ProfileCollectionDTO implements Serializable {
 
     private ProfileDTO profile;
 
-    private ClientInterestDTO interest;
+    private Set<ClientInterestDTO> interests = new HashSet<>();
 
     private ProfileCollectionImageDTO image;
 

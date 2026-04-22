@@ -15,5 +15,4 @@ public class ClientCollectionLiteDTO {
     private String createdBy;
     private ClientCollectionCommunityDTO community;
     private ClientImageDTO image;
-    private ClientInterestDTO interest;
 }

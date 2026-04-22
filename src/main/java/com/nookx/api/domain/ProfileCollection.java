@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,9 +57,14 @@ public class ProfileCollection implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_profile_collection__interest",
+        joinColumns = @JoinColumn(name = "profile_collection_id"),
+        inverseJoinColumns = @JoinColumn(name = "interest_id")
+    )
     @JsonIgnoreProperties(value = { "profileInterests" }, allowSetters = true)
-    private Interest interest;
+    private Set<Interest> interests = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
@@ -116,6 +123,21 @@ public class ProfileCollection implements Serializable {
 
     public ProfileCollection profile(Profile profile) {
         this.setProfile(profile);
+        return this;
+    }
+
+    public ProfileCollection interests(Set<Interest> interests) {
+        this.setInterests(interests);
+        return this;
+    }
+
+    public ProfileCollection addInterest(Interest interest) {
+        this.interests.add(interest);
+        return this;
+    }
+
+    public ProfileCollection removeInterest(Interest interest) {
+        this.interests.remove(interest);
         return this;
     }
 

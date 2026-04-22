@@ -3,6 +3,7 @@ package com.nookx.api.client.service;
 import com.nookx.api.client.dto.*;
 import com.nookx.api.config.ApplicationProperties;
 import com.nookx.api.domain.CloneInformation;
+import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionImage;
@@ -17,8 +18,11 @@ import com.nookx.api.service.ProfileService;
 import com.nookx.api.service.mapper.CurrencyMapper;
 import com.nookx.api.service.mapper.InterestMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -181,16 +185,16 @@ public class ClientCollectionService {
         ClientImageDTO clientImageDto = getClientImageDto(profileCollection.getId());
         dto.setImage(clientImageDto);
 
-        dto.setInterest(toClientInterestDto(profileCollection));
+        dto.setInterests(toClientInterestDtos(profileCollection));
 
         return dto;
     }
 
-    private ClientInterestDTO toClientInterestDto(ProfileCollection profileCollection) {
-        if (profileCollection.getInterest() == null) {
-            return null;
+    private List<ClientInterestDTO> toClientInterestDtos(ProfileCollection profileCollection) {
+        if (profileCollection.getInterests() == null || profileCollection.getInterests().isEmpty()) {
+            return List.of();
         }
-        return interestMapper.toDto(profileCollection.getInterest());
+        return profileCollection.getInterests().stream().map(interestMapper::toDto).collect(Collectors.toList());
     }
 
     private static ClientCloneInformationDTO getClientCloneInformationDTO(CloneInformation cloneInformation) {
@@ -226,8 +230,6 @@ public class ClientCollectionService {
         communityDTO.setTotalStars(99);
         dto.setCommunity(communityDTO);
 
-        dto.setInterest(toClientInterestDto(profileCollection));
-
         return dto;
     }
 
@@ -249,16 +251,21 @@ public class ClientCollectionService {
             }
         }
 
-        ClientInterestDTO interestDto = dto.getInterest();
-        if (interestDto != null && interestDto.getId() != null) {
+        List<ClientInterestDTO> interestDtos = dto.getInterests();
+        if (interestDtos != null && !interestDtos.isEmpty()) {
             Long profileId = profileService.getCurrentProfile().getId();
-            entity.setInterest(
-                interestRepository
-                    .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId)
-                    .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"))
-            );
+            Set<Interest> resolvedInterests = interestDtos
+                .stream()
+                .filter(interestDto -> interestDto != null && interestDto.getId() != null)
+                .map(interestDto ->
+                    interestRepository
+                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId)
+                        .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"))
+                )
+                .collect(Collectors.toCollection(HashSet::new));
+            entity.setInterests(resolvedInterests);
         } else {
-            entity.setInterest(null);
+            entity.setInterests(new HashSet<>());
         }
 
         return entity;
