@@ -10,8 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,15 +96,6 @@ public class ProfileCollectionSetService {
     }
 
     /**
-     * Get all the profileCollectionSets with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<ProfileCollectionSetDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return profileCollectionSetRepository.findAllWithEagerRelationships(pageable).map(profileCollectionSetMapper::toDto);
-    }
-
-    /**
      * Get one profileCollectionSet by id.
      *
      * @param id the id of the entity.
@@ -115,7 +104,7 @@ public class ProfileCollectionSetService {
     @Transactional(readOnly = true)
     public Optional<ProfileCollectionSetDTO> findOne(Long id) {
         LOG.debug("Request to get ProfileCollectionSet : {}", id);
-        return profileCollectionSetRepository.findOneWithEagerRelationships(id).map(profileCollectionSetMapper::toDto);
+        return profileCollectionSetRepository.findById(id).map(profileCollectionSetMapper::toDto);
     }
 
     /**

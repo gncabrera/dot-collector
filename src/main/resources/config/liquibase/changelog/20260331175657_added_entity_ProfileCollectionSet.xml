@@ -26,22 +26,11 @@
             <column name="collection_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="set_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-    </changeSet>
-
-    <changeSet id="20260331175657-1-relations" author="jhipster">
-
-        <createTable tableName="rel_profile_collection_set__set">
-            <column name="set_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="profile_collection_set_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="profile_collection_set_id, set_id" tableName="rel_profile_collection_set__set"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

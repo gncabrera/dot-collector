@@ -39,13 +39,6 @@
       "relationshipName": "type",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
-    },
-    {
-      "otherEntityName": "profileCollectionSet",
-      "otherEntityRelationshipName": "set",
-      "relationshipName": "profileCollectionSet",
-      "relationshipSide": "right",
-      "relationshipType": "many-to-many"
     }
   ],
   "searchEngine": "no",

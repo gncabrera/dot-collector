@@ -6,9 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -65,11 +62,6 @@ public class MegaSet extends AbstractOwnedEntity<Long> {
     @JsonIgnoreProperties(value = { "profileInterests" }, allowSetters = true)
     private Interest interest;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "sets")
-    @JsonIgnoreProperties(value = { "collection", "sets" }, allowSetters = true)
-    @Setter(AccessLevel.NONE)
-    private Set<ProfileCollectionSet> profileCollectionSets = new HashSet<>();
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public MegaSet id(Long id) {
@@ -114,33 +106,6 @@ public class MegaSet extends AbstractOwnedEntity<Long> {
 
     public MegaSet type(MegaSetType megaSetType) {
         this.setType(megaSetType);
-        return this;
-    }
-
-    public void setProfileCollectionSets(Set<ProfileCollectionSet> profileCollectionSets) {
-        if (this.profileCollectionSets != null) {
-            this.profileCollectionSets.forEach(i -> i.removeSet(this));
-        }
-        if (profileCollectionSets != null) {
-            profileCollectionSets.forEach(i -> i.addSet(this));
-        }
-        this.profileCollectionSets = profileCollectionSets;
-    }
-
-    public MegaSet profileCollectionSets(Set<ProfileCollectionSet> profileCollectionSets) {
-        this.setProfileCollectionSets(profileCollectionSets);
-        return this;
-    }
-
-    public MegaSet addProfileCollectionSet(ProfileCollectionSet profileCollectionSet) {
-        this.profileCollectionSets.add(profileCollectionSet);
-        profileCollectionSet.getSets().add(this);
-        return this;
-    }
-
-    public MegaSet removeProfileCollectionSet(ProfileCollectionSet profileCollectionSet) {
-        this.profileCollectionSets.remove(profileCollectionSet);
-        profileCollectionSet.getSets().remove(this);
         return this;
     }
 

@@ -62,6 +62,6 @@ public class ProfileCollectionSetAsserts {
         assertThat(actual)
             .as("Verify ProfileCollectionSet relationships")
             .satisfies(a -> assertThat(a.getCollection()).as("check collection").isEqualTo(expected.getCollection()))
-            .satisfies(a -> assertThat(a.getSets()).as("check sets").isEqualTo(expected.getSets()));
+            .satisfies(a -> assertThat(a.getSet()).as("check set").isEqualTo(expected.getSet()));
     }
 }

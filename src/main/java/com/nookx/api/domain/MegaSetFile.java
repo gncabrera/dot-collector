@@ -33,7 +33,7 @@ public class MegaSetFile implements Serializable {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "set_id", nullable = false)
-    @JsonIgnoreProperties(value = { "type", "profileCollectionSets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "type" }, allowSetters = true)
     private MegaSet megaSet;
 
     @NotNull

@@ -17,16 +17,9 @@
                                  referencedTableName="profile_collection"
                                  />
 
-        <addForeignKeyConstraint baseColumnNames="profile_collection_set_id"
-                                 baseTableName="rel_profile_collection_set__set"
-                                 constraintName="fk_rel_profile_collection_set__set__profile_collection_set_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="profile_collection_set"
-                                 />
-
         <addForeignKeyConstraint baseColumnNames="set_id"
-                                 baseTableName="rel_profile_collection_set__set"
-                                 constraintName="fk_rel_profile_collection_set__set__set_id"
+                                 baseTableName="profile_collection_set"
+                                 constraintName="fk_profile_collection_set__set_id"
                                  referencedColumnNames="id"
                                  referencedTableName="mega_set"
                                  />

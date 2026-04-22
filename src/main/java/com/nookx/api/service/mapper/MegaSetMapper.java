@@ -2,12 +2,8 @@ package com.nookx.api.service.mapper;
 
 import com.nookx.api.domain.MegaSet;
 import com.nookx.api.domain.MegaSetType;
-import com.nookx.api.domain.ProfileCollectionSet;
 import com.nookx.api.service.dto.MegaSetDTO;
 import com.nookx.api.service.dto.MegaSetTypeDTO;
-import com.nookx.api.service.dto.ProfileCollectionSetDTO;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.mapstruct.*;
 
 /**
@@ -20,8 +16,6 @@ public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @Mapping(target = "ownerId", source = "owner.id")
     MegaSetDTO toDto(MegaSet s);
 
-    @Mapping(target = "profileCollectionSets", ignore = true)
-    @Mapping(target = "removeProfileCollectionSet", ignore = true)
     @Mapping(target = "interest", source = "interest", qualifiedByName = "toEntityInterestId")
     @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     MegaSet toEntity(MegaSetDTO megaSetDTO);
@@ -29,8 +23,6 @@ public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @Override
     @Named("partialUpdate")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "profileCollectionSets", ignore = true)
-    @Mapping(target = "removeProfileCollectionSet", ignore = true)
     @Mapping(target = "interest", source = "interest", qualifiedByName = "toEntityInterestId")
     @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     void partialUpdate(@MappingTarget MegaSet entity, MegaSetDTO dto);
@@ -39,14 +31,4 @@ public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     MegaSetTypeDTO toDtoMegaSetTypeId(MegaSetType megaSetType);
-
-    @Named("profileCollectionSetId")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    ProfileCollectionSetDTO toDtoProfileCollectionSetId(ProfileCollectionSet profileCollectionSet);
-
-    @Named("profileCollectionSetIdSet")
-    default Set<ProfileCollectionSetDTO> toDtoProfileCollectionSetIdSet(Set<ProfileCollectionSet> profileCollectionSet) {
-        return profileCollectionSet.stream().map(this::toDtoProfileCollectionSetId).collect(Collectors.toSet());
-    }
 }

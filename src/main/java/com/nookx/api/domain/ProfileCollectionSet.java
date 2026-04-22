@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,14 +40,10 @@ public class ProfileCollectionSet implements Serializable {
     @JsonIgnoreProperties(value = { "profile" }, allowSetters = true)
     private ProfileCollection collection;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "rel_profile_collection_set__set",
-        joinColumns = @JoinColumn(name = "profile_collection_set_id"),
-        inverseJoinColumns = @JoinColumn(name = "set_id")
-    )
-    @JsonIgnoreProperties(value = { "type", "profileCollectionSets" }, allowSetters = true)
-    private Set<MegaSet> sets = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "set_id")
+    @JsonIgnoreProperties(value = { "type" }, allowSetters = true)
+    private MegaSet set;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -78,18 +72,8 @@ public class ProfileCollectionSet implements Serializable {
         return this;
     }
 
-    public ProfileCollectionSet sets(Set<MegaSet> megaSets) {
-        this.setSets(megaSets);
-        return this;
-    }
-
-    public ProfileCollectionSet addSet(MegaSet megaSet) {
-        this.sets.add(megaSet);
-        return this;
-    }
-
-    public ProfileCollectionSet removeSet(MegaSet megaSet) {
-        this.sets.remove(megaSet);
+    public ProfileCollectionSet set(MegaSet megaSet) {
+        this.setSet(megaSet);
         return this;
     }
 

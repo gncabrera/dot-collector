@@ -72,9 +72,6 @@ public class MegaSetAsserts {
     public static void assertMegaSetUpdatableRelationshipsEquals(MegaSet expected, MegaSet actual) {
         assertThat(actual)
             .as("Verify MegaSet relationships")
-            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()))
-            .satisfies(a ->
-                assertThat(a.getProfileCollectionSets()).as("check profileCollectionSets").isEqualTo(expected.getProfileCollectionSets())
-            );
+            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()));
     }
 }
