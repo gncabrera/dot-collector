@@ -17,7 +17,6 @@ import org.mapstruct.*;
 public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @Mapping(target = "type", source = "type", qualifiedByName = "megaSetTypeId")
     @Mapping(target = "interest", source = "interest", qualifiedByName = "interestId")
-    @Mapping(target = "profileCollectionSets", source = "profileCollectionSets", qualifiedByName = "profileCollectionSetIdSet")
     MegaSetDTO toDto(MegaSet s);
 
     @Mapping(target = "profileCollectionSets", ignore = true)

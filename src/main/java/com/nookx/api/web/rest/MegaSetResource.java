@@ -24,7 +24,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link MegaSet}.
  */
 @RestController
-@RequestMapping("/api/mega-sets")
+@RequestMapping("/api/backoffice/sets")
 public class MegaSetResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(MegaSetResource.class);
@@ -44,7 +44,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code POST  /mega-sets} : Create a new megaSet.
+     * {@code POST  /sets} : Create a new megaSet.
      *
      * @param megaSetDTO the megaSetDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new megaSetDTO, or with status {@code 400 (Bad Request)} if the megaSet has already an ID.
@@ -57,13 +57,13 @@ public class MegaSetResource {
             throw new BadRequestAlertException("A new megaSet cannot already have an ID", ENTITY_NAME, "idexists");
         }
         megaSetDTO = megaSetService.save(megaSetDTO);
-        return ResponseEntity.created(new URI("/api/mega-sets/" + megaSetDTO.getId()))
+        return ResponseEntity.created(new URI("/api/sets/" + megaSetDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, megaSetDTO.getId().toString()))
             .body(megaSetDTO);
     }
 
     /**
-     * {@code PUT  /mega-sets/:id} : Updates an existing megaSet.
+     * {@code PUT  /sets/:id} : Updates an existing megaSet.
      *
      * @param id the id of the megaSetDTO to save.
      * @param megaSetDTO the megaSetDTO to update.
@@ -96,7 +96,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code PATCH  /mega-sets/:id} : Partial updates given fields of an existing megaSet, field will ignore if it is null
+     * {@code PATCH  /sets/:id} : Partial updates given fields of an existing megaSet, field will ignore if it is null
      *
      * @param id the id of the megaSetDTO to save.
      * @param megaSetDTO the megaSetDTO to update.
@@ -132,7 +132,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code GET  /mega-sets} : get all the Mega Sets.
+     * {@code GET  /sets} : get all the Mega Sets.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Mega Sets in body.
      */
@@ -143,7 +143,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code GET  /mega-sets/:id} : get the "id" megaSet.
+     * {@code GET  /sets/:id} : get the "id" megaSet.
      *
      * @param id the id of the megaSetDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the megaSetDTO, or with status {@code 404 (Not Found)}.
@@ -156,7 +156,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code DELETE  /mega-sets/:id} : delete the "id" megaSet.
+     * {@code DELETE  /sets/:id} : delete the "id" megaSet.
      *
      * @param id the id of the megaSetDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.

@@ -1,6 +1,9 @@
 package com.nookx.api.service;
 
+import com.nookx.api.client.rest.MegaSetTypeResource;
+import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaSet;
+import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.service.dto.MegaSetDTO;
 import com.nookx.api.service.mapper.MegaSetMapper;
@@ -36,10 +39,22 @@ public class MegaSetService {
 
     private final MegaSetTypeService megaSetTypeService;
 
-    public MegaSetService(MegaSetRepository megaSetRepository, MegaSetMapper megaSetMapper, MegaSetTypeService megaSetTypeService) {
+    private final InterestRepository interestRepository;
+
+    private final MegaSetTypeResource megaSetTypeResource;
+
+    public MegaSetService(
+        MegaSetRepository megaSetRepository,
+        MegaSetMapper megaSetMapper,
+        MegaSetTypeService megaSetTypeService,
+        InterestRepository interestRepository,
+        MegaSetTypeResource megaSetTypeResource
+    ) {
         this.megaSetRepository = megaSetRepository;
         this.megaSetMapper = megaSetMapper;
         this.megaSetTypeService = megaSetTypeService;
+        this.interestRepository = interestRepository;
+        this.megaSetTypeResource = megaSetTypeResource;
     }
 
     /**
@@ -51,7 +66,14 @@ public class MegaSetService {
     public MegaSetDTO save(MegaSetDTO megaSetDTO) {
         LOG.debug("Request to save MegaSet : {}", megaSetDTO);
         MegaSet megaSet = megaSetMapper.toEntity(megaSetDTO);
+
+        Interest interest = interestRepository.findById(megaSetDTO.getInterest().getId()).orElse(null);
+        if (interest != null) {
+            megaSet.setInterest(interest);
+            megaSet.setType(interest.getSetType());
+        }
         validateAgainstType(megaSet);
+
         megaSet = megaSetRepository.save(megaSet);
         return megaSetMapper.toDto(megaSet);
     }
