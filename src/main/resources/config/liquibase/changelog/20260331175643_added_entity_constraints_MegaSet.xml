@@ -26,4 +26,13 @@
                                  referencedTableName="interest"
                                  />
     </changeSet>
+
+    <changeSet id="20260422000000-ms-owner-fk" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="mega_set"
+                                 constraintName="fk_mega_set__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+    </changeSet>
 </databaseChangeLog>

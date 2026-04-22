@@ -44,6 +44,20 @@
         <addPrimaryKey columnNames="mega_set_type_id, attribute_id" tableName="rel_mega_set_type__attribute"/>
     </changeSet>
 
+    <changeSet id="20260331175642-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/set-types.csv"
+                  separator=";"
+                  tableName="mega_set_type"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="version" type="numeric"/>
+            <column name="active" type="boolean"/>
+            <column name="is_latest" type="boolean"/>
+        </loadData>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
 </databaseChangeLog>

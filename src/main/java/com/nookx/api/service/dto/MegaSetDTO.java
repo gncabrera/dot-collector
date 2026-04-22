@@ -42,6 +42,8 @@ public class MegaSetDTO implements Serializable {
 
     private ClientInterestDTO interest;
 
+    private Long ownerId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -75,6 +77,7 @@ public class MegaSetDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", type=" + getType() +
+            ", ownerId=" + getOwnerId() +
             "}";
     }
 }

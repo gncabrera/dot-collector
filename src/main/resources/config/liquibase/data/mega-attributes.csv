@@ -1,0 +1,2 @@
+id;name;label;description;type;ui_component;required;multiple;jhi_order;attribute_group;active
+1;instructionsFirstPrinted;Instructions first printed;Date the original printed instructions were issued;DATE;DATE;true;false;1;metadata;true

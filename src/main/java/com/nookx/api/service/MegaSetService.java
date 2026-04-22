@@ -3,6 +3,7 @@ package com.nookx.api.service;
 import com.nookx.api.client.rest.MegaSetTypeResource;
 import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaSet;
+import com.nookx.api.domain.User;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.service.dto.MegaSetDTO;
@@ -43,18 +44,22 @@ public class MegaSetService {
 
     private final MegaSetTypeResource megaSetTypeResource;
 
+    private final UserService userService;
+
     public MegaSetService(
         MegaSetRepository megaSetRepository,
         MegaSetMapper megaSetMapper,
         MegaSetTypeService megaSetTypeService,
         InterestRepository interestRepository,
-        MegaSetTypeResource megaSetTypeResource
+        MegaSetTypeResource megaSetTypeResource,
+        UserService userService
     ) {
         this.megaSetRepository = megaSetRepository;
         this.megaSetMapper = megaSetMapper;
         this.megaSetTypeService = megaSetTypeService;
         this.interestRepository = interestRepository;
         this.megaSetTypeResource = megaSetTypeResource;
+        this.userService = userService;
     }
 
     /**
@@ -73,6 +78,11 @@ public class MegaSetService {
             megaSet.setType(interest.getSetType());
         }
         validateAgainstType(megaSet);
+
+        User owner = userService
+            .getUserWithAuthorities()
+            .orElseThrow(() -> new BadRequestAlertException("Current user could not be resolved", ENTITY_NAME, "usernotfound"));
+        megaSet.setOwner(owner);
 
         megaSet = megaSetRepository.save(megaSet);
         return megaSetMapper.toDto(megaSet);

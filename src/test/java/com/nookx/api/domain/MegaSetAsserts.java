@@ -55,6 +55,11 @@ public class MegaSetAsserts {
             .satisfies(a -> assertThat(a.getAttributes()).as("check attributes").isEqualTo(expected.getAttributes()))
             .satisfies(a ->
                 assertThat(a.getAttributesContentType()).as("check attributes content type").isEqualTo(expected.getAttributesContentType())
+            )
+            .satisfies(a ->
+                assertThat(a.getOwner() == null ? null : a.getOwner().getId())
+                    .as("check owner id")
+                    .isEqualTo(expected.getOwner() == null ? null : expected.getOwner().getId())
             );
     }
 

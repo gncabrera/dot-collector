@@ -13,15 +13,17 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link MegaSet} and its DTO {@link MegaSetDTO}.
  */
-@Mapper(componentModel = "spring", uses = InterestMapper.class)
+@Mapper(componentModel = "spring", uses = { InterestMapper.class, UserMapper.class })
 public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @Mapping(target = "type", source = "type", qualifiedByName = "megaSetTypeId")
     @Mapping(target = "interest", source = "interest", qualifiedByName = "interestId")
+    @Mapping(target = "ownerId", source = "owner.id")
     MegaSetDTO toDto(MegaSet s);
 
     @Mapping(target = "profileCollectionSets", ignore = true)
     @Mapping(target = "removeProfileCollectionSet", ignore = true)
     @Mapping(target = "interest", source = "interest", qualifiedByName = "toEntityInterestId")
+    @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     MegaSet toEntity(MegaSetDTO megaSetDTO);
 
     @Override
@@ -30,6 +32,7 @@ public interface MegaSetMapper extends EntityMapper<MegaSetDTO, MegaSet> {
     @Mapping(target = "profileCollectionSets", ignore = true)
     @Mapping(target = "removeProfileCollectionSet", ignore = true)
     @Mapping(target = "interest", source = "interest", qualifiedByName = "toEntityInterestId")
+    @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     void partialUpdate(@MappingTarget MegaSet entity, MegaSetDTO dto);
 
     @Named("megaSetTypeId")

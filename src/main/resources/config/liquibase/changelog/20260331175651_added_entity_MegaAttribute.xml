@@ -66,6 +66,37 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20260331175651-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/mega-attributes.csv"
+                  separator=";"
+                  tableName="mega_attribute"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="label" type="string"/>
+            <column name="description" type="string"/>
+            <column name="type" type="string"/>
+            <column name="ui_component" type="string"/>
+            <column name="required" type="boolean"/>
+            <column name="multiple" type="boolean"/>
+            <column name="jhi_order" type="numeric"/>
+            <column name="attribute_group" type="string"/>
+            <column name="active" type="boolean"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="20260331175651-2-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/rel-mega-set-type-attribute.csv"
+                  separator=";"
+                  tableName="rel_mega_set_type__attribute"
+                  usePreparedStatements="true">
+            <column name="mega_set_type_id" type="numeric"/>
+            <column name="attribute_id" type="numeric"/>
+        </loadData>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
 </databaseChangeLog>

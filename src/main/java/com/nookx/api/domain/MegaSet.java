@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +22,7 @@ import org.hibernate.type.SqlTypes;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class MegaSet implements Serializable {
+public class MegaSet extends AbstractOwnedEntity<Long> {
 
     @Serial
     private static final long serialVersionUID = 1L;

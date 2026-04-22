@@ -51,6 +51,7 @@
             <column name="sort_order" type="numeric"/>
             <column name="deleted" type="boolean"/>
             <column name="deleted_date" type="timestamp"/>
+            <column name="set_type_id" type="numeric"/>
         </loadData>
     </changeSet>
 
