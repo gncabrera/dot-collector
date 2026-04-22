@@ -2,6 +2,7 @@ package com.nookx.api.client.rest;
 
 import com.nookx.api.client.dto.ClientCollectionDTO;
 import com.nookx.api.client.dto.ClientCollectionLiteDTO;
+import com.nookx.api.client.dto.ClientCollectionUpdateDTO;
 import com.nookx.api.client.service.ClientCollectionService;
 import com.nookx.api.domain.enumeration.ProfileCollectionType;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -95,6 +97,26 @@ public class ClientCollectionResource {
         ClientCollectionDTO result = clientCollectionService.create(dto);
         return ResponseEntity.created(new URI("/api/client/collections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code PUT  /client-collections/:id} : update an existing client collection.
+     *
+     * @param id the id of the collection to update.
+     * @param dto the update payload containing fields to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated DTO,
+     * or with status {@code 400 (Bad Request)} if the collection does not exist.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientCollectionDTO> update(@PathVariable("id") Long id, @Valid @RequestBody ClientCollectionUpdateDTO dto) {
+        LOG.debug("REST request to update ClientCollection : {}, {}", id, dto);
+        if (id == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        ClientCollectionDTO result = clientCollectionService.update(id, dto);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 

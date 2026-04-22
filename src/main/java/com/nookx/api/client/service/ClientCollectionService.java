@@ -144,6 +144,50 @@ public class ClientCollectionService {
         return toClientCollectionDTO(profileCollection);
     }
 
+    @Transactional
+    public ClientCollectionDTO update(Long id, ClientCollectionUpdateDTO dto) {
+        ProfileCollection profileCollection = profileCollectionRepository
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Collection not found", "clientCollection", "idnotfound"));
+
+        profileCollection.setTitle(dto.getTitle());
+        profileCollection.setDescription(dto.getDescription());
+        profileCollection.setType(dto.getCollectionType());
+
+        ClientCollectionSettingsDTO settings = dto.getSettings();
+        if (settings != null) {
+            profileCollection.setIsPublic(settings.isPublic());
+            profileCollection.setShowPrice(settings.isShowPrice());
+            profileCollection.setShowCheckbox(settings.isShowCheckbox());
+            profileCollection.setShowComment(settings.isShowComment());
+            if (settings.getCurrency() != null && settings.getCurrency().getId() != null) {
+                currencyRepository.findById(settings.getCurrency().getId()).ifPresent(profileCollection::setCurrency);
+            } else {
+                profileCollection.setCurrency(null);
+            }
+        }
+
+        List<ClientInterestDTO> interestDtos = dto.getInterests();
+        if (interestDtos != null && !interestDtos.isEmpty()) {
+            Long profileId = profileService.getCurrentProfile().getId();
+            Set<Interest> resolvedInterests = interestDtos
+                .stream()
+                .filter(interestDto -> interestDto != null && interestDto.getId() != null)
+                .map(interestDto ->
+                    interestRepository
+                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId)
+                        .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"))
+                )
+                .collect(Collectors.toCollection(HashSet::new));
+            profileCollection.setInterests(resolvedInterests);
+        } else {
+            profileCollection.setInterests(new HashSet<>());
+        }
+
+        profileCollection = profileCollectionRepository.save(profileCollection);
+        return toClientCollectionDTO(profileCollection);
+    }
+
     private ClientCollectionDTO toClientCollectionDTO(ProfileCollection profileCollection) {
         ClientCollectionDTO dto = new ClientCollectionDTO();
         dto.setId(profileCollection.getId());
