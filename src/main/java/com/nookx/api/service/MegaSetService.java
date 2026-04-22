@@ -163,7 +163,7 @@ public class MegaSetService {
         megaSetTypeService.validateAttributes(megaSet.getType().getId(), megaSet.getAttributes());
     }
 
-    private boolean isOwner(MegaSet set) {
+    public boolean isOwner(MegaSet set) {
         return profileService.isCurrentProfile(set.getOwner()) || SecurityUtils.currentUserIsAdmin();
     }
 }

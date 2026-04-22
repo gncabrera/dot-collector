@@ -41,6 +41,7 @@
     <include file="config/liquibase/changelog/20260415120000_added_entity_MegaPartImage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260415120001_added_entity_MegaSetImage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260415130100_added_entity_ProfileCollectionImage.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260422120000_added_entity_MegaSetFile.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20260331175642_added_entity_constraints_MegaSetType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260331175643_added_entity_constraints_MegaSet.xml" relativeToChangelogFile="false"/>
@@ -61,6 +62,7 @@
     <include file="config/liquibase/changelog/20260415120002_added_entity_constraints_MegaPartImage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260415120003_added_entity_constraints_MegaSetImage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260415130102_added_entity_constraints_ProfileCollectionImage.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260422120001_added_entity_constraints_MegaSetFile.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

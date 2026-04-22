@@ -6,5 +6,6 @@ package com.nookx.api.domain.enumeration;
 public enum AttachmentType {
     PARTS,
     SETS,
+    SETS_FILE,
     COLLECTIONS,
 }
