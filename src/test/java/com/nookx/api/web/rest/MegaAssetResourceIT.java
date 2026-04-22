@@ -194,7 +194,7 @@ class MegaAssetResourceIT {
         assertThat(returnedMegaAssetDTO.getContentType()).isEqualTo(MediaType.TEXT_PLAIN_VALUE);
         assertThat(returnedMegaAssetDTO.getSizeBytes()).isEqualTo(5L);
         assertThat(returnedMegaAssetDTO.getExtension()).isEqualTo(".txt");
-        assertThat(returnedMegaAssetDTO.getUploadedById()).isEqualTo(userId);
+        assertThat(returnedMegaAssetDTO.getOwnerId()).isEqualTo(userId);
         assertThat(returnedMegaAssetDTO.isPublic()).isTrue();
 
         insertedMegaAsset = megaAssetMapper.toEntity(returnedMegaAssetDTO);

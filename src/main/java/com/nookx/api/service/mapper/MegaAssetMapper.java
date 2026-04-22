@@ -15,17 +15,17 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface MegaAssetMapper extends EntityMapper<MegaAssetDTO, MegaAsset> {
     @Override
-    @Mapping(target = "uploadedBy", source = "uploadedById", qualifiedByName = "userFromId")
+    @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     MegaAsset toEntity(MegaAssetDTO dto);
 
     @Override
-    @Mapping(target = "uploadedById", source = "uploadedBy.id")
+    @Mapping(target = "ownerId", source = "owner.id")
     MegaAssetDTO toDto(MegaAsset entity);
 
     @Override
     @Named("partialUpdate")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "uploadedBy", source = "uploadedById", qualifiedByName = "userFromId")
+    @Mapping(target = "owner", source = "ownerId", qualifiedByName = "userFromId")
     void partialUpdate(@MappingTarget MegaAsset entity, MegaAssetDTO dto);
 
     @Named("megaAssetFromDtoId")
