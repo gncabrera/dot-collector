@@ -1,12 +1,10 @@
 package com.nookx.api.client.service;
 
 import com.nookx.api.client.dto.*;
-import com.nookx.api.config.ApplicationProperties;
 import com.nookx.api.domain.CloneInformation;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionImage;
-import com.nookx.api.domain.enumeration.MegaAssetImageSize;
 import com.nookx.api.repository.CloneInformationRepository;
 import com.nookx.api.repository.CurrencyRepository;
 import com.nookx.api.repository.InterestRepository;
@@ -34,7 +32,7 @@ public class ClientCollectionService {
     private final CurrencyMapper currencyMapper;
     private final CloneInformationRepository cloneInformationRepository;
     private final ProfileCollectionImageRepository profileCollectionImageRepository;
-    private final ApplicationProperties applicationProperties;
+    private final ClientAssetUrlService clientAssetUrlService;
     private final InterestRepository interestRepository;
     private final InterestMapper interestMapper;
 
@@ -46,7 +44,7 @@ public class ClientCollectionService {
         CurrencyMapper currencyMapper,
         CloneInformationRepository cloneInformationRepository,
         ProfileCollectionImageRepository profileCollectionImageRepository,
-        ApplicationProperties applicationProperties,
+        ClientAssetUrlService clientAssetUrlService,
         InterestRepository interestRepository,
         InterestMapper interestMapper
     ) {
@@ -57,7 +55,7 @@ public class ClientCollectionService {
         this.currencyMapper = currencyMapper;
         this.cloneInformationRepository = cloneInformationRepository;
         this.profileCollectionImageRepository = profileCollectionImageRepository;
-        this.applicationProperties = applicationProperties;
+        this.clientAssetUrlService = clientAssetUrlService;
         this.interestRepository = interestRepository;
         this.interestMapper = interestMapper;
     }
@@ -83,18 +81,11 @@ public class ClientCollectionService {
     }
 
     private ClientImageDTO getClientImageDto(Long collectionId) {
-        Optional<ProfileCollectionImage> byProfileCollectionId = profileCollectionImageRepository.findByProfileCollection_Id(collectionId);
-        if (byProfileCollectionId.isPresent()) {
-            ProfileCollectionImage profileCollectionImage = byProfileCollectionId.orElse(null);
-            String url =
-                applicationProperties.getBaseUrl() + "/api/client/assets/image/_SIZE_/" + profileCollectionImage.getAsset().getUuid();
-            ClientImageDTO imageDTO = new ClientImageDTO();
-            imageDTO.setOriginal(url.replace("_SIZE_", MegaAssetImageSize.ORIGINAL.suffix()));
-            imageDTO.setThumb(url.replace("_SIZE_", MegaAssetImageSize.THUMB.suffix()));
-            imageDTO.setMedium(url.replace("_SIZE_", MegaAssetImageSize.MEDIUM.suffix()));
-            return imageDTO;
-        }
-        return null;
+        return profileCollectionImageRepository
+            .findByProfileCollection_Id(collectionId)
+            .map(ProfileCollectionImage::getAsset)
+            .map(clientAssetUrlService::toClientImageDto)
+            .orElse(null);
     }
 
     @Transactional(readOnly = true)
