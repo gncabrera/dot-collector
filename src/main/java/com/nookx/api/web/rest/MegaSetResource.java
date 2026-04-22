@@ -96,53 +96,6 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code PATCH  /sets/:id} : Partial updates given fields of an existing megaSet, field will ignore if it is null
-     *
-     * @param id the id of the megaSetDTO to save.
-     * @param megaSetDTO the megaSetDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated megaSetDTO,
-     * or with status {@code 400 (Bad Request)} if the megaSetDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the megaSetDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the megaSetDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<MegaSetDTO> partialUpdateMegaSet(
-        @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody MegaSetDTO megaSetDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to partial update MegaSet partially : {}, {}", id, megaSetDTO);
-        if (megaSetDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, megaSetDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!megaSetRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<MegaSetDTO> result = megaSetService.partialUpdate(megaSetDTO);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, megaSetDTO.getId().toString())
-        );
-    }
-
-    /**
-     * {@code GET  /sets} : get all the Mega Sets.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Mega Sets in body.
-     */
-    @GetMapping("")
-    public List<MegaSetDTO> getAllMegaSets() {
-        LOG.debug("REST request to get all MegaSets");
-        return megaSetService.findAll();
-    }
-
-    /**
      * {@code GET  /sets/:id} : get the "id" megaSet.
      *
      * @param id the id of the megaSetDTO to retrieve.

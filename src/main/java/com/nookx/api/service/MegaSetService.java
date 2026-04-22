@@ -3,9 +3,11 @@ package com.nookx.api.service;
 import com.nookx.api.client.rest.MegaSetTypeResource;
 import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaSet;
+import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.User;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.MegaSetRepository;
+import com.nookx.api.security.SecurityUtils;
 import com.nookx.api.service.dto.MegaSetDTO;
 import com.nookx.api.service.mapper.MegaSetMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
@@ -15,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +47,8 @@ public class MegaSetService {
 
     private final MegaSetTypeResource megaSetTypeResource;
 
+    private final ProfileService profileService;
+
     private final UserService userService;
 
     public MegaSetService(
@@ -52,6 +57,7 @@ public class MegaSetService {
         MegaSetTypeService megaSetTypeService,
         InterestRepository interestRepository,
         MegaSetTypeResource megaSetTypeResource,
+        ProfileService profileService,
         UserService userService
     ) {
         this.megaSetRepository = megaSetRepository;
@@ -59,6 +65,7 @@ public class MegaSetService {
         this.megaSetTypeService = megaSetTypeService;
         this.interestRepository = interestRepository;
         this.megaSetTypeResource = megaSetTypeResource;
+        this.profileService = profileService;
         this.userService = userService;
     }
 
@@ -96,41 +103,16 @@ public class MegaSetService {
      */
     public MegaSetDTO update(MegaSetDTO megaSetDTO) {
         LOG.debug("Request to update MegaSet : {}", megaSetDTO);
-        MegaSet megaSet = megaSetMapper.toEntity(megaSetDTO);
-        validateAgainstType(megaSet);
-        megaSet = megaSetRepository.save(megaSet);
-        return megaSetMapper.toDto(megaSet);
-    }
-
-    /**
-     * Partially update a megaSet.
-     *
-     * @param megaSetDTO the entity to update partially.
-     * @return the persisted entity.
-     */
-    public Optional<MegaSetDTO> partialUpdate(MegaSetDTO megaSetDTO) {
-        LOG.debug("Request to partially update MegaSet : {}", megaSetDTO);
-
-        return megaSetRepository
+        MegaSet existing = megaSetRepository
             .findById(megaSetDTO.getId())
-            .map(existingMegaSet -> {
-                megaSetMapper.partialUpdate(existingMegaSet, megaSetDTO);
-                validateAgainstType(existingMegaSet);
-                return existingMegaSet;
-            })
-            .map(megaSetRepository::save)
-            .map(megaSetMapper::toDto);
-    }
-
-    /**
-     * Get all the megaSets.
-     *
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<MegaSetDTO> findAll() {
-        LOG.debug("Request to get all MegaSets");
-        return megaSetRepository.findAll().stream().map(megaSetMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+        if (!isOwner(existing)) {
+            throw new AccessDeniedException("Current user is not the owner of this MegaSet");
+        }
+        megaSetMapper.partialUpdate(existing, megaSetDTO);
+        validateAgainstType(existing);
+        existing = megaSetRepository.save(existing);
+        return megaSetMapper.toDto(existing);
     }
 
     /**
@@ -142,7 +124,14 @@ public class MegaSetService {
     @Transactional(readOnly = true)
     public Optional<MegaSetDTO> findOne(Long id) {
         LOG.debug("Request to get MegaSet : {}", id);
-        return megaSetRepository.findById(id).map(megaSetMapper::toDto);
+        return megaSetRepository
+            .findById(id)
+            .map(set -> {
+                if (!isOwner(set)) {
+                    throw new AccessDeniedException("Current user is not the owner of this MegaSet");
+                }
+                return megaSetMapper.toDto(set);
+            });
     }
 
     /**
@@ -152,6 +141,12 @@ public class MegaSetService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete MegaSet : {}", id);
+        MegaSet existing = megaSetRepository
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+        if (!isOwner(existing)) {
+            throw new AccessDeniedException("Current user is not the owner of this MegaSet");
+        }
         megaSetRepository.deleteById(id);
     }
 
@@ -166,5 +161,9 @@ public class MegaSetService {
             throw new BadRequestAlertException("MegaSet must reference a MegaSetType", ENTITY_NAME, "typerequired");
         }
         megaSetTypeService.validateAttributes(megaSet.getType().getId(), megaSet.getAttributes());
+    }
+
+    private boolean isOwner(MegaSet set) {
+        return profileService.isCurrentProfile(set.getOwner()) || SecurityUtils.currentUserIsAdmin();
     }
 }
