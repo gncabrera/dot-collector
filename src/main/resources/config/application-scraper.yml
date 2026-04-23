@@ -1,0 +1,44 @@
+# ===================================================================
+# Spring Boot configuration for the "scraper" profile.
+#
+# Activate by adding "scraper" to spring.profiles.active. When active,
+# the background scraper runners (Discovery / Fetch / Parse / AssetFetch)
+# are wired and start on application startup.
+#
+# Usage example:
+#   mvn -Pdev spring-boot:run -Dspring-boot.run.profiles=dev,scraper
+# ===================================================================
+
+logging:
+  level:
+    com.nookx.api.scraper: DEBUG
+
+application:
+  scraper:
+    raw-storage-directory: /data/scraper
+    user-agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0'
+    connect-timeout-ms: 15000
+    request-timeout-ms: 60000
+
+    # 7 days in milliseconds
+    discovery-delay-ms: 604800000
+    discovery-initial-delay-ms: 604800000
+    fetch-delay-ms: 15000
+    fetch-initial-delay-ms: 500
+    fetch-jitter-ms: 3500
+    parse-delay-ms: 5000
+    parse-initial-delay-ms: 2000
+    asset-fetch-delay-ms: 604800000
+    asset-fetch-initial-delay-ms: 604800000
+
+    recheck:
+      default-days: 90
+      recent-set-release-days: 14
+      recent-set-age-years: 1
+      not-found-days: 180
+      transient-retry-minutes: 60
+      max-retries: 5
+    sources:
+      playmodb:
+        enabled: true
+        base-url: 'https://playmodb.org'
