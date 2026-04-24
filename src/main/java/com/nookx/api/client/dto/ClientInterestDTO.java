@@ -28,6 +28,8 @@ public class ClientInterestDTO implements Serializable {
 
     private Integer order;
 
+    private boolean subscribed;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,6 +61,7 @@ public class ClientInterestDTO implements Serializable {
             ", isPublic=" + isPublic() +
             ", isSystem=" + isSystem() +
             ", order=" + getOrder() +
+            ", subscribed=" + isSubscribed() +
             "}";
     }
 }

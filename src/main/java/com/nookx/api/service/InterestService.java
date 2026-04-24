@@ -138,10 +138,11 @@ public class InterestService {
     public List<ClientInterestDTO> findAll() {
         LOG.debug("Request to get Interests for current profile and system catalog");
         Long profileId = profileService.getCurrentProfile().getId();
+        Set<Long> subscribedIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
         return interestRepository
             .findAllLinkedToProfileOrSystem(profileId)
             .stream()
-            .map(interestMapper::toDto)
+            .map(interest -> toDtoWithSubscription(interest, subscribedIds))
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
@@ -160,7 +161,16 @@ public class InterestService {
     public Optional<ClientInterestDTO> findOne(Long id) {
         LOG.debug("Request to get Interest : {} for current profile", id);
         Long profileId = profileService.getCurrentProfile().getId();
-        return interestRepository.findByIdLinkedToProfileOrSystem(id, profileId).map(interestMapper::toDto);
+        Set<Long> subscribedIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
+        return interestRepository
+            .findByIdLinkedToProfileOrSystem(id, profileId)
+            .map(interest -> toDtoWithSubscription(interest, subscribedIds));
+    }
+
+    private ClientInterestDTO toDtoWithSubscription(Interest interest, Set<Long> subscribedInterestIds) {
+        ClientInterestDTO dto = interestMapper.toDto(interest);
+        dto.setSubscribed(subscribedInterestIds.contains(interest.getId()));
+        return dto;
     }
 
     public void delete(Long id) {
