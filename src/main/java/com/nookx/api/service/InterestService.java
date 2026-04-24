@@ -56,7 +56,7 @@ public class InterestService {
         LOG.debug("Request to save Interest : {}", interestDTO);
         Interest interest = interestMapper.toEntity(interestDTO);
         interest.setSystem(false);
-        interest.setPublic(false);
+        interest.setPublic(interestDTO.isPublic());
         interest.setDeleted(false);
         interest.setDeletedDate(null);
         interest = interestRepository.save(interest);

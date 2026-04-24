@@ -1,5 +1,6 @@
 package com.nookx.api.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nookx.api.domain.Interest;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -22,8 +23,10 @@ public class ClientInterestDTO implements Serializable {
 
     private String description;
 
+    @JsonProperty("isPublic")
     private boolean isPublic;
 
+    @JsonProperty("isSystem")
     private boolean isSystem;
 
     private Integer order;
