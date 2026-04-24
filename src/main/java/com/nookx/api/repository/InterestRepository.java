@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByIdAndDeletedFalse(Long id);
 
+    Optional<Interest> findByNameIgnoreCaseAndDeletedFalse(String name);
+
     List<Interest> findAllBySetType_Id(Long setTypeId);
 
     @Query(

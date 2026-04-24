@@ -9,6 +9,8 @@ package com.nookx.api.scraper.source.klickypedia;
 final class KlickypediaConstants {
 
     static final String SOURCE_CODE = "klickypedia";
+    /** Catalog interest every Klickypedia set belongs to (matches the seeded {@code interest.csv}). */
+    static final String INTEREST_NAME = "Playmobil";
     static final String BASE_URL = "https://www.klickypedia.com";
     /** Discovery entry point: lists every theme link. */
     static final String ALL_SETS_URL = BASE_URL + "/sets/";

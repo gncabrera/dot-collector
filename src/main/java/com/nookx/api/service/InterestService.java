@@ -164,6 +164,20 @@ public class InterestService {
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
+    /**
+     * System-level lookup by name (case-insensitive). Skips profile-scoping on purpose so internal
+     * pipelines (scraper ingest, seeding, etc.) can resolve catalog interests like "Playmobil"
+     * without a logged-in user. Returns the JPA entity so callers can attach it to other rows.
+     */
+    @Transactional(readOnly = true)
+    public Optional<Interest> findByName(String name) {
+        LOG.debug("Request to get Interest by name : {}", name);
+        if (name == null || name.isBlank()) {
+            return Optional.empty();
+        }
+        return interestRepository.findByNameIgnoreCaseAndDeletedFalse(name.trim());
+    }
+
     @Transactional(readOnly = true)
     public Optional<ClientInterestDTO> findOne(Long id) {
         LOG.debug("Request to get Interest : {} for current profile", id);
