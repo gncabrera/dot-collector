@@ -24,10 +24,10 @@ application:
     discovery-delay-ms: 604800000
     discovery-initial-delay-ms: 604800000
     fetch-delay-ms: 15000
-    fetch-initial-delay-ms: 500
+    fetch-initial-delay-ms: 15000
     fetch-jitter-ms: 3500
-    parse-delay-ms: 5000
-    parse-initial-delay-ms: 2000
+    parse-delay-ms: 3000
+    parse-initial-delay-ms: 3000
     asset-fetch-delay-ms: 604800000
     asset-fetch-initial-delay-ms: 604800000
 
@@ -39,6 +39,12 @@ application:
       transient-retry-minutes: 60
       max-retries: 5
     sources:
+      # PlaymoDB is paused: site ships a JS-based anti-bot challenge (wsidchk) that requires a
+      # headless browser. Kept here as a reference; flip enabled to true once a Playwright-backed
+      # fetcher is in place.
       playmodb:
-        enabled: true
+        enabled: false
         base-url: 'https://playmodb.org'
+      klickypedia:
+        enabled: true
+        base-url: 'https://www.klickypedia.com'

@@ -1,2 +1,12 @@
 id;name;label;description;type;ui_component;required;multiple;jhi_order;attribute_group;active
 1;instructionsFirstPrinted;Instructions first printed;Date the original printed instructions were issued;DATE;DATE;true;false;1;metadata;true
+2;tags;Tags;Free-form tags describing the set (e.g. soccer, sportsmen);STRING;INPUT;false;true;2;metadata;true
+3;theme;Theme;Theme classification (e.g. Sports, City);STRING;INPUT;false;false;3;metadata;true
+4;format;Format;Packaging or release format (e.g. Standard Box);STRING;INPUT;false;false;4;metadata;true
+5;figures;Figures;Number of figures included in the set;NUMBER;NUMBER;false;false;5;metadata;true
+6;exclusive;Exclusive;Exclusivity flag (none or retailer/market name);STRING;INPUT;false;false;6;metadata;true
+7;discontinued;Discontinued;Discontinuation status (e.g. n/a, year);STRING;INPUT;false;false;7;metadata;true
+8;exportMarket;Export Market;Export market designation (none or market name);STRING;INPUT;false;false;8;metadata;true
+9;nameDE;Name (DE);German localized set name;STRING;INPUT;false;false;9;localization;true
+10;nameES;Name (ES);Spanish localized set name;STRING;INPUT;false;false;10;localization;true
+11;nameFR;Name (FR);French localized set name;STRING;INPUT;false;false;11;localization;true
