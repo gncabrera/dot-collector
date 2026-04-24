@@ -1,6 +1,7 @@
 package com.nookx.api.repository;
 
 import com.nookx.api.domain.CloneInformation;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CloneInformationRepository extends JpaRepository<CloneInformation, Long> {}
+public interface CloneInformationRepository extends JpaRepository<CloneInformation, Long> {
+    List<CloneInformation> findBySourceCollection_Id(Long sourceCollectionId);
+}

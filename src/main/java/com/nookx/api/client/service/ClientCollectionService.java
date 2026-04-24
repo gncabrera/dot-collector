@@ -7,13 +7,16 @@ import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionImage;
+import com.nookx.api.domain.ProfileCollectionSet;
 import com.nookx.api.domain.enumeration.MegaAssetImageSize;
 import com.nookx.api.repository.CloneInformationRepository;
 import com.nookx.api.repository.CurrencyRepository;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileCollectionImageRepository;
 import com.nookx.api.repository.ProfileCollectionRepository;
+import com.nookx.api.repository.ProfileCollectionSetRepository;
 import com.nookx.api.service.ProfileCollectionService;
+import com.nookx.api.service.ProfileCollectionSetService;
 import com.nookx.api.service.ProfileService;
 import com.nookx.api.service.mapper.CurrencyMapper;
 import com.nookx.api.service.mapper.InterestMapper;
@@ -41,6 +44,8 @@ public class ClientCollectionService {
     private final ApplicationProperties applicationProperties;
     private final InterestRepository interestRepository;
     private final InterestMapper interestMapper;
+    private final ProfileCollectionSetService profileCollectionSetService;
+    private final ProfileCollectionSetRepository profileCollectionSetRepository;
 
     public ClientCollectionService(
         ProfileService profileService,
@@ -52,7 +57,9 @@ public class ClientCollectionService {
         ProfileCollectionImageRepository profileCollectionImageRepository,
         ApplicationProperties applicationProperties,
         InterestRepository interestRepository,
-        InterestMapper interestMapper
+        InterestMapper interestMapper,
+        ProfileCollectionSetService profileCollectionSetService,
+        ProfileCollectionSetRepository profileCollectionSetRepository
     ) {
         this.profileService = profileService;
         this.profileCollectionService = profileCollectionService;
@@ -64,6 +71,8 @@ public class ClientCollectionService {
         this.applicationProperties = applicationProperties;
         this.interestRepository = interestRepository;
         this.interestMapper = interestMapper;
+        this.profileCollectionSetService = profileCollectionSetService;
+        this.profileCollectionSetRepository = profileCollectionSetRepository;
     }
 
     @Transactional(readOnly = true)
@@ -186,6 +195,56 @@ public class ClientCollectionService {
 
         profileCollection = profileCollectionRepository.save(profileCollection);
         return toClientCollectionDTO(profileCollection);
+    }
+
+    /**
+     * Delete a client collection along with its dependent data:
+     * <ul>
+     *   <li>Removes its associated image (if any).</li>
+     *   <li>Clears its interest relations (without deleting the interests).</li>
+     *   <li>Nulls out {@code sourceCollection} on any {@link CloneInformation} that references this collection
+     *       and deletes the {@link CloneInformation} that this collection itself owns (if it was a clone).</li>
+     *   <li>Deletes every {@link ProfileCollectionSet} belonging to this collection.</li>
+     *   <li>Leaves {@code profile} and {@code currency} untouched.</li>
+     * </ul>
+     */
+    @Transactional
+    public void delete(Long id) {
+        ProfileCollection collection = profileCollectionRepository
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Collection not found", "clientCollection", "idnotfound"));
+
+        Profile currentProfile = profileService.getCurrentProfile();
+        if (currentProfile == null || collection.getProfile() == null || !currentProfile.getId().equals(collection.getProfile().getId())) {
+            throw new BadRequestAlertException("Forbidden", "clientCollection", "forbidden");
+        }
+
+        if (collection.getImage() != null) {
+            collection.setImage(null);
+        }
+
+        collection.getInterests().clear();
+        collection = profileCollectionRepository.save(collection);
+
+        List<CloneInformation> referencingAsSource = cloneInformationRepository.findBySourceCollection_Id(id);
+        for (CloneInformation info : referencingAsSource) {
+            info.setSourceCollection(null);
+            cloneInformationRepository.save(info);
+        }
+
+        CloneInformation ownedCloneInformation = collection.getCloneInformation();
+        if (ownedCloneInformation != null) {
+            collection.setCloneInformation(null);
+            collection = profileCollectionRepository.save(collection);
+            cloneInformationRepository.delete(ownedCloneInformation);
+        }
+
+        List<ProfileCollectionSet> collectionSets = profileCollectionSetRepository.findByCollection_Id(id);
+        for (ProfileCollectionSet set : collectionSets) {
+            profileCollectionSetService.delete(set.getId());
+        }
+
+        profileCollectionService.delete(id);
     }
 
     private ClientCollectionDTO toClientCollectionDTO(ProfileCollection profileCollection) {

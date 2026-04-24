@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -143,5 +144,33 @@ public class ClientCollectionResource {
         return ResponseEntity.created(new URI("/api/client/collections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code DELETE  /client-collections/delete/:id} : delete a client collection along with its dependents.
+     *
+     * <p>Cleans up the dependents of the collection:
+     * <ul>
+     *   <li>image: removed</li>
+     *   <li>interests: relations removed (interests themselves are kept)</li>
+     *   <li>profile: untouched</li>
+     *   <li>currency: untouched</li>
+     *   <li>clone information: source references nulled out, owned clone information deleted</li>
+     *   <li>profile collection sets: deleted</li>
+     * </ul>
+     *
+     * @param id the id of the collection to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (No Content)}.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        LOG.debug("REST request to delete ClientCollection : {}", id);
+        if (id == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        clientCollectionService.delete(id);
+        return ResponseEntity.noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

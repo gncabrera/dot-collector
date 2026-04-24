@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 public interface ProfileCollectionSetRepository
     extends ProfileCollectionSetRepositoryWithBagRelationships, JpaRepository<ProfileCollectionSet, Long>
 {
+    List<ProfileCollectionSet> findByCollection_Id(Long collectionId);
+
     default Optional<ProfileCollectionSet> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findById(id));
     }
