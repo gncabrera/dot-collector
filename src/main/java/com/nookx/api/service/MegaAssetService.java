@@ -85,6 +85,91 @@ public class MegaAssetService {
     }
 
     /**
+     * Persists a binary payload captured outside of an HTTP request (e.g. by the scraper).
+     * <p>
+     * The caller is responsible for deciding ownership: when invoked from a background job with no
+     * authenticated principal, pass {@code null} (the {@code owner_id} column is nullable). Image
+     * variants (thumb / medium) are generated the same way as for uploaded files.
+     *
+     * @param bytes            binary payload, must be non-empty
+     * @param originalFilename original file name, used only to extract the extension
+     * @param contentType      MIME type; drives {@link AssetType} and image variant generation
+     * @param description      optional description persisted on the {@link MegaAsset}
+     * @param isPublic         whether the asset should be publicly accessible via {@code /api/client/assets/file/*}
+     * @param owner            explicit owner, or {@code null} for system-owned assets
+     * @return the persisted {@link MegaAsset}
+     */
+    public MegaAsset storeFromBytes(
+        byte[] bytes,
+        String originalFilename,
+        String contentType,
+        String description,
+        boolean isPublic,
+        User owner
+    ) {
+        if (bytes == null || bytes.length == 0) {
+            throw new BadRequestAlertException("Bytes payload is required", ENTITY_NAME, "filerequired");
+        }
+
+        String safeName = buildSafeName(originalFilename);
+        String extensionPart = extractExtension(safeName);
+
+        boolean isImage = getAssetType(contentType) == AssetType.IMAGE;
+        UUID assetUuid = UUID.randomUUID();
+        String storedFilename = isImage
+            ? buildImageFilename(assetUuid, extensionPart, MegaAssetImageSize.ORIGINAL)
+            : assetUuid + extensionPart;
+
+        Path baseDir = getBaseDir();
+        try {
+            Files.createDirectories(baseDir);
+            Path target = baseDir.resolve(storedFilename).normalize();
+            if (!target.startsWith(baseDir)) {
+                throw new BadRequestAlertException("Invalid file path", ENTITY_NAME, "invalidpath");
+            }
+            Files.write(target, bytes);
+            if (isImage) {
+                writeImageVariants(baseDir, assetUuid, extensionPart);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to store binary payload", e);
+        }
+
+        String displayName = safeName.length() > 255 ? safeName.substring(0, 255) : safeName;
+        AssetType assetType = getAssetType(contentType);
+
+        MegaAsset megaAsset = new MegaAsset()
+            .name(displayName)
+            .description(description)
+            .uuid(assetUuid.toString())
+            .extension(extensionPart)
+            .type(assetType)
+            .contentType(contentType)
+            .sizeBytes((long) bytes.length);
+        megaAsset.setOwner(owner);
+        megaAsset.setPublic(isPublic);
+        return megaAssetRepository.save(megaAsset);
+    }
+
+    private static String buildSafeName(String originalFilename) {
+        String cleaned = StringUtils.cleanPath(originalFilename != null ? originalFilename : "upload");
+        String safe = Path.of(cleaned).getFileName().toString();
+        return safe.isBlank() ? "upload" : safe;
+    }
+
+    private static String extractExtension(String safeName) {
+        int dot = safeName.lastIndexOf('.');
+        if (dot < 0 || dot >= safeName.length() - 1) {
+            return "";
+        }
+        String ext = safeName.substring(dot);
+        if (ext.length() > 32) {
+            return "";
+        }
+        return ext.toLowerCase(Locale.ROOT);
+    }
+
+    /**
      * Stores the file, persists {@link MegaAsset}, and links it to the target entity in one transaction.
      * If linking fails after the file was written, the asset row and file on disk are removed.
      */
