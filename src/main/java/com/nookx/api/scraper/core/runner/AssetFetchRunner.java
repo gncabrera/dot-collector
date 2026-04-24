@@ -64,7 +64,7 @@ public class AssetFetchRunner {
             LOG.debug("AssetFetchRunner tick: nothing to download");
             return false;
         }
-        assetDownloadService.downloadOne(next.get());
+        assetDownloadService.downloadOne(next.get().getId());
         return true;
     }
 

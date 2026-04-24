@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Downloads one {@link SourceSetAsset} and links it to the canonical {@code MegaSet}.
  * <p>
  * Extracted from {@code AssetFetchRunner} so the {@code @Transactional} boundary is applied via
- * Spring's proxy (the runner calls {@link #downloadOne(SourceSetAsset)} from a different bean).
+ * Spring's proxy (the runner calls {@link #downloadOne(Long)} from a different bean).
  */
 @Service
 @Profile("scraper")
@@ -64,7 +64,10 @@ public class AssetDownloadService {
     }
 
     @Transactional
-    public void downloadOne(SourceSetAsset asset) {
+    public void downloadOne(Long assetId) {
+        SourceSetAsset asset = sourceSetAssetRepository
+            .findById(assetId)
+            .orElseThrow(() -> new IllegalStateException("SourceSetAsset " + assetId + " no longer exists"));
         LOG.info("Downloading asset {} ({}) for source set {}", asset.getExternalUrl(), asset.getKind(), asset.getSourceSet().getId());
         asset.setLastTriedAt(Instant.now());
 
