@@ -10,6 +10,8 @@ import com.nookx.api.scraper.api.dto.NormalizedAssetDto;
 import com.nookx.api.scraper.api.dto.NormalizedSetDto;
 import com.nookx.api.scraper.domain.enumeration.PageType;
 import com.nookx.api.scraper.domain.enumeration.SourceAssetKind;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -56,6 +60,11 @@ public class KlickypediaSetDetailParser implements PageParser {
     private static final String FLAG_DE = "flag-germany";
     private static final String FLAG_FR = "flag-france";
 
+    private static final String RELEASED_KEY = "released";
+    private static final Pattern FULL_DATE_PATTERN = Pattern.compile("\\b(\\d{4})-(\\d{2})-(\\d{2})\\b");
+    private static final Pattern YEAR_PATTERN = Pattern.compile("\\b(19\\d{2}|20\\d{2})\\b");
+    private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
+
     private final ObjectMapper objectMapper;
 
     public KlickypediaSetDetailParser(ObjectMapper objectMapper) {
@@ -90,6 +99,7 @@ public class KlickypediaSetDetailParser implements PageParser {
         List<NormalizedAssetDto> assets = extractImages(doc);
 
         String name = firstNonBlank(names.get("name"), labelled.get("name"));
+        LocalDate releaseDate = parseReleaseDate(labelled.get(RELEASED_KEY));
         ObjectNode rawAttributes = buildRawAttributes(names, labelled, tags);
 
         NormalizedSetDto dto = new NormalizedSetDto(
@@ -98,7 +108,7 @@ public class KlickypediaSetDetailParser implements PageParser {
             slug,
             name,
             null,
-            null,
+            releaseDate,
             null,
             rawAttributes,
             assets
@@ -427,7 +437,7 @@ public class KlickypediaSetDetailParser implements PageParser {
             node.put(entry.getKey(), entry.getValue());
         }
         for (Map.Entry<String, String> entry : labelled.entrySet()) {
-            if ("name".equals(entry.getKey())) {
+            if ("name".equals(entry.getKey()) || RELEASED_KEY.equals(entry.getKey())) {
                 continue;
             }
             node.put(entry.getKey(), entry.getValue());
@@ -439,6 +449,34 @@ public class KlickypediaSetDetailParser implements PageParser {
             }
         }
         return node;
+    }
+
+    /**
+     * Parses the {@code released} attribute. Klickypedia typically renders this as a 4-digit year
+     * (e.g. {@code 2026}); we also accept ISO {@code yyyy-MM-dd} just in case. Year-only values are
+     * normalized to January 1st of that year. Returns {@code null} when nothing parseable is found.
+     */
+    private static LocalDate parseReleaseDate(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        Matcher full = FULL_DATE_PATTERN.matcher(value);
+        if (full.find()) {
+            try {
+                return LocalDate.parse(full.group(0), ISO_DATE);
+            } catch (Exception ignore) {
+                // fall through to year matching
+            }
+        }
+        Matcher year = YEAR_PATTERN.matcher(value);
+        if (year.find()) {
+            try {
+                return LocalDate.of(Integer.parseInt(year.group(1)), 1, 1);
+            } catch (NumberFormatException ignore) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static String firstNonBlank(String... candidates) {
