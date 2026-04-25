@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!--
+        Scraper operational + staging tables.
+
+        - scrape_page:           work queue + durable log of every URL tracked by the crawler.
+        - source_set:            staging row per (source_code, source_external_id) populated by the parser.
+        - source_set_asset:      staging row for each image / PDF / file referenced by a source set.
+        - mega_set_source_link:  bridge from canonical mega_set to its originating source.
+    -->
+    <changeSet id="20260422140000-1" author="nookx">
+        <createTable tableName="scrape_page">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source_code" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="page_type" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="natural_key" type="varchar(255)"/>
+            <column name="storage_path" type="varchar(512)"/>
+            <column name="http_status" type="integer"/>
+            <column name="etag" type="varchar(255)"/>
+            <column name="last_modified" type="varchar(64)"/>
+            <column name="content_hash" type="varchar(64)"/>
+            <column name="content_size_bytes" type="bigint"/>
+            <column name="fetch_status" type="varchar(32)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parse_status" type="varchar(32)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discovered_at" type="timestamp"/>
+            <column name="fetched_at" type="timestamp"/>
+            <column name="parsed_at" type="timestamp"/>
+            <column name="next_check_at" type="timestamp"/>
+            <column name="retry_count" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_error" type="varchar(2000)"/>
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="scrape_page"
+            columnNames="source_code, url"
+            constraintName="ux_scrape_page__source_url"
+        />
+        <createIndex tableName="scrape_page" indexName="ix_scrape_page__fetch_next">
+            <column name="fetch_status"/>
+            <column name="next_check_at"/>
+        </createIndex>
+        <createIndex tableName="scrape_page" indexName="ix_scrape_page__parse_status">
+            <column name="parse_status"/>
+        </createIndex>
+        <createIndex tableName="scrape_page" indexName="ix_scrape_page__source_type_key">
+            <column name="source_code"/>
+            <column name="page_type"/>
+            <column name="natural_key"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20260422140000-2" author="nookx">
+        <createTable tableName="source_set">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source_code" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_external_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="set_number" type="varchar(255)"/>
+            <column name="name" type="varchar(1024)"/>
+            <column name="description" type="text"/>
+            <column name="release_date" type="date"/>
+            <column name="theme" type="varchar(255)"/>
+            <column name="raw_attributes" type="${jsonbType}"/>
+            <column name="scrape_page_id" type="bigint"/>
+            <column name="first_seen_at" type="timestamp"/>
+            <column name="last_parsed_at" type="timestamp"/>
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="source_set"
+            columnNames="source_code, source_external_id"
+            constraintName="ux_source_set__source_external"
+        />
+        <createIndex tableName="source_set" indexName="ix_source_set__scrape_page">
+            <column name="scrape_page_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="source_set"
+            baseColumnNames="scrape_page_id"
+            constraintName="fk_source_set__scrape_page"
+            referencedTableName="scrape_page"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <changeSet id="20260422140000-3" author="nookx">
+        <createTable tableName="source_set_asset">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source_set_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kind" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_url" type="varchar(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="varchar(255)"/>
+            <column name="sort_order" type="integer"/>
+            <column name="downloaded" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="download_failed" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retry_count" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_hash" type="varchar(64)"/>
+            <column name="content_size_bytes" type="bigint"/>
+            <column name="content_type" type="varchar(255)"/>
+            <column name="mega_asset_id" type="bigint"/>
+            <column name="last_tried_at" type="timestamp"/>
+            <column name="downloaded_at" type="timestamp"/>
+            <column name="last_error" type="varchar(2000)"/>
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="source_set_asset"
+            columnNames="source_set_id, external_url"
+            constraintName="ux_source_set_asset__set_url"
+        />
+        <createIndex tableName="source_set_asset" indexName="ix_source_set_asset__download">
+            <column name="downloaded"/>
+            <column name="kind"/>
+        </createIndex>
+        <createIndex tableName="source_set_asset" indexName="ix_source_set_asset__content_hash">
+            <column name="content_hash"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="source_set_asset"
+            baseColumnNames="source_set_id"
+            constraintName="fk_source_set_asset__source_set"
+            referencedTableName="source_set"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="source_set_asset"
+            baseColumnNames="mega_asset_id"
+            constraintName="fk_source_set_asset__mega_asset"
+            referencedTableName="mega_asset"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <changeSet id="20260422140000-4" author="nookx">
+        <createTable tableName="mega_set_source_link">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="mega_set_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_code" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_external_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_merged_at" type="timestamp"/>
+            <column name="last_merged_at" type="timestamp"/>
+        </createTable>
+
+        <addUniqueConstraint
+            tableName="mega_set_source_link"
+            columnNames="source_code, source_external_id"
+            constraintName="ux_mega_set_source_link__source_external"
+        />
+        <createIndex tableName="mega_set_source_link" indexName="ix_mega_set_source_link__mega_set">
+            <column name="mega_set_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint
+            baseTableName="mega_set_source_link"
+            baseColumnNames="mega_set_id"
+            constraintName="fk_mega_set_source_link__mega_set"
+            referencedTableName="mega_set"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+
+</databaseChangeLog>
