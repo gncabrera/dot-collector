@@ -266,21 +266,6 @@ public class MegaSetTypeService {
         return megaSetTypeRepository.findLatestByName(name).map(this::toDto);
     }
 
-    /**
-     * Entity-returning variant of {@link #findLatestByName(String)} for internal callers that need
-     * the JPA-managed {@link MegaSetType} to attach as a relationship (e.g. when the scraper
-     * ingest sets the {@code type} of a freshly-resolved {@code MegaSet}). Not cached on purpose:
-     * we hand back a managed entity so the caller's transaction owns it.
-     */
-    @Transactional(readOnly = true)
-    public Optional<MegaSetType> findLatestEntityByName(String name) {
-        LOG.debug("Request to get latest MegaSetType entity by name : {}", name);
-        if (name == null || name.isBlank()) {
-            return Optional.empty();
-        }
-        return megaSetTypeRepository.findLatestByName(name);
-    }
-
     @Transactional(readOnly = true)
     public List<MegaSetTypeDTO> findVersionsByName(String name) {
         LOG.debug("Request to get all versions of MegaSetType : {}", name);

@@ -9,8 +9,6 @@ package com.nookx.api.scraper.source.playmodb;
 final class PlaymoDbConstants {
 
     static final String SOURCE_CODE = "playmodb";
-    /** Catalog interest every PlaymoDB set belongs to (matches the seeded {@code interest.csv}). */
-    static final String INTEREST_NAME = "Playmobil";
     static final String BASE_URL = "https://playmodb.org";
     static final String ALL_THEMES_URL = BASE_URL + "/cgi-bin/sets.pl";
     static final String SETS_BY_THEME_PREFIX_URL = BASE_URL + "/cgi-bin/sets.pl?sortby=name&focus=all&theme=";

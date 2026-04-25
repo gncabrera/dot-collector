@@ -1,8 +1,6 @@
 package com.nookx.api.scraper.core.service;
 
-import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaSet;
-import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.scraper.api.dto.NormalizedAssetDto;
 import com.nookx.api.scraper.api.dto.NormalizedSetDto;
@@ -13,8 +11,6 @@ import com.nookx.api.scraper.domain.SourceSetAsset;
 import com.nookx.api.scraper.repository.MegaSetSourceLinkRepository;
 import com.nookx.api.scraper.repository.SourceSetAssetRepository;
 import com.nookx.api.scraper.repository.SourceSetRepository;
-import com.nookx.api.service.InterestService;
-import com.nookx.api.service.MegaSetTypeService;
 import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -46,23 +42,17 @@ public class SourceIngestService {
     private final SourceSetAssetRepository sourceSetAssetRepository;
     private final MegaSetSourceLinkRepository megaSetSourceLinkRepository;
     private final MegaSetRepository megaSetRepository;
-    private final InterestService interestService;
-    private final MegaSetTypeService megaSetTypeService;
 
     public SourceIngestService(
         SourceSetRepository sourceSetRepository,
         SourceSetAssetRepository sourceSetAssetRepository,
         MegaSetSourceLinkRepository megaSetSourceLinkRepository,
-        MegaSetRepository megaSetRepository,
-        InterestService interestService,
-        MegaSetTypeService megaSetTypeService
+        MegaSetRepository megaSetRepository
     ) {
         this.sourceSetRepository = sourceSetRepository;
         this.sourceSetAssetRepository = sourceSetAssetRepository;
         this.megaSetSourceLinkRepository = megaSetSourceLinkRepository;
         this.megaSetRepository = megaSetRepository;
-        this.interestService = interestService;
-        this.megaSetTypeService = megaSetTypeService;
     }
 
     public SourceSet ingest(NormalizedSetDto dto, ScrapePage scrapePage) {
@@ -140,44 +130,6 @@ public class SourceIngestService {
         if (dto.rawAttributes() != null) {
             canonical.setAttributes(dto.rawAttributes());
             canonical.setAttributesContentType("application/json");
-        }
-        attachInterestAndType(canonical, dto);
-    }
-
-    /**
-     * Pins the canonical set to the catalog Interest declared by the source plugin (e.g. Klickypedia
-     * → "Playmobil") and to the latest {@link MegaSetType} schema for that interest. Lookup is
-     * best-effort: a missing interest only logs a warning so ingestion never fails on metadata.
-     */
-    private void attachInterestAndType(MegaSet canonical, NormalizedSetDto dto) {
-        String interestName = dto.interestName();
-        if (interestName == null || interestName.isBlank()) {
-            return;
-        }
-        Optional<Interest> interestOpt = interestService.findByName(interestName);
-        if (interestOpt.isEmpty()) {
-            LOG.warn(
-                "Interest '{}' declared by {}/{} was not found; canonical set will not be pinned",
-                interestName,
-                dto.sourceCode(),
-                dto.sourceExternalId()
-            );
-            return;
-        }
-        Interest interest = interestOpt.get();
-        canonical.setInterest(interest);
-
-        MegaSetType currentType = interest.getSetType();
-        if (currentType == null) {
-            LOG.warn("Interest '{}' has no set type configured; cannot resolve latest schema", interestName);
-            return;
-        }
-        Optional<MegaSetType> latestType = megaSetTypeService.findLatestEntityByName(currentType.getName());
-        if (latestType.isPresent()) {
-            canonical.setType(latestType.get());
-        } else {
-            LOG.warn("No latest MegaSetType found for name '{}'; falling back to interest's pinned type", currentType.getName());
-            canonical.setType(currentType);
         }
     }
 

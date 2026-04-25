@@ -92,7 +92,6 @@ public class PlaymoDbSetDetailParser implements PageParser {
             description,
             releaseDate,
             theme,
-            PlaymoDbConstants.INTEREST_NAME,
             rawAttributes,
             assets
         );

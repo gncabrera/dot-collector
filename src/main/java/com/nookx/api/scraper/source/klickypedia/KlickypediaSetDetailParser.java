@@ -110,7 +110,6 @@ public class KlickypediaSetDetailParser implements PageParser {
             null,
             releaseDate,
             null,
-            KlickypediaConstants.INTEREST_NAME,
             rawAttributes,
             assets
         );
