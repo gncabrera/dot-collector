@@ -315,12 +315,6 @@
             </exclusion>
         </exclusions>
       </dependency>
-      <!-- HTML parser used by the scraper module to extract data from source sites (e.g. playmodb.org). -->
-      <dependency>
-        <groupId>org.jsoup</groupId>
-        <artifactId>jsoup</artifactId>
-        <version>1.18.3</version>
-      </dependency>
     </dependencies>
 
     <build>
