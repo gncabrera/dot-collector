@@ -42,6 +42,19 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20260331175653-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/profile.csv"
+                  separator=";"
+                  tableName="profile"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="username" type="string"/>
+            <column name="full_name" type="string"/>
+            <column name="user_id" type="numeric"/>
+        </loadData>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
 </databaseChangeLog>

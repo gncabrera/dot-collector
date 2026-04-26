@@ -5,6 +5,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import com.nookx.api.security.*;
 import com.nookx.api.security.AuthoritiesConstants;
 import com.nookx.api.security.FirebaseAuthenticationFilter;
+import com.nookx.api.security.ScraperApiKeyAuthenticationFilter;
 import com.nookx.api.web.filter.SpaWebFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +28,19 @@ public class SecurityConfiguration {
 
     private final JHipsterProperties jHipsterProperties;
     private final FirebaseAuthenticationFilter firebaseAuthenticationFilter;
+    private final EnsureUserProfileFilter ensureUserProfileFilter;
+    private final ScraperApiKeyAuthenticationFilter scraperApiKeyAuthenticationFilter;
 
-    public SecurityConfiguration(JHipsterProperties jHipsterProperties, FirebaseAuthenticationFilter firebaseAuthenticationFilter) {
+    public SecurityConfiguration(
+        JHipsterProperties jHipsterProperties,
+        FirebaseAuthenticationFilter firebaseAuthenticationFilter,
+        EnsureUserProfileFilter ensureUserProfileFilter,
+        ScraperApiKeyAuthenticationFilter scraperApiKeyAuthenticationFilter
+    ) {
         this.jHipsterProperties = jHipsterProperties;
         this.firebaseAuthenticationFilter = firebaseAuthenticationFilter;
+        this.ensureUserProfileFilter = ensureUserProfileFilter;
+        this.scraperApiKeyAuthenticationFilter = scraperApiKeyAuthenticationFilter;
     }
 
     @Bean
@@ -39,7 +49,9 @@ public class SecurityConfiguration {
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable())
             .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
+            .addFilterBefore(scraperApiKeyAuthenticationFilter, BearerTokenAuthenticationFilter.class)
             .addFilterBefore(firebaseAuthenticationFilter, BearerTokenAuthenticationFilter.class)
+            .addFilterAfter(ensureUserProfileFilter, BearerTokenAuthenticationFilter.class)
             .headers(headers ->
                 headers
                     .contentSecurityPolicy(csp -> csp.policyDirectives(jHipsterProperties.getSecurity().getContentSecurityPolicy()))
