@@ -11,6 +11,8 @@ import com.nookx.api.service.upload.AssetUploadLinkContext;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -182,7 +184,29 @@ public class IngestResource {
     }
 
     private static String safeMessage(RuntimeException ex) {
-        return StringUtils.hasText(ex.getMessage()) ? ex.getMessage() : ex.getClass().getSimpleName();
+        Throwable rootCause = ex;
+        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+            rootCause = rootCause.getCause();
+        }
+
+        StringWriter sw = new StringWriter();
+        try (PrintWriter pw = new PrintWriter(sw)) {
+            ex.printStackTrace(pw);
+        }
+
+        StringBuilder detail = new StringBuilder();
+        detail.append("exception=").append(ex.getClass().getName());
+        if (StringUtils.hasText(ex.getMessage())) {
+            detail.append(", message=").append(ex.getMessage());
+        }
+        if (rootCause != ex) {
+            detail.append(", rootCause=").append(rootCause.getClass().getName());
+            if (StringUtils.hasText(rootCause.getMessage())) {
+                detail.append(", rootMessage=").append(rootCause.getMessage());
+            }
+        }
+        detail.append(", stackTrace=").append(sw);
+        return detail.toString();
     }
 
     private void ensureIdempotencyKey(String idempotencyKey) {
