@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260426104500-1" author="jhipster" dbms="postgresql">
+        <sql>CREATE EXTENSION IF NOT EXISTS pg_trgm;</sql>
+    </changeSet>
+
+    <changeSet id="20260426104500-2" author="jhipster" dbms="postgresql">
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_megaset_name_trgm ON mega_set USING GIN (lower(name) gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_megaset_description_trgm ON mega_set USING GIN (lower(coalesce(description, '')) gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_megaset_notes_trgm ON mega_set USING GIN (lower(coalesce(notes, '')) gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_megaset_set_number_trgm ON mega_set USING GIN (lower(set_number) gin_trgm_ops);
+            CREATE INDEX IF NOT EXISTS idx_megaset_attributes_text_trgm ON mega_set USING GIN (lower(coalesce(attributes::text, '')) gin_trgm_ops);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
