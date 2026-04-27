@@ -68,6 +68,7 @@ public class ClientSearchService {
         item.setId(megaSet.getId());
         item.setSetNumber(megaSet.getSetNumber());
         item.setName(megaSet.getName());
+        item.setPublicItem(megaSet.isPublicItem());
         item.setImage(getPrimaryImage(megaSet.getId()));
         return item;
     }

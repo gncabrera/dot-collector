@@ -47,6 +47,9 @@ public class MegaSet extends AbstractOwnedEntity<Long> {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "public_item", nullable = false)
+    private boolean publicItem = false;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "attributes", columnDefinition = "jsonb")
     private JsonNode attributes;
@@ -94,6 +97,11 @@ public class MegaSet extends AbstractOwnedEntity<Long> {
         return this;
     }
 
+    public MegaSet publicItem(boolean publicItem) {
+        this.setPublicItem(publicItem);
+        return this;
+    }
+
     public MegaSet attributes(JsonNode attributes) {
         this.setAttributes(attributes);
         return this;
@@ -138,6 +146,7 @@ public class MegaSet extends AbstractOwnedEntity<Long> {
             ", notes='" + getNotes() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", publicItem='" + isPublicItem() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", attributesContentType='" + getAttributesContentType() + "'" +
             "}";

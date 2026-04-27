@@ -52,6 +52,7 @@ public class MegaSetAsserts {
             .satisfies(a -> assertThat(a.getNotes()).as("check notes").isEqualTo(expected.getNotes()))
             .satisfies(a -> assertThat(a.getName()).as("check name").isEqualTo(expected.getName()))
             .satisfies(a -> assertThat(a.getDescription()).as("check description").isEqualTo(expected.getDescription()))
+            .satisfies(a -> assertThat(a.isPublicItem()).as("check publicItem").isEqualTo(expected.isPublicItem()))
             .satisfies(a -> assertThat(a.getAttributes()).as("check attributes").isEqualTo(expected.getAttributes()))
             .satisfies(a ->
                 assertThat(a.getAttributesContentType()).as("check attributes content type").isEqualTo(expected.getAttributesContentType())

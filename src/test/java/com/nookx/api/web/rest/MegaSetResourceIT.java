@@ -54,6 +54,9 @@ class MegaSetResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final boolean DEFAULT_PUBLIC_ITEM = false;
+    private static final boolean UPDATED_PUBLIC_ITEM = true;
+
     private static final JsonNode DEFAULT_ATTRIBUTES = JsonNodeFactory.instance.objectNode().put("v", "0");
     private static final JsonNode UPDATED_ATTRIBUTES = JsonNodeFactory.instance.objectNode().put("v", "1");
     private static final String DEFAULT_ATTRIBUTES_CONTENT_TYPE = "image/jpg";
@@ -97,6 +100,7 @@ class MegaSetResourceIT {
             .notes(DEFAULT_NOTES)
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
+            .publicItem(DEFAULT_PUBLIC_ITEM)
             .attributes(DEFAULT_ATTRIBUTES)
             .attributesContentType(DEFAULT_ATTRIBUTES_CONTENT_TYPE);
     }
@@ -114,6 +118,7 @@ class MegaSetResourceIT {
             .notes(UPDATED_NOTES)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
+            .publicItem(UPDATED_PUBLIC_ITEM)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
     }
@@ -224,6 +229,7 @@ class MegaSetResourceIT {
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].publicItem").value(hasItem(DEFAULT_PUBLIC_ITEM)))
             .andExpect(jsonPath("$.[*].attributesContentType").value(hasItem(DEFAULT_ATTRIBUTES_CONTENT_TYPE)));
     }
 
@@ -244,6 +250,7 @@ class MegaSetResourceIT {
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.publicItem").value(DEFAULT_PUBLIC_ITEM))
             .andExpect(jsonPath("$.attributesContentType").value(DEFAULT_ATTRIBUTES_CONTENT_TYPE));
     }
 
@@ -272,6 +279,7 @@ class MegaSetResourceIT {
             .notes(UPDATED_NOTES)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
+            .publicItem(UPDATED_PUBLIC_ITEM)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
         MegaSetDTO megaSetDTO = megaSetMapper.toDto(updatedMegaSet);
@@ -364,6 +372,7 @@ class MegaSetResourceIT {
             .releaseDate(UPDATED_RELEASE_DATE)
             .notes(UPDATED_NOTES)
             .name(UPDATED_NAME)
+            .publicItem(UPDATED_PUBLIC_ITEM)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
 
@@ -399,6 +408,7 @@ class MegaSetResourceIT {
             .notes(UPDATED_NOTES)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
+            .publicItem(UPDATED_PUBLIC_ITEM)
             .attributes(UPDATED_ATTRIBUTES)
             .attributesContentType(UPDATED_ATTRIBUTES_CONTENT_TYPE);
 

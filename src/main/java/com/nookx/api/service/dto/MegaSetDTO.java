@@ -34,6 +34,8 @@ public class MegaSetDTO implements Serializable {
 
     private String description;
 
+    private boolean publicItem;
+
     private JsonNode attributes;
 
     private String attributesContentType;
@@ -75,6 +77,7 @@ public class MegaSetDTO implements Serializable {
             ", notes='" + getNotes() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", publicItem='" + isPublicItem() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", type=" + getType() +
             ", ownerId=" + getOwnerId() +

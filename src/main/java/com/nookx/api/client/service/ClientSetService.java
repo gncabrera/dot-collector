@@ -100,6 +100,7 @@ public class ClientSetService {
         dto.setNotes(source.getNotes());
         dto.setName(source.getName());
         dto.setDescription(source.getDescription());
+        dto.setPublicItem(source.isPublicItem());
         dto.setAttributes(source.getAttributes());
         dto.setType(source.getType());
         dto.setInterest(source.getInterest());
@@ -120,6 +121,7 @@ public class ClientSetService {
         dto.setNotes(source.getNotes());
         dto.setName(source.getName());
         dto.setDescription(source.getDescription());
+        dto.setPublicItem(source.isPublicItem());
         dto.setAttributes(source.getAttributes());
         dto.setType(source.getType());
         dto.setInterest(source.getInterest());

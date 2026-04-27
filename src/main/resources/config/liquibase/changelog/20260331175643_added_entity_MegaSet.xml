@@ -29,6 +29,9 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="public_item" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
             <column name="attributes" type="${jsonbType}">
                 <constraints nullable="true" />
             </column>

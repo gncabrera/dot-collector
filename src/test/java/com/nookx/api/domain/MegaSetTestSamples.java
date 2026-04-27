@@ -10,11 +10,11 @@ public class MegaSetTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static MegaSet getMegaSetSample1() {
-        return new MegaSet().id(1L).setNumber("setNumber1").notes("notes1").name("name1").description("description1");
+        return new MegaSet().id(1L).setNumber("setNumber1").notes("notes1").name("name1").description("description1").publicItem(false);
     }
 
     public static MegaSet getMegaSetSample2() {
-        return new MegaSet().id(2L).setNumber("setNumber2").notes("notes2").name("name2").description("description2");
+        return new MegaSet().id(2L).setNumber("setNumber2").notes("notes2").name("name2").description("description2").publicItem(true);
     }
 
     public static MegaSet getMegaSetRandomSampleGenerator() {
@@ -23,6 +23,7 @@ public class MegaSetTestSamples {
             .setNumber(UUID.randomUUID().toString())
             .notes(UUID.randomUUID().toString())
             .name(UUID.randomUUID().toString())
-            .description(UUID.randomUUID().toString());
+            .description(UUID.randomUUID().toString())
+            .publicItem(random.nextBoolean());
     }
 }

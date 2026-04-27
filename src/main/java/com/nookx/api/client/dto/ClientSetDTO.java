@@ -13,6 +13,7 @@ public class ClientSetDTO {
     private String notes;
     private String name;
     private String description;
+    private boolean publicItem;
     private JsonNode attributes;
     private MegaSetTypeDTO type;
     private ClientInterestDTO interest;
