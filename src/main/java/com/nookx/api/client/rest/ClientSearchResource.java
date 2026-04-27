@@ -19,6 +19,7 @@ public class ClientSearchResource {
     private static final String ENTITY_NAME = "clientSearch";
     private static final String TAB_SETS = "SETS";
     private static final int MAX_LIMIT = 50;
+    private static final int MIN_QUERY_LENGTH = 3;
 
     private final ClientSearchService clientSearchService;
 
@@ -37,6 +38,13 @@ public class ClientSearchResource {
 
         if (query == null || query.isBlank()) {
             throw new BadRequestAlertException("Search query is required", ENTITY_NAME, "queryrequired");
+        }
+        if (query.trim().length() < MIN_QUERY_LENGTH) {
+            throw new BadRequestAlertException(
+                "Search query must be at least " + MIN_QUERY_LENGTH + " characters",
+                ENTITY_NAME,
+                "querytooshort"
+            );
         }
         if (tab != null && !tab.isBlank() && !TAB_SETS.equalsIgnoreCase(tab)) {
             throw new BadRequestAlertException("Unsupported search tab", ENTITY_NAME, "unsupportedtab");

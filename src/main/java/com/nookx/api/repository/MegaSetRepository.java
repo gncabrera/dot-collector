@@ -18,23 +18,11 @@ public interface MegaSetRepository extends JpaRepository<MegaSet, Long> {
         WITH ranked_sets AS (
             SELECT
                 ms.id AS id,
-                GREATEST(
-                    word_similarity(:searchQuery, lower(coalesce(ms.name, ''))),
-                    word_similarity(:searchQuery, lower(coalesce(ms.description, ''))),
-                    word_similarity(:searchQuery, lower(coalesce(ms.set_number, ''))),
-                    word_similarity(:searchQuery, lower(coalesce(ms.notes, ''))),
-                    word_similarity(:searchQuery, lower(coalesce(ms.attributes::text, '')))
-                ) AS score
+                word_similarity(lower(f_unaccent(:searchQuery)), ms.search_text) AS score
             FROM mega_set ms
             WHERE
                 (ms.public_item = true OR ms.owner_id = :currentUserId)
-                AND (
-                    :searchQuery <% lower(coalesce(ms.name, ''))
-                    OR :searchQuery <% lower(coalesce(ms.description, ''))
-                    OR :searchQuery <% lower(coalesce(ms.set_number, ''))
-                    OR :searchQuery <% lower(coalesce(ms.notes, ''))
-                    OR :searchQuery <% lower(coalesce(ms.attributes::text, ''))
-                )
+                AND lower(f_unaccent(:searchQuery)) <% ms.search_text
         )
         SELECT rs.id AS id, rs.score AS score
         FROM ranked_sets rs

@@ -91,7 +91,7 @@ public class ClientSearchService {
     }
 
     private String normalizeQuery(String query) {
-        return query.trim().toLowerCase();
+        return query.trim();
     }
 
     private String encodeCursor(MegaSetSearchHitProjection hit) {
