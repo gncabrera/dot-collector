@@ -324,6 +324,7 @@ public class ClientCollectionService {
         communityDTO.setTotalComments(88);
         communityDTO.setTotalStars(99);
         dto.setCommunity(communityDTO);
+        dto.setInterests(toClientInterestDtos(profileCollection));
 
         return dto;
     }
