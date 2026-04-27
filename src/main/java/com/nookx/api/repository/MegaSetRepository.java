@@ -19,19 +19,22 @@ public interface MegaSetRepository extends JpaRepository<MegaSet, Long> {
             SELECT
                 ms.id AS id,
                 GREATEST(
-                    similarity(lower(coalesce(ms.name, '')), :searchQuery),
-                    similarity(lower(coalesce(ms.description, '')), :searchQuery),
-                    similarity(lower(coalesce(ms.set_number, '')), :searchQuery),
-                    similarity(lower(coalesce(ms.notes, '')), :searchQuery),
-                    similarity(lower(coalesce(ms.attributes::text, '')), :searchQuery)
+                    word_similarity(:searchQuery, lower(coalesce(ms.name, ''))),
+                    word_similarity(:searchQuery, lower(coalesce(ms.description, ''))),
+                    word_similarity(:searchQuery, lower(coalesce(ms.set_number, ''))),
+                    word_similarity(:searchQuery, lower(coalesce(ms.notes, ''))),
+                    word_similarity(:searchQuery, lower(coalesce(ms.attributes::text, '')))
                 ) AS score
             FROM mega_set ms
             WHERE
-                lower(coalesce(ms.name, '')) % :searchQuery
-                OR lower(coalesce(ms.description, '')) % :searchQuery
-                OR lower(coalesce(ms.set_number, '')) % :searchQuery
-                OR lower(coalesce(ms.notes, '')) % :searchQuery
-                OR lower(coalesce(ms.attributes::text, '')) % :searchQuery
+                (ms.public_item = true OR ms.owner_id = :currentUserId)
+                AND (
+                    :searchQuery <% lower(coalesce(ms.name, ''))
+                    OR :searchQuery <% lower(coalesce(ms.description, ''))
+                    OR :searchQuery <% lower(coalesce(ms.set_number, ''))
+                    OR :searchQuery <% lower(coalesce(ms.notes, ''))
+                    OR :searchQuery <% lower(coalesce(ms.attributes::text, ''))
+                )
         )
         SELECT rs.id AS id, rs.score AS score
         FROM ranked_sets rs
@@ -47,6 +50,7 @@ public interface MegaSetRepository extends JpaRepository<MegaSet, Long> {
     )
     List<MegaSetSearchHitProjection> searchSetHits(
         @Param("searchQuery") String searchQuery,
+        @Param("currentUserId") Long currentUserId,
         @Param("cursorScore") Float cursorScore,
         @Param("cursorId") Long cursorId,
         @Param("limitPlusOne") int limitPlusOne

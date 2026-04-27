@@ -7,6 +7,7 @@ import com.nookx.api.client.dto.ClientSetSearchItemDTO;
 import com.nookx.api.domain.MegaSet;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.repository.projection.MegaSetSearchHitProjection;
+import com.nookx.api.service.UserService;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -25,16 +26,28 @@ public class ClientSearchService {
 
     private final MegaSetRepository megaSetRepository;
     private final ClientSetAssetService clientSetAssetService;
+    private final UserService userService;
 
-    public ClientSearchService(MegaSetRepository megaSetRepository, ClientSetAssetService clientSetAssetService) {
+    public ClientSearchService(MegaSetRepository megaSetRepository, ClientSetAssetService clientSetAssetService, UserService userService) {
         this.megaSetRepository = megaSetRepository;
         this.clientSetAssetService = clientSetAssetService;
+        this.userService = userService;
     }
 
     public ClientSearchResponseDTO searchSets(String query, int limit, String cursorToken) {
         String normalizedQuery = normalizeQuery(query);
         CursorPosition cursor = decodeCursor(cursorToken);
-        List<MegaSetSearchHitProjection> hits = megaSetRepository.searchSetHits(normalizedQuery, cursor.score(), cursor.id(), limit + 1);
+        Long currentUserId = userService
+            .getUserWithAuthorities()
+            .map(user -> user.getId())
+            .orElse(null);
+        List<MegaSetSearchHitProjection> hits = megaSetRepository.searchSetHits(
+            normalizedQuery,
+            currentUserId,
+            cursor.score(),
+            cursor.id(),
+            limit + 1
+        );
 
         boolean hasMore = hits.size() > limit;
         List<MegaSetSearchHitProjection> pageHits = hasMore ? hits.subList(0, limit) : hits;
