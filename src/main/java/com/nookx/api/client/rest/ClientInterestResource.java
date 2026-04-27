@@ -81,9 +81,12 @@ public class ClientInterestResource {
     }
 
     @GetMapping("")
-    public List<ClientInterestDTO> getAllInterests() {
+    public List<ClientInterestDTO> getAllInterests(
+        @RequestParam(defaultValue = "true", name = "isSystem") boolean isSystem,
+        @RequestParam(defaultValue = "true", name = "isPublic") boolean isPublic
+    ) {
         LOG.debug("REST request to get all Interests");
-        return interestService.findAll();
+        return interestService.findAll(isSystem, isPublic);
     }
 
     @GetMapping("/{id}")
