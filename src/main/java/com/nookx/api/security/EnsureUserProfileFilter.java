@@ -59,7 +59,7 @@ public class EnsureUserProfileFilter extends OncePerRequestFilter {
 
         Optional<User> userOptional = userRepository.findOneWithAuthoritiesByLogin(authentication.getName().toLowerCase());
         if (userOptional.isPresent()) {
-            ensureProfileExists(userOptional.get());
+            ensureProfileExists(userOptional.orElse(null));
         }
 
         filterChain.doFilter(request, response);
