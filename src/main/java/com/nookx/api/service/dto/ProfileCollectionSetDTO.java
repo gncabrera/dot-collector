@@ -3,9 +3,7 @@ package com.nookx.api.service.dto;
 import com.nookx.api.domain.ProfileCollectionSet;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +25,7 @@ public class ProfileCollectionSetDTO implements Serializable {
 
     private ProfileCollectionDTO collection;
 
-    private Set<MegaSetDTO> sets = new HashSet<>();
+    private MegaSetDTO set;
 
     @Override
     public boolean equals(Object o) {
@@ -59,7 +57,7 @@ public class ProfileCollectionSetDTO implements Serializable {
             ", wanted='" + getWanted() + "'" +
             ", dateAdded='" + getDateAdded() + "'" +
             ", collection=" + getCollection() +
-            ", sets=" + getSets() +
+            ", set=" + getSet() +
             "}";
     }
 }

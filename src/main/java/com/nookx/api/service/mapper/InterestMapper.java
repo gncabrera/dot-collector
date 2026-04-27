@@ -13,6 +13,20 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface InterestMapper extends EntityMapper<ClientInterestDTO, Interest> {
+    @Override
+    @Mapping(target = "setType", ignore = true)
+    ClientInterestDTO toDto(Interest entity);
+
+    @Override
+    @Mapping(target = "setType", ignore = true)
+    Interest toEntity(ClientInterestDTO dto);
+
+    @Override
+    @Named("partialUpdate")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "setType", ignore = true)
+    void partialUpdate(@MappingTarget Interest entity, ClientInterestDTO dto);
+
     @Named("interestId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")

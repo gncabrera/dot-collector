@@ -35,7 +35,7 @@
             <column name="size_bytes" type="bigint">
                 <constraints nullable="true"/>
             </column>
-            <column name="uploaded_by_id" type="bigint">
+            <column name="owner_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
             <column name="is_public" type="boolean" defaultValueBoolean="false">
@@ -45,8 +45,8 @@
         </createTable>
         <addForeignKeyConstraint
             baseTableName="mega_asset"
-            baseColumnNames="uploaded_by_id"
-            constraintName="fk_mega_asset__uploaded_by_id"
+            baseColumnNames="owner_id"
+            constraintName="fk_mega_asset__owner_id"
             referencedTableName="jhi_user"
             referencedColumnNames="id"
         />

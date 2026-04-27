@@ -6,8 +6,6 @@ import static com.nookx.api.domain.ProfileCollectionTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nookx.api.web.rest.TestUtil;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class ProfileCollectionSetTest {
@@ -43,16 +41,10 @@ class ProfileCollectionSetTest {
         ProfileCollectionSet profileCollectionSet = getProfileCollectionSetRandomSampleGenerator();
         MegaSet megaSetBack = getMegaSetRandomSampleGenerator();
 
-        profileCollectionSet.addSet(megaSetBack);
-        assertThat(profileCollectionSet.getSets()).containsOnly(megaSetBack);
+        profileCollectionSet.setSet(megaSetBack);
+        assertThat(profileCollectionSet.getSet()).isEqualTo(megaSetBack);
 
-        profileCollectionSet.removeSet(megaSetBack);
-        assertThat(profileCollectionSet.getSets()).doesNotContain(megaSetBack);
-
-        profileCollectionSet.sets(new HashSet<>(Set.of(megaSetBack)));
-        assertThat(profileCollectionSet.getSets()).containsOnly(megaSetBack);
-
-        profileCollectionSet.setSets(new HashSet<>());
-        assertThat(profileCollectionSet.getSets()).doesNotContain(megaSetBack);
+        profileCollectionSet.set(null);
+        assertThat(profileCollectionSet.getSet()).isNull();
     }
 }

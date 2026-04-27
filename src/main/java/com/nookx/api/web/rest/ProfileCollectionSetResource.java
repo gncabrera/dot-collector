@@ -136,13 +136,10 @@ public class ProfileCollectionSetResource {
     /**
      * {@code GET  /profile-collection-sets} : get all the Profile Collection Sets.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Profile Collection Sets in body.
      */
     @GetMapping("")
-    public List<ProfileCollectionSetDTO> getAllProfileCollectionSets(
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
-    ) {
+    public List<ProfileCollectionSetDTO> getAllProfileCollectionSets() {
         LOG.debug("REST request to get all ProfileCollectionSets");
         return profileCollectionSetService.findAll();
     }

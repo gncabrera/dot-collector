@@ -30,22 +30,11 @@ public class MegaSetDTO implements Serializable {
     private String notes;
 
     @NotNull
-    private String nameEN;
+    private String name;
 
-    private String nameES;
+    private String description;
 
-    private String nameDE;
-
-    private String nameFR;
-
-    @NotNull
-    private String descriptionEN;
-
-    private String descriptionES;
-
-    private String descriptionDE;
-
-    private String descriptionFR;
+    private boolean publicItem;
 
     private JsonNode attributes;
 
@@ -55,7 +44,7 @@ public class MegaSetDTO implements Serializable {
 
     private ClientInterestDTO interest;
 
-    private Set<ProfileCollectionSetDTO> profileCollectionSets = new HashSet<>();
+    private Long ownerId;
 
     @Override
     public boolean equals(Object o) {
@@ -86,17 +75,12 @@ public class MegaSetDTO implements Serializable {
             ", setNumber='" + getSetNumber() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
             ", notes='" + getNotes() + "'" +
-            ", nameEN='" + getNameEN() + "'" +
-            ", nameES='" + getNameES() + "'" +
-            ", nameDE='" + getNameDE() + "'" +
-            ", nameFR='" + getNameFR() + "'" +
-            ", descriptionEN='" + getDescriptionEN() + "'" +
-            ", descriptionES='" + getDescriptionES() + "'" +
-            ", descriptionDE='" + getDescriptionDE() + "'" +
-            ", descriptionFR='" + getDescriptionFR() + "'" +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", publicItem='" + isPublicItem() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", type=" + getType() +
-            ", profileCollectionSets=" + getProfileCollectionSets() +
+            ", ownerId=" + getOwnerId() +
             "}";
     }
 }

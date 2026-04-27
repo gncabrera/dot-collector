@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nookx.api.IntegrationTest;
+import com.nookx.api.client.rest.MegaSetTypeResource;
 import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.repository.MegaSetTypeRepository;
 import com.nookx.api.service.MegaSetTypeService;
@@ -211,23 +212,6 @@ class MegaSetTypeResourceIT {
             .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE)))
             .andExpect(jsonPath("$.[*].isLatest").value(hasItem(DEFAULT_IS_LATEST)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllMegaSetTypesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(megaSetTypeServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMegaSetTypeMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(megaSetTypeServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllMegaSetTypesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(megaSetTypeServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restMegaSetTypeMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(megaSetTypeRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

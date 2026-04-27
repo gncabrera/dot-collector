@@ -5,17 +5,16 @@ import { IMegaSet, NewMegaSet } from './mega-set.model';
 export const sampleWithRequiredData: IMegaSet = {
   id: 11613,
   setNumber: 'sympathetically',
-  nameEN: 'esteemed',
-  descriptionEN: 'aboard',
+  name: 'esteemed',
+  description: 'aboard',
 };
 
 export const sampleWithPartialData: IMegaSet = {
   id: 6787,
   setNumber: 'gulp bide',
   releaseDate: dayjs('2026-03-31'),
-  nameEN: 'gee',
-  descriptionEN: 'precious',
-  descriptionES: 'whose',
+  name: 'gee',
+  description: 'precious',
   attributes: null,
   attributesContentType: null,
 };
@@ -25,22 +24,16 @@ export const sampleWithFullData: IMegaSet = {
   setNumber: 'pfft extract but',
   releaseDate: dayjs('2026-03-31'),
   notes: 'trusting yum above',
-  nameEN: 'for jubilantly rekindle',
-  nameES: 'husband iridescence better',
-  nameDE: 'pleasant violent fiercely',
-  nameFR: 'oof disclosure transparency',
-  descriptionEN: 'youthfully french',
-  descriptionES: 'besides',
-  descriptionDE: 'so geez quaver',
-  descriptionFR: 'aha',
+  name: 'for jubilantly rekindle',
+  description: 'youthfully french',
   attributes: null,
   attributesContentType: null,
 };
 
 export const sampleWithNewData: NewMegaSet = {
   setNumber: 'mostly prance defrag',
-  nameEN: 'vast tedious austere',
-  descriptionEN: 'quarrel garage bookcase',
+  name: 'vast tedious austere',
+  description: 'quarrel garage bookcase',
   id: null,
 };
 

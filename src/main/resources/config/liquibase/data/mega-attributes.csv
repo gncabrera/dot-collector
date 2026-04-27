@@ -1,0 +1,12 @@
+id;name;label;description;type;ui_component;required;multiple;jhi_order;attribute_group;active
+1;instructionsFirstPrinted;Instructions first printed;Date the original printed instructions were issued;DATE;DATE;false;false;1;metadata;true
+2;tags;Tags;Lowercase comma-separated tags without spaces (example: trains,city);STRING;INPUT;false;false;2;metadata;true
+3;theme;Theme;Playmobil line or theme name;STRING;INPUT;false;false;3;metadata;true
+4;format;Format;Packaging format description;STRING;INPUT;false;false;4;metadata;true
+5;nameDE;Name (DE);Set name in German;STRING;INPUT;false;false;5;metadata;true
+6;nameES;Name (ES);Set name in Spanish;STRING;INPUT;false;false;6;metadata;true
+7;nameFR;Name (FR);Set name in French;STRING;INPUT;false;false;7;metadata;true
+8;figures;Figures;Figures information for the set;STRING;INPUT;false;false;8;metadata;true
+9;exclusive;Exclusive;Exclusive market or channel information;STRING;INPUT;false;false;9;metadata;true
+10;discontinued;Discontinued;Discontinued status text;STRING;INPUT;false;false;10;metadata;true
+11;exportMarket;Export market;Export market information;STRING;INPUT;false;false;11;metadata;true

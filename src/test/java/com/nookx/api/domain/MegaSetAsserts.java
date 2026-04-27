@@ -50,17 +50,17 @@ public class MegaSetAsserts {
             .satisfies(a -> assertThat(a.getSetNumber()).as("check setNumber").isEqualTo(expected.getSetNumber()))
             .satisfies(a -> assertThat(a.getReleaseDate()).as("check releaseDate").isEqualTo(expected.getReleaseDate()))
             .satisfies(a -> assertThat(a.getNotes()).as("check notes").isEqualTo(expected.getNotes()))
-            .satisfies(a -> assertThat(a.getNameEN()).as("check nameEN").isEqualTo(expected.getNameEN()))
-            .satisfies(a -> assertThat(a.getNameES()).as("check nameES").isEqualTo(expected.getNameES()))
-            .satisfies(a -> assertThat(a.getNameDE()).as("check nameDE").isEqualTo(expected.getNameDE()))
-            .satisfies(a -> assertThat(a.getNameFR()).as("check nameFR").isEqualTo(expected.getNameFR()))
-            .satisfies(a -> assertThat(a.getDescriptionEN()).as("check descriptionEN").isEqualTo(expected.getDescriptionEN()))
-            .satisfies(a -> assertThat(a.getDescriptionES()).as("check descriptionES").isEqualTo(expected.getDescriptionES()))
-            .satisfies(a -> assertThat(a.getDescriptionDE()).as("check descriptionDE").isEqualTo(expected.getDescriptionDE()))
-            .satisfies(a -> assertThat(a.getDescriptionFR()).as("check descriptionFR").isEqualTo(expected.getDescriptionFR()))
+            .satisfies(a -> assertThat(a.getName()).as("check name").isEqualTo(expected.getName()))
+            .satisfies(a -> assertThat(a.getDescription()).as("check description").isEqualTo(expected.getDescription()))
+            .satisfies(a -> assertThat(a.isPublicItem()).as("check publicItem").isEqualTo(expected.isPublicItem()))
             .satisfies(a -> assertThat(a.getAttributes()).as("check attributes").isEqualTo(expected.getAttributes()))
             .satisfies(a ->
                 assertThat(a.getAttributesContentType()).as("check attributes content type").isEqualTo(expected.getAttributesContentType())
+            )
+            .satisfies(a ->
+                assertThat(a.getOwner() == null ? null : a.getOwner().getId())
+                    .as("check owner id")
+                    .isEqualTo(expected.getOwner() == null ? null : expected.getOwner().getId())
             );
     }
 
@@ -73,9 +73,6 @@ public class MegaSetAsserts {
     public static void assertMegaSetUpdatableRelationshipsEquals(MegaSet expected, MegaSet actual) {
         assertThat(actual)
             .as("Verify MegaSet relationships")
-            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()))
-            .satisfies(a ->
-                assertThat(a.getProfileCollectionSets()).as("check profileCollectionSets").isEqualTo(expected.getProfileCollectionSets())
-            );
+            .satisfies(a -> assertThat(a.getType()).as("check type").isEqualTo(expected.getType()));
     }
 }

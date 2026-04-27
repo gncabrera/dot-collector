@@ -2,6 +2,7 @@ package com.nookx.api.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nookx.api.domain.Interest;
+import com.nookx.api.service.dto.MegaSetTypeDTO;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -32,6 +33,8 @@ public class ClientInterestDTO implements Serializable {
     private Integer order;
 
     private boolean subscribed;
+
+    private MegaSetTypeDTO setType;
 
     @Override
     public boolean equals(Object o) {

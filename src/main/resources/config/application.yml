@@ -96,6 +96,14 @@ spring:
       max-request-size: 105MB
   application:
     name: Nookx
+  http:
+    converters:
+      # Jackson 2 is the HTTP JSON mapper: DTOs, domain entities and service
+      # code (e.g. MegaSetDTO.attributes, MegaSetTypeService.validateAttributes)
+      # are written against com.fasterxml.jackson.databind.JsonNode. Without
+      # this, Spring Boot 4 would route @RequestBody through Jackson 3
+      # (tools.jackson.databind) and fail to construct Jackson 2 JsonNode.
+      preferred-json-mapper: jackson2
   docker:
     compose:
       enabled: true
@@ -239,3 +247,7 @@ jhipster:
 application:
   mega-asset:
     upload-directory: ${java.io.tmpdir}/nookx-mega-assets
+  scraper:
+    api-key: ${SCRAPER_API_KEY:el-pepe-de-la-gente-525351213578751}
+    principal-login: ${SCRAPER_PRINCIPAL_LOGIN:admin}
+    max-batch-size: ${SCRAPER_MAX_BATCH_SIZE:200}

@@ -17,6 +17,8 @@ public class ApplicationProperties {
 
     private final MegaAsset megaAsset = new MegaAsset();
 
+    private final Scraper scraper = new Scraper();
+
     // jhipster-needle-application-properties-property
 
     public Liquibase getLiquibase() {
@@ -25,6 +27,10 @@ public class ApplicationProperties {
 
     public MegaAsset getMegaAsset() {
         return megaAsset;
+    }
+
+    public Scraper getScraper() {
+        return scraper;
     }
 
     public String getBaseUrl() {
@@ -60,6 +66,39 @@ public class ApplicationProperties {
 
         public void setUploadDirectory(String uploadDirectory) {
             this.uploadDirectory = uploadDirectory;
+        }
+    }
+
+    public static class Scraper {
+
+        private String apiKey = "";
+
+        private String principalLogin = "admin";
+
+        private int maxBatchSize = 200;
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+
+        public String getPrincipalLogin() {
+            return principalLogin;
+        }
+
+        public void setPrincipalLogin(String principalLogin) {
+            this.principalLogin = principalLogin;
+        }
+
+        public int getMaxBatchSize() {
+            return maxBatchSize;
+        }
+
+        public void setMaxBatchSize(int maxBatchSize) {
+            this.maxBatchSize = maxBatchSize;
         }
     }
 

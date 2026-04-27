@@ -19,37 +19,12 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "nameEN",
+      "fieldName": "name",
       "fieldType": "String",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "nameES",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "nameDE",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "nameFR",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "descriptionEN",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "descriptionES",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "descriptionDE",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "descriptionFR",
+      "fieldName": "description",
       "fieldType": "String"
     },
     {
@@ -64,13 +39,6 @@
       "relationshipName": "type",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
-    },
-    {
-      "otherEntityName": "profileCollectionSet",
-      "otherEntityRelationshipName": "set",
-      "relationshipName": "profileCollectionSet",
-      "relationshipSide": "right",
-      "relationshipType": "many-to-many"
     }
   ],
   "searchEngine": "no",

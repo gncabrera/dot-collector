@@ -30,7 +30,7 @@ public class MegaSetPartCount implements Serializable {
     private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "type", "profileCollectionSets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "type" }, allowSetters = true)
     private MegaSet set;
 
     @ManyToOne(fetch = FetchType.LAZY)

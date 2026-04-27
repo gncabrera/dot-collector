@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,4 +28,24 @@ public interface MegaSetTypeRepository extends MegaSetTypeRepositoryWithBagRelat
     default Page<MegaSetType> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    @Query("select distinct t from MegaSetType t left join fetch t.attributes where t.name = :name and t.isLatest = true")
+    Optional<MegaSetType> findLatestByName(@Param("name") String name);
+
+    @Query("select distinct t from MegaSetType t left join fetch t.attributes where t.isLatest = true")
+    List<MegaSetType> findAllLatestWithAttributes();
+
+    @Query(
+        "select distinct t from MegaSetType t left join fetch t.attributes where " +
+            "(:name is null or t.name = :name) and " +
+            "(:isLatest is null or t.isLatest = :isLatest) and " +
+            "(:active is null or t.active = :active)"
+    )
+    List<MegaSetType> search(@Param("name") String name, @Param("isLatest") Boolean isLatest, @Param("active") Boolean active);
+
+    List<MegaSetType> findByNameOrderByVersionDesc(String name);
+
+    Optional<MegaSetType> findFirstByNameOrderByVersionDesc(String name);
+
+    boolean existsByName(String name);
 }

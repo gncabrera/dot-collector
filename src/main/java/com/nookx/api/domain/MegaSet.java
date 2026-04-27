@@ -5,11 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -23,7 +19,7 @@ import org.hibernate.type.SqlTypes;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class MegaSet implements Serializable {
+public class MegaSet extends AbstractOwnedEntity<Long> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -45,30 +41,14 @@ public class MegaSet implements Serializable {
     private String notes;
 
     @NotNull
-    @Column(name = "name_en", nullable = false)
-    private String nameEN;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "name_es")
-    private String nameES;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "name_de")
-    private String nameDE;
-
-    @Column(name = "name_fr")
-    private String nameFR;
-
-    @NotNull
-    @Column(name = "description_en", nullable = false)
-    private String descriptionEN;
-
-    @Column(name = "description_es")
-    private String descriptionES;
-
-    @Column(name = "description_de")
-    private String descriptionDE;
-
-    @Column(name = "description_fr")
-    private String descriptionFR;
+    @Column(name = "public_item", nullable = false)
+    private boolean publicItem = false;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "attributes", columnDefinition = "jsonb")
@@ -84,11 +64,6 @@ public class MegaSet implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "profileInterests" }, allowSetters = true)
     private Interest interest;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "sets")
-    @JsonIgnoreProperties(value = { "collection", "sets" }, allowSetters = true)
-    @Setter(AccessLevel.NONE)
-    private Set<ProfileCollectionSet> profileCollectionSets = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -112,43 +87,18 @@ public class MegaSet implements Serializable {
         return this;
     }
 
-    public MegaSet nameEN(String nameEN) {
-        this.setNameEN(nameEN);
+    public MegaSet name(String name) {
+        this.setName(name);
         return this;
     }
 
-    public MegaSet nameES(String nameES) {
-        this.setNameES(nameES);
+    public MegaSet description(String description) {
+        this.setDescription(description);
         return this;
     }
 
-    public MegaSet nameDE(String nameDE) {
-        this.setNameDE(nameDE);
-        return this;
-    }
-
-    public MegaSet nameFR(String nameFR) {
-        this.setNameFR(nameFR);
-        return this;
-    }
-
-    public MegaSet descriptionEN(String descriptionEN) {
-        this.setDescriptionEN(descriptionEN);
-        return this;
-    }
-
-    public MegaSet descriptionES(String descriptionES) {
-        this.setDescriptionES(descriptionES);
-        return this;
-    }
-
-    public MegaSet descriptionDE(String descriptionDE) {
-        this.setDescriptionDE(descriptionDE);
-        return this;
-    }
-
-    public MegaSet descriptionFR(String descriptionFR) {
-        this.setDescriptionFR(descriptionFR);
+    public MegaSet publicItem(boolean publicItem) {
+        this.setPublicItem(publicItem);
         return this;
     }
 
@@ -164,33 +114,6 @@ public class MegaSet implements Serializable {
 
     public MegaSet type(MegaSetType megaSetType) {
         this.setType(megaSetType);
-        return this;
-    }
-
-    public void setProfileCollectionSets(Set<ProfileCollectionSet> profileCollectionSets) {
-        if (this.profileCollectionSets != null) {
-            this.profileCollectionSets.forEach(i -> i.removeSet(this));
-        }
-        if (profileCollectionSets != null) {
-            profileCollectionSets.forEach(i -> i.addSet(this));
-        }
-        this.profileCollectionSets = profileCollectionSets;
-    }
-
-    public MegaSet profileCollectionSets(Set<ProfileCollectionSet> profileCollectionSets) {
-        this.setProfileCollectionSets(profileCollectionSets);
-        return this;
-    }
-
-    public MegaSet addProfileCollectionSet(ProfileCollectionSet profileCollectionSet) {
-        this.profileCollectionSets.add(profileCollectionSet);
-        profileCollectionSet.getSets().add(this);
-        return this;
-    }
-
-    public MegaSet removeProfileCollectionSet(ProfileCollectionSet profileCollectionSet) {
-        this.profileCollectionSets.remove(profileCollectionSet);
-        profileCollectionSet.getSets().remove(this);
         return this;
     }
 
@@ -221,14 +144,9 @@ public class MegaSet implements Serializable {
             ", setNumber='" + getSetNumber() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
             ", notes='" + getNotes() + "'" +
-            ", nameEN='" + getNameEN() + "'" +
-            ", nameES='" + getNameES() + "'" +
-            ", nameDE='" + getNameDE() + "'" +
-            ", nameFR='" + getNameFR() + "'" +
-            ", descriptionEN='" + getDescriptionEN() + "'" +
-            ", descriptionES='" + getDescriptionES() + "'" +
-            ", descriptionDE='" + getDescriptionDE() + "'" +
-            ", descriptionFR='" + getDescriptionFR() + "'" +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", publicItem='" + isPublicItem() + "'" +
             ", attributes='" + getAttributes() + "'" +
             ", attributesContentType='" + getAttributesContentType() + "'" +
             "}";

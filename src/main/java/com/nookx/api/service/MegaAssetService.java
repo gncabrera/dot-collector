@@ -169,7 +169,7 @@ public class MegaAssetService {
         String contentType = file.getContentType(); //TODO: find content-type from file directly
         AssetType assetType = getAssetType(contentType);
 
-        User uploadedBy = userService
+        User owner = userService
             .getUserWithAuthorities()
             .orElseThrow(() -> new BadRequestAlertException("Current user could not be resolved", ENTITY_NAME, "usernotfound"));
 
@@ -180,8 +180,8 @@ public class MegaAssetService {
             .extension(extensionPart)
             .type(assetType)
             .contentType(contentType)
-            .sizeBytes(file.getSize())
-            .uploadedBy(uploadedBy);
+            .sizeBytes(file.getSize());
+        megaAsset.setOwner(owner);
         megaAsset.setPublic(isPublic);
         return megaAssetRepository.save(megaAsset);
     }
@@ -298,7 +298,7 @@ public class MegaAssetService {
         if (currentUser.isEmpty()) {
             return false;
         }
-        if (entity.getUploadedBy() != null && !Objects.equals(entity.getUploadedBy().getId(), currentUser.orElse(null).getId())) {
+        if (entity.getOwner() != null && !Objects.equals(entity.getOwner().getId(), currentUser.orElse(null).getId())) {
             return false;
         }
         return true;

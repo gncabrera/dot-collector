@@ -61,58 +61,16 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="nameEN">
+            <th scope="col" jhiSortBy="name">
               <div class="d-flex">
-                <span>Name EN</span>
+                <span>Name</span>
 
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="nameES">
+            <th scope="col" jhiSortBy="description">
               <div class="d-flex">
-                <span>Name ES</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="nameDE">
-              <div class="d-flex">
-                <span>Name DE</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="nameFR">
-              <div class="d-flex">
-                <span>Name FR</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="descriptionEN">
-              <div class="d-flex">
-                <span>Description EN</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="descriptionES">
-              <div class="d-flex">
-                <span>Description ES</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="descriptionDE">
-              <div class="d-flex">
-                <span>Description DE</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="descriptionFR">
-              <div class="d-flex">
-                <span>Description FR</span>
+                <span>Description</span>
 
                 <fa-icon class="p-1" icon="sort" />
               </div>
@@ -148,14 +106,8 @@
               <td>{{ megaSet.setNumber }}</td>
               <td>{{ megaSet.releaseDate | formatMediumDate }}</td>
               <td>{{ megaSet.notes }}</td>
-              <td>{{ megaSet.nameEN }}</td>
-              <td>{{ megaSet.nameES }}</td>
-              <td>{{ megaSet.nameDE }}</td>
-              <td>{{ megaSet.nameFR }}</td>
-              <td>{{ megaSet.descriptionEN }}</td>
-              <td>{{ megaSet.descriptionES }}</td>
-              <td>{{ megaSet.descriptionDE }}</td>
-              <td>{{ megaSet.descriptionFR }}</td>
+              <td>{{ megaSet.name }}</td>
+              <td>{{ megaSet.description }}</td>
               <td>
                 @if (megaSet.attributes) {
                   <a (click)="openFile(megaSet.attributes, megaSet.attributesContentType)">Open</a>

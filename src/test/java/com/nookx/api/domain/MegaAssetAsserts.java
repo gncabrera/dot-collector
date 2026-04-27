@@ -55,9 +55,9 @@ public class MegaAssetAsserts {
             .satisfies(a -> assertThat(a.getSizeBytes()).as("check sizeBytes").isEqualTo(expected.getSizeBytes()))
             .satisfies(a -> assertThat(a.isPublic()).as("check isPublic").isEqualTo(expected.isPublic()))
             .satisfies(a ->
-                assertThat(a.getUploadedBy() == null ? null : a.getUploadedBy().getId())
-                    .as("check uploadedBy id")
-                    .isEqualTo(expected.getUploadedBy() == null ? null : expected.getUploadedBy().getId())
+                assertThat(a.getOwner() == null ? null : a.getOwner().getId())
+                    .as("check owner id")
+                    .isEqualTo(expected.getOwner() == null ? null : expected.getOwner().getId())
             );
     }
 }

@@ -8,6 +8,7 @@ import com.nookx.api.domain.enumeration.AttachmentType;
 import com.nookx.api.repository.MegaSetImageRepository;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.security.SecurityUtils;
+import com.nookx.api.service.MegaSetService;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
 import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,10 +21,16 @@ public class MegaSetAssetUploadLinkHandler implements AssetUploadLinkHandler {
 
     private final MegaSetRepository megaSetRepository;
     private final MegaSetImageRepository megaSetImageRepository;
+    private final MegaSetService megaSetService;
 
-    public MegaSetAssetUploadLinkHandler(MegaSetRepository megaSetRepository, MegaSetImageRepository megaSetImageRepository) {
+    public MegaSetAssetUploadLinkHandler(
+        MegaSetRepository megaSetRepository,
+        MegaSetImageRepository megaSetImageRepository,
+        MegaSetService megaSetService
+    ) {
         this.megaSetRepository = megaSetRepository;
         this.megaSetImageRepository = megaSetImageRepository;
+        this.megaSetService = megaSetService;
     }
 
     @Override
@@ -38,10 +45,10 @@ public class MegaSetAssetUploadLinkHandler implements AssetUploadLinkHandler {
 
     @Override
     public boolean canUpload(Long entityId) {
-        megaSetRepository
+        MegaSet megaSet = megaSetRepository
             .findById(entityId)
             .orElseThrow(() -> new BadRequestAlertException("MegaSet not found", ENTITY_NAME, "idnotfound"));
-        return SecurityUtils.currentUserIsAdmin();
+        return megaSetService.isOwner(megaSet);
     }
 
     @Override

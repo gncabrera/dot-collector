@@ -23,29 +23,14 @@
             <column name="notes" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="name_en" type="varchar(255)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="name_es" type="varchar(255)">
+            <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="name_de" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="name_fr" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="description_en" type="varchar(255)">
+            <column name="public_item" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false" />
-            </column>
-            <column name="description_es" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="description_de" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="description_fr" type="varchar(255)">
-                <constraints nullable="true" />
             </column>
             <column name="attributes" type="${jsonbType}">
                 <constraints nullable="true" />
@@ -58,6 +43,9 @@
             </column>
             <column name="interest_id" type="bigint">
                 <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true"/>
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>

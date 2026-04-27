@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260427124000-1-extensions" author="nookx" dbms="postgresql">
+        <sql>CREATE EXTENSION IF NOT EXISTS pg_trgm;</sql>
+        <sql>CREATE EXTENSION IF NOT EXISTS unaccent;</sql>
+    </changeSet>
+
+    <changeSet id="20260427124000-2-immutable-helpers" author="nookx" dbms="postgresql">
+        <sql splitStatements="false" stripComments="false"><![CDATA[
+            CREATE OR REPLACE FUNCTION f_unaccent(text)
+            RETURNS text
+            LANGUAGE sql
+            IMMUTABLE
+            PARALLEL SAFE
+            STRICT
+            AS $$ SELECT public.unaccent('public.unaccent', $1) $$;
+        ]]></sql>
+        <sql splitStatements="false" stripComments="false"><![CDATA[
+            CREATE OR REPLACE FUNCTION f_jsonb_values_text(jsonb)
+            RETURNS text
+            LANGUAGE sql
+            IMMUTABLE
+            PARALLEL SAFE
+            STRICT
+            AS $$
+                SELECT CASE
+                    WHEN jsonb_typeof($1) = 'object' THEN
+                        (SELECT coalesce(string_agg(value, ' '), '')
+                         FROM jsonb_each_text($1))
+                    ELSE ''
+                END
+            $$;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="20260427124000-3-drop-legacy-trgm-indexes" author="nookx" dbms="postgresql">
+        <sql>
+            DROP INDEX IF EXISTS idx_megaset_name_trgm;
+            DROP INDEX IF EXISTS idx_megaset_description_trgm;
+            DROP INDEX IF EXISTS idx_megaset_notes_trgm;
+            DROP INDEX IF EXISTS idx_megaset_set_number_trgm;
+            DROP INDEX IF EXISTS idx_megaset_attributes_text_trgm;
+        </sql>
+    </changeSet>
+
+    <changeSet id="20260427124000-4-add-search-text-column" author="nookx" dbms="postgresql">
+        <sql splitStatements="false" stripComments="false"><![CDATA[
+            ALTER TABLE mega_set
+                ADD COLUMN search_text text
+                GENERATED ALWAYS AS (
+                    lower(f_unaccent(
+                        coalesce(name, '') || ' ' ||
+                        coalesce(description, '') || ' ' ||
+                        coalesce(set_number, '') || ' ' ||
+                        coalesce(f_jsonb_values_text(attributes), '')
+                    ))
+                ) STORED;
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="20260427124000-5-search-text-trgm-index" author="nookx" dbms="postgresql">
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_mega_set_search_text_trgm
+                ON mega_set USING gin (search_text gin_trgm_ops);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

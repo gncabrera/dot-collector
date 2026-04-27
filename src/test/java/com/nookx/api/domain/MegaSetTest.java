@@ -2,12 +2,9 @@ package com.nookx.api.domain;
 
 import static com.nookx.api.domain.MegaSetTestSamples.*;
 import static com.nookx.api.domain.MegaSetTypeTestSamples.*;
-import static com.nookx.api.domain.ProfileCollectionSetTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nookx.api.web.rest.TestUtil;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class MegaSetTest {
@@ -36,27 +33,5 @@ class MegaSetTest {
 
         megaSet.type(null);
         assertThat(megaSet.getType()).isNull();
-    }
-
-    @Test
-    void profileCollectionSetTest() {
-        MegaSet megaSet = getMegaSetRandomSampleGenerator();
-        ProfileCollectionSet profileCollectionSetBack = getProfileCollectionSetRandomSampleGenerator();
-
-        megaSet.addProfileCollectionSet(profileCollectionSetBack);
-        assertThat(megaSet.getProfileCollectionSets()).containsOnly(profileCollectionSetBack);
-        assertThat(profileCollectionSetBack.getSets()).containsOnly(megaSet);
-
-        megaSet.removeProfileCollectionSet(profileCollectionSetBack);
-        assertThat(megaSet.getProfileCollectionSets()).doesNotContain(profileCollectionSetBack);
-        assertThat(profileCollectionSetBack.getSets()).doesNotContain(megaSet);
-
-        megaSet.profileCollectionSets(new HashSet<>(Set.of(profileCollectionSetBack)));
-        assertThat(megaSet.getProfileCollectionSets()).containsOnly(profileCollectionSetBack);
-        assertThat(profileCollectionSetBack.getSets()).containsOnly(megaSet);
-
-        megaSet.setProfileCollectionSets(new HashSet<>());
-        assertThat(megaSet.getProfileCollectionSets()).doesNotContain(profileCollectionSetBack);
-        assertThat(profileCollectionSetBack.getSets()).doesNotContain(megaSet);
     }
 }

@@ -1,12 +1,14 @@
 package com.nookx.api.service;
 
 import com.nookx.api.domain.Profile;
+import com.nookx.api.domain.User;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileRepository;
 import com.nookx.api.service.dto.ProfileDTO;
 import com.nookx.api.service.mapper.ProfileMapper;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -130,5 +132,27 @@ public class ProfileService {
                     .orElseThrow(() -> new RuntimeException("Profile for user " + user + " not found"))
             )
             .orElse(null);
+    }
+
+    public boolean isCurrentProfile(Profile profile) {
+        if (profile == null) {
+            return false;
+        }
+        Profile currentProfile = getCurrentProfile();
+        if (currentProfile == null) {
+            return false;
+        }
+        return Objects.equals(profile.getId(), currentProfile.getId());
+    }
+
+    public boolean isCurrentProfile(User user) {
+        if (user == null) {
+            return false;
+        }
+        Profile currentProfile = getCurrentProfile();
+        if (currentProfile == null) {
+            return false;
+        }
+        return Objects.equals(user.getId(), currentProfile.getUser().getId());
     }
 }

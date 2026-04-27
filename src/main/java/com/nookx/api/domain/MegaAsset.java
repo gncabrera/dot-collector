@@ -17,7 +17,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class MegaAsset implements Serializable {
+public class MegaAsset extends AbstractOwnedEntity<Long> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -52,10 +52,6 @@ public class MegaAsset implements Serializable {
 
     @Column(name = "size_bytes")
     private Long sizeBytes;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "uploaded_by_id")
-    private User uploadedBy;
 
     @NotNull
     @Column(name = "is_public", nullable = false)
@@ -100,11 +96,6 @@ public class MegaAsset implements Serializable {
 
     public MegaAsset sizeBytes(Long sizeBytes) {
         this.setSizeBytes(sizeBytes);
-        return this;
-    }
-
-    public MegaAsset uploadedBy(User uploadedBy) {
-        this.setUploadedBy(uploadedBy);
         return this;
     }
 

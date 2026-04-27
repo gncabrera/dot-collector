@@ -4,7 +4,6 @@ import static com.nookx.api.domain.ProfileCollectionSetAsserts.*;
 import static com.nookx.api.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,25 +11,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nookx.api.IntegrationTest;
 import com.nookx.api.domain.ProfileCollectionSet;
 import com.nookx.api.repository.ProfileCollectionSetRepository;
-import com.nookx.api.service.ProfileCollectionSetService;
 import com.nookx.api.service.dto.ProfileCollectionSetDTO;
 import com.nookx.api.service.mapper.ProfileCollectionSetMapper;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -66,14 +60,8 @@ class ProfileCollectionSetResourceIT {
     @Autowired
     private ProfileCollectionSetRepository profileCollectionSetRepository;
 
-    @Mock
-    private ProfileCollectionSetRepository profileCollectionSetRepositoryMock;
-
     @Autowired
     private ProfileCollectionSetMapper profileCollectionSetMapper;
-
-    @Mock
-    private ProfileCollectionSetService profileCollectionSetServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -180,23 +168,6 @@ class ProfileCollectionSetResourceIT {
             .andExpect(jsonPath("$.[*].owned").value(hasItem(DEFAULT_OWNED)))
             .andExpect(jsonPath("$.[*].wanted").value(hasItem(DEFAULT_WANTED)))
             .andExpect(jsonPath("$.[*].dateAdded").value(hasItem(DEFAULT_DATE_ADDED.toString())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProfileCollectionSetsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(profileCollectionSetServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProfileCollectionSetMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(profileCollectionSetServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllProfileCollectionSetsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(profileCollectionSetServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restProfileCollectionSetMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(profileCollectionSetRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

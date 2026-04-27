@@ -21,14 +21,8 @@ type MegaSetFormGroupContent = {
   setNumber: FormControl<IMegaSet['setNumber']>;
   releaseDate: FormControl<IMegaSet['releaseDate']>;
   notes: FormControl<IMegaSet['notes']>;
-  nameEN: FormControl<IMegaSet['nameEN']>;
-  nameES: FormControl<IMegaSet['nameES']>;
-  nameDE: FormControl<IMegaSet['nameDE']>;
-  nameFR: FormControl<IMegaSet['nameFR']>;
-  descriptionEN: FormControl<IMegaSet['descriptionEN']>;
-  descriptionES: FormControl<IMegaSet['descriptionES']>;
-  descriptionDE: FormControl<IMegaSet['descriptionDE']>;
-  descriptionFR: FormControl<IMegaSet['descriptionFR']>;
+  name: FormControl<IMegaSet['name']>;
+  description: FormControl<IMegaSet['description']>;
   attributes: FormControl<IMegaSet['attributes']>;
   attributesContentType: FormControl<IMegaSet['attributesContentType']>;
   type: FormControl<IMegaSet['type']>;
@@ -57,18 +51,10 @@ export class MegaSetFormService {
       }),
       releaseDate: new FormControl(megaSetRawValue.releaseDate),
       notes: new FormControl(megaSetRawValue.notes),
-      nameEN: new FormControl(megaSetRawValue.nameEN, {
+      name: new FormControl(megaSetRawValue.name, {
         validators: [Validators.required],
       }),
-      nameES: new FormControl(megaSetRawValue.nameES),
-      nameDE: new FormControl(megaSetRawValue.nameDE),
-      nameFR: new FormControl(megaSetRawValue.nameFR),
-      descriptionEN: new FormControl(megaSetRawValue.descriptionEN, {
-        validators: [Validators.required],
-      }),
-      descriptionES: new FormControl(megaSetRawValue.descriptionES),
-      descriptionDE: new FormControl(megaSetRawValue.descriptionDE),
-      descriptionFR: new FormControl(megaSetRawValue.descriptionFR),
+      description: new FormControl(megaSetRawValue.description),
       attributes: new FormControl(megaSetRawValue.attributes),
       attributesContentType: new FormControl(megaSetRawValue.attributesContentType),
       type: new FormControl(megaSetRawValue.type),

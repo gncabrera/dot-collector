@@ -77,16 +77,13 @@ public class MegaAssetResource {
             .body(megaAssetDTO);
     }
 
-    @GetMapping("/dl/{uuid}")
+    @GetMapping("/file/{uuid}")
     public ResponseEntity<Resource> downloadMegaAsset(@PathVariable("uuid") String uuid) {
         LOG.debug("REST request to download MegaAsset file : {}", uuid);
         Optional<MegaAssetService.MegaAssetFileDownload> fileForDownload = megaAssetService.findFileForDownload(uuid);
 
         if (fileForDownload.isPresent()) {
             MegaAssetService.MegaAssetFileDownload dl = fileForDownload.orElse(null);
-            if (dl.asset().getType() != AssetType.IMAGE) {
-                return ResponseEntity.badRequest().build();
-            }
             return downloadAsset(uuid, dl);
         } else {
             return ResponseEntity.notFound().build();

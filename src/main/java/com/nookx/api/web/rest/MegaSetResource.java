@@ -24,7 +24,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link MegaSet}.
  */
 @RestController
-@RequestMapping("/api/mega-sets")
+@RequestMapping("/api/backoffice/sets")
 public class MegaSetResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(MegaSetResource.class);
@@ -44,7 +44,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code POST  /mega-sets} : Create a new megaSet.
+     * {@code POST  /sets} : Create a new megaSet.
      *
      * @param megaSetDTO the megaSetDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new megaSetDTO, or with status {@code 400 (Bad Request)} if the megaSet has already an ID.
@@ -57,13 +57,13 @@ public class MegaSetResource {
             throw new BadRequestAlertException("A new megaSet cannot already have an ID", ENTITY_NAME, "idexists");
         }
         megaSetDTO = megaSetService.save(megaSetDTO);
-        return ResponseEntity.created(new URI("/api/mega-sets/" + megaSetDTO.getId()))
+        return ResponseEntity.created(new URI("/api/sets/" + megaSetDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, megaSetDTO.getId().toString()))
             .body(megaSetDTO);
     }
 
     /**
-     * {@code PUT  /mega-sets/:id} : Updates an existing megaSet.
+     * {@code PUT  /sets/:id} : Updates an existing megaSet.
      *
      * @param id the id of the megaSetDTO to save.
      * @param megaSetDTO the megaSetDTO to update.
@@ -96,54 +96,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code PATCH  /mega-sets/:id} : Partial updates given fields of an existing megaSet, field will ignore if it is null
-     *
-     * @param id the id of the megaSetDTO to save.
-     * @param megaSetDTO the megaSetDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated megaSetDTO,
-     * or with status {@code 400 (Bad Request)} if the megaSetDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the megaSetDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the megaSetDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<MegaSetDTO> partialUpdateMegaSet(
-        @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody MegaSetDTO megaSetDTO
-    ) throws URISyntaxException {
-        LOG.debug("REST request to partial update MegaSet partially : {}, {}", id, megaSetDTO);
-        if (megaSetDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, megaSetDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!megaSetRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Optional<MegaSetDTO> result = megaSetService.partialUpdate(megaSetDTO);
-
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, megaSetDTO.getId().toString())
-        );
-    }
-
-    /**
-     * {@code GET  /mega-sets} : get all the Mega Sets.
-     *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Mega Sets in body.
-     */
-    @GetMapping("")
-    public List<MegaSetDTO> getAllMegaSets() {
-        LOG.debug("REST request to get all MegaSets");
-        return megaSetService.findAll();
-    }
-
-    /**
-     * {@code GET  /mega-sets/:id} : get the "id" megaSet.
+     * {@code GET  /sets/:id} : get the "id" megaSet.
      *
      * @param id the id of the megaSetDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the megaSetDTO, or with status {@code 404 (Not Found)}.
@@ -156,7 +109,7 @@ public class MegaSetResource {
     }
 
     /**
-     * {@code DELETE  /mega-sets/:id} : delete the "id" megaSet.
+     * {@code DELETE  /sets/:id} : delete the "id" megaSet.
      *
      * @param id the id of the megaSetDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.

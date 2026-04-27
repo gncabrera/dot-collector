@@ -28,10 +28,9 @@
     },
     {
       "otherEntityName": "megaSet",
-      "otherEntityRelationshipName": "profileCollectionSet",
       "relationshipName": "set",
       "relationshipSide": "left",
-      "relationshipType": "many-to-many"
+      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",
