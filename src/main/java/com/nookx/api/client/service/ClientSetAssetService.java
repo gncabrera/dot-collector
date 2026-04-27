@@ -34,6 +34,16 @@ public class ClientSetAssetService {
         this.clientAssetUrlService = clientAssetUrlService;
     }
 
+    public ClientImageDTO getPrimaryImage(Long setId) {
+        List<MegaAsset> assets = megaSetImageRepository
+            .findByMegaSet_IdOrderBySortOrderAsc(setId)
+            .stream()
+            .filter(MegaSetImage::isPrimary)
+            .map(MegaSetImage::getAsset)
+            .toList();
+        return clientAssetUrlService.toClientImageDtos(assets).stream().findFirst().orElse(null);
+    }
+
     public List<ClientImageDTO> getImages(Long setId) {
         List<MegaAsset> assets = megaSetImageRepository
             .findByMegaSet_IdOrderBySortOrderAsc(setId)

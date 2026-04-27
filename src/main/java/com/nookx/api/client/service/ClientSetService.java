@@ -2,6 +2,7 @@ package com.nookx.api.client.service;
 
 import com.nookx.api.client.dto.ClientSetCommunityDTO;
 import com.nookx.api.client.dto.ClientSetDTO;
+import com.nookx.api.client.dto.ClientSetLiteDTO;
 import com.nookx.api.domain.MegaSet;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.repository.ProfileCollectionSetRepository;
@@ -10,6 +11,7 @@ import com.nookx.api.service.MegaSetTypeService;
 import com.nookx.api.service.dto.MegaSetDTO;
 import com.nookx.api.service.mapper.MegaSetMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,32 @@ public class ClientSetService {
     public void delete(Long id) {
         log.debug("Request to delete ClientSet : {}", id);
         megaSetService.delete(id);
+    }
+
+    /**
+     * Get every set that is part of the given collection, fully enriched
+     * (community stats, image URLs, file uuids and detailed type info).
+     *
+     * <p>This method does NOT enforce any authorization on the collection –
+     * callers are responsible for verifying that the current user is allowed
+     * to read the collection before invoking it.</p>
+     */
+    @Transactional(readOnly = true)
+    public List<ClientSetLiteDTO> getSetsByCollectionId(Long collectionId) {
+        log.debug("Request to get sets for collection : {}", collectionId);
+        return profileCollectionSetRepository.findSetsByCollectionId(collectionId).stream().map(this::toLiteDto).toList();
+    }
+
+    private ClientSetLiteDTO toLiteDto(MegaSet source) {
+        if (source == null) {
+            return null;
+        }
+        ClientSetLiteDTO dto = new ClientSetLiteDTO();
+        dto.setId(source.getId());
+        dto.setSetNumber(source.getSetNumber());
+        dto.setName(source.getName());
+        dto.setImage(clientSetAssetService.getPrimaryImage(dto.getId()));
+        return dto;
     }
 
     // -----------------------------------------------------------------
