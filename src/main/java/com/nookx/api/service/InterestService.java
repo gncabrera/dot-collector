@@ -155,14 +155,14 @@ public class InterestService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClientInterestDTO> findAll(boolean isSystem, boolean isPublic) {
+    public List<ClientInterestDTO> findAll(Boolean isSystem, Boolean isPublic) {
         LOG.debug("Request to get Interests for current profile and system catalog");
         Long profileId = profileService.getCurrentProfile().getId();
         Set<Long> subscribedIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
         return interestRepository
             .findAllLinkedToProfileOrSystem(profileId)
             .stream()
-            .filter(i -> i.isSystem() == isSystem && i.isPublic() == isPublic)
+            .filter(i -> (isSystem == null || i.isSystem() == isSystem) && (isPublic == null || i.isPublic() == isPublic))
             .map(interest -> toDtoWithSubscription(interest, subscribedIds))
             .collect(Collectors.toCollection(LinkedList::new));
     }
