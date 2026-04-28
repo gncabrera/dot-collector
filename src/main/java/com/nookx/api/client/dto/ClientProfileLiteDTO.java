@@ -7,5 +7,6 @@ import lombok.Data;
 public class ClientProfileLiteDTO {
 
     private String name;
+    private ClientImageDTO image;
     private List<ClientInterestDTO> interests;
 }

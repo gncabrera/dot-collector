@@ -59,6 +59,7 @@ public class ClientProfileService {
         Profile profile = profileService.getCurrentProfile();
         ClientProfileLiteDTO dto = new ClientProfileLiteDTO();
         dto.setName(resolveName(profile));
+        dto.setImage(getProfileImage(profile));
         dto.setInterests(interestService.findAllForCurrentProfile());
         return dto;
     }
