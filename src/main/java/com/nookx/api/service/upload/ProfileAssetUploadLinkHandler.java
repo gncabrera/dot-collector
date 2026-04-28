@@ -67,7 +67,7 @@ public class ProfileAssetUploadLinkHandler implements AssetUploadLinkHandler {
         Optional<ProfileImage> existing = profileImageRepository.findByProfile_Id(entityId);
 
         if (existing.isPresent()) {
-            ProfileImage row = existing.get();
+            ProfileImage row = existing.orElse(null);
             row.setAsset(megaAsset);
             profileImageRepository.save(row);
         } else {
