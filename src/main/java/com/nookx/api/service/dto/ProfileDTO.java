@@ -34,6 +34,8 @@ public class ProfileDTO implements Serializable {
 
     private UserDTO user;
 
+    private ProfileImageDTO image;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,6 +70,7 @@ public class ProfileDTO implements Serializable {
             ", facebook='" + getFacebook() + "'" +
             ", whatsapp='" + getWhatsapp() + "'" +
             ", user=" + getUser() +
+            ", image=" + getImage() +
             "}";
     }
 }

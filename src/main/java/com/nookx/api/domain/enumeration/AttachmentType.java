@@ -8,4 +8,5 @@ public enum AttachmentType {
     SETS,
     SETS_FILE,
     COLLECTIONS,
+    PROFILE,
 }

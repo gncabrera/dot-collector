@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,6 +54,10 @@ public class Profile implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
+    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter(AccessLevel.NONE)
+    private ProfileImage image;
+
     public Profile id(Long id) {
         this.setId(id);
         return this;
@@ -95,6 +100,21 @@ public class Profile implements Serializable {
 
     public Profile user(User user) {
         this.setUser(user);
+        return this;
+    }
+
+    public void setImage(ProfileImage image) {
+        if (this.image != null) {
+            this.image.setProfile(null);
+        }
+        this.image = image;
+        if (image != null) {
+            image.setProfile(this);
+        }
+    }
+
+    public Profile image(ProfileImage image) {
+        setImage(image);
         return this;
     }
 

@@ -7,8 +7,10 @@ import com.nookx.api.client.dto.ClientInterestDTO;
 import com.nookx.api.client.dto.ClientProfileDTO;
 import com.nookx.api.client.dto.ClientProfileLiteDTO;
 import com.nookx.api.domain.Profile;
+import com.nookx.api.domain.ProfileImage;
 import com.nookx.api.domain.enumeration.ProfileCollectionType;
 import com.nookx.api.repository.ProfileCollectionRepository;
+import com.nookx.api.repository.ProfileImageRepository;
 import com.nookx.api.repository.ProfileRepository;
 import com.nookx.api.service.InterestService;
 import com.nookx.api.service.ProfileService;
@@ -24,17 +26,23 @@ public class ClientProfileService {
     private final ProfileService profileService;
     private final ProfileRepository profileRepository;
     private final ProfileCollectionRepository profileCollectionRepository;
+    private final ProfileImageRepository profileImageRepository;
+    private final ClientAssetUrlService clientAssetUrlService;
     private final InterestService interestService;
 
     public ClientProfileService(
         ProfileService profileService,
         ProfileRepository profileRepository,
         ProfileCollectionRepository profileCollectionRepository,
+        ProfileImageRepository profileImageRepository,
+        ClientAssetUrlService clientAssetUrlService,
         InterestService interestService
     ) {
         this.profileService = profileService;
         this.profileRepository = profileRepository;
         this.profileCollectionRepository = profileCollectionRepository;
+        this.profileImageRepository = profileImageRepository;
+        this.clientAssetUrlService = clientAssetUrlService;
         this.interestService = interestService;
     }
 
@@ -86,8 +94,11 @@ public class ClientProfileService {
     }
 
     private ClientImageDTO getProfileImage(Profile profile) {
-        // Profile entity does not yet expose an image relationship.
-        return null;
+        return profileImageRepository
+            .findByProfile_Id(profile.getId())
+            .map(ProfileImage::getAsset)
+            .map(clientAssetUrlService::toClientImageDto)
+            .orElse(null);
     }
 
     private ClientCollectionsSummaryDTO buildCollectionsSummary(Profile profile) {
