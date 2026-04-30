@@ -1,8 +1,6 @@
 package com.nookx.api.client.service;
 
-import static com.nookx.api.client.cursor.CursorCodec.decodeSearchCursor;
-import static com.nookx.api.client.cursor.CursorCodec.encodeSearchCursor;
-
+import com.nookx.api.client.cursor.CursorCodec;
 import com.nookx.api.client.cursor.SearchCursorPosition;
 import com.nookx.api.client.dto.ClientImageDTO;
 import com.nookx.api.client.dto.ClientSearchResponseDTO;
@@ -39,7 +37,7 @@ public class ClientSearchService {
 
     public ClientSearchResponseDTO searchSets(String query, int limit, String cursorToken) {
         String normalizedQuery = normalizeQuery(query);
-        SearchCursorPosition cursor = decodeSearchCursor(cursorToken);
+        SearchCursorPosition cursor = CursorCodec.decode(cursorToken, SearchCursorPosition.PARSER);
         Long currentUserId = userService.getUserWithAuthorities().map(User::getId).orElse(null);
         List<MegaSetSearchHitProjection> hits = megaSetRepository.searchSetHits(
             normalizedQuery,
@@ -66,7 +64,9 @@ public class ClientSearchService {
         ClientSearchTabDTO tab = new ClientSearchTabDTO();
         tab.setType(TAB_SETS);
         tab.setItems(items);
-        tab.setNextCursor(hasMore ? encodeSearchCursor(pageHits.getLast()) : null);
+        tab.setNextCursor(
+            hasMore ? CursorCodec.encode(new SearchCursorPosition(pageHits.getLast().getScore(), pageHits.getLast().getId())) : null
+        );
 
         ClientSearchResponseDTO response = new ClientSearchResponseDTO();
         response.setTabs(List.of(tab));

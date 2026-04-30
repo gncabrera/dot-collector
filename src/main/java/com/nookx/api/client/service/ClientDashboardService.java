@@ -64,7 +64,7 @@ public class ClientDashboardService {
             throw new AccessDeniedException("Not authenticated");
         }
 
-        DashboardLatestReleasedCursorPosition cursor = CursorCodec.decodeCursor(cursorToken);
+        DashboardLatestReleasedCursorPosition cursor = CursorCodec.decode(cursorToken, DashboardLatestReleasedCursorPosition.PARSER);
         List<Long> interestIds = profileInterestRepository.findInterestIdsByProfileId(currentProfile.getId());
         if (interestIds.isEmpty()) {
             interestIds = List.of(NO_INTEREST_SENTINEL);
@@ -94,7 +94,17 @@ public class ClientDashboardService {
 
         ClientDashboardNewsSetsDTO response = new ClientDashboardNewsSetsDTO();
         response.setItems(items);
-        response.setNextCursor(hasMore ? CursorCodec.encodeCursor(pageHits.get(pageHits.size() - 1)) : null);
+        response.setNextCursor(
+            hasMore
+                ? CursorCodec.encode(
+                      new DashboardLatestReleasedCursorPosition(
+                          pageHits.getLast().getPriority(),
+                          pageHits.getLast().getReleaseDate(),
+                          pageHits.getLast().getId()
+                      )
+                  )
+                : null
+        );
         return response;
     }
 }
