@@ -251,3 +251,6 @@ application:
     api-key: ${SCRAPER_API_KEY:el-pepe-de-la-gente-525351213578751}
     principal-login: ${SCRAPER_PRINCIPAL_LOGIN:admin}
     max-batch-size: ${SCRAPER_MAX_BATCH_SIZE:200}
+  dicebear:
+    url: ${DICEBEAR_URL:https://avatars.nookx.app/9.x}
+    type: ${DICEBEAR_TYPE:bottts-neutral}

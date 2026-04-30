@@ -19,6 +19,8 @@ public class ApplicationProperties {
 
     private final Scraper scraper = new Scraper();
 
+    private final Dicebear dicebear = new Dicebear();
+
     // jhipster-needle-application-properties-property
 
     public Liquibase getLiquibase() {
@@ -31,6 +33,10 @@ public class ApplicationProperties {
 
     public Scraper getScraper() {
         return scraper;
+    }
+
+    public Dicebear getDicebear() {
+        return dicebear;
     }
 
     public String getBaseUrl() {
@@ -99,6 +105,29 @@ public class ApplicationProperties {
 
         public void setMaxBatchSize(int maxBatchSize) {
             this.maxBatchSize = maxBatchSize;
+        }
+    }
+
+    public static class Dicebear {
+
+        private String url = "https://avatars.nookx.app/9.x";
+
+        private String type = "bottts-neutral";
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 
