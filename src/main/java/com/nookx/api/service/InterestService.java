@@ -5,6 +5,7 @@ import com.nookx.api.domain.Interest;
 import com.nookx.api.domain.MegaSetType;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileInterest;
+import com.nookx.api.domain.User;
 import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileInterestRepository;
 import com.nookx.api.service.mapper.InterestMapper;
@@ -43,18 +44,22 @@ public class InterestService {
 
     private final MegaSetTypeService megaSetTypeService;
 
+    private final UserService userService;
+
     public InterestService(
         InterestRepository interestRepository,
         InterestMapper interestMapper,
         ProfileService profileService,
         ProfileInterestRepository profileInterestRepository,
-        MegaSetTypeService megaSetTypeService
+        MegaSetTypeService megaSetTypeService,
+        UserService userService
     ) {
         this.interestRepository = interestRepository;
         this.interestMapper = interestMapper;
         this.profileService = profileService;
         this.profileInterestRepository = profileInterestRepository;
         this.megaSetTypeService = megaSetTypeService;
+        this.userService = userService;
     }
 
     @Transactional
@@ -65,6 +70,10 @@ public class InterestService {
         interest.setPublic(interestDTO.isPublic());
         interest.setDeleted(false);
         interest.setDeletedDate(null);
+        User owner = userService
+            .getUserWithAuthorities()
+            .orElseThrow(() -> new BadRequestAlertException("Current user could not be resolved", "interest", "usernotfound"));
+        interest.setOwner(owner);
         interest = interestRepository.save(interest);
 
         Profile currentProfile = profileService.getCurrentProfile();
@@ -149,18 +158,21 @@ public class InterestService {
 
     private void assertCurrentUserIsOwner(Interest interest) {
         Profile currentProfile = profileService.getCurrentProfile();
-        if (!profileInterestRepository.existsByProfile_IdAndInterest_Id(currentProfile.getId(), interest.getId())) {
-            throw new AccessDeniedException("Current profile is not linked to this interest");
+        if (profileInterestRepository.existsByProfile_IdAndInterest_Id(currentProfile.getId(), interest.getId())) {
+            return;
         }
+        throw new AccessDeniedException("Current profile is not linked to this interest");
     }
 
     @Transactional(readOnly = true)
     public List<ClientInterestDTO> findAll(Boolean isSystem, Boolean isPublic) {
         LOG.debug("Request to get Interests for current profile and system catalog");
-        Long profileId = profileService.getCurrentProfile().getId();
+        Profile currentProfile = profileService.getCurrentProfile();
+        Long profileId = currentProfile.getId();
+        Long userId = currentProfile.getUser().getId();
         Set<Long> subscribedIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
         return interestRepository
-            .findAllLinkedToProfileOrSystem(profileId)
+            .findAllLinkedToProfileOrSystem(profileId, userId)
             .stream()
             .filter(i -> (isSystem == null || i.isSystem() == isSystem) && (isPublic == null || i.isPublic() == isPublic))
             .map(interest -> toDtoWithSubscription(interest, subscribedIds))
@@ -181,9 +193,11 @@ public class InterestService {
     @Transactional(readOnly = true)
     public Optional<ClientInterestDTO> findOne(Long id) {
         LOG.debug("Request to get Interest : {} for current profile", id);
-        Long profileId = profileService.getCurrentProfile().getId();
+        Profile currentProfile = profileService.getCurrentProfile();
+        Long profileId = currentProfile.getId();
+        Long userId = currentProfile.getUser().getId();
         Set<Long> subscribedIds = new HashSet<>(profileInterestRepository.findInterestIdsByProfileId(profileId));
-        Optional<Interest> byIdLinkedToProfileOrSystem = interestRepository.findByIdLinkedToProfileOrSystem(id, profileId);
+        Optional<Interest> byIdLinkedToProfileOrSystem = interestRepository.findByIdLinkedToProfileOrSystem(id, profileId, userId);
 
         if (byIdLinkedToProfileOrSystem.isPresent()) {
             Interest interest = byIdLinkedToProfileOrSystem.orElse(null);

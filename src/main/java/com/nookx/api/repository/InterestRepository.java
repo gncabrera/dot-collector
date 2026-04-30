@@ -19,16 +19,24 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     List<Interest> findAllBySetType_Id(Long setTypeId);
 
     @Query(
-        "SELECT i FROM Interest i WHERE i.deleted = false AND (i.isSystem = true OR EXISTS (" +
-            "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId)) ORDER BY i.order"
+        "SELECT i FROM Interest i WHERE i.deleted = false AND (" +
+            "i.isSystem = true OR i.isPublic = true OR EXISTS (" +
+            "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId) OR (" +
+            "i.owner IS NOT NULL AND i.owner.id = :userId)) ORDER BY i.order"
     )
-    List<Interest> findAllLinkedToProfileOrSystem(@Param("profileId") Long profileId);
+    List<Interest> findAllLinkedToProfileOrSystem(@Param("profileId") Long profileId, @Param("userId") Long userId);
 
     @Query(
-        "SELECT i FROM Interest i WHERE i.deleted = false AND i.id = :id AND (i.isSystem = true OR EXISTS (" +
-            "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId))"
+        "SELECT i FROM Interest i WHERE i.deleted = false AND i.id = :id AND (" +
+            "i.isSystem = true OR i.isPublic = true  OR EXISTS (" +
+            "SELECT 1 FROM ProfileInterest pi WHERE pi.interest.id = i.id AND pi.profile.id = :profileId) OR (" +
+            "i.owner IS NOT NULL AND i.owner.id = :userId))"
     )
-    Optional<Interest> findByIdLinkedToProfileOrSystem(@Param("id") Long id, @Param("profileId") Long profileId);
+    Optional<Interest> findByIdLinkedToProfileOrSystem(
+        @Param("id") Long id,
+        @Param("profileId") Long profileId,
+        @Param("userId") Long userId
+    );
 
     @Query(
         "SELECT i FROM Interest i WHERE i.deleted = false AND EXISTS (" +

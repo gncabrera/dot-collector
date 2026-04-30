@@ -34,6 +34,9 @@
             <column name="set_type_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -52,6 +55,7 @@
             <column name="deleted" type="boolean"/>
             <column name="deleted_date" type="timestamp"/>
             <column name="set_type_id" type="numeric"/>
+            <column name="owner_id" type="numeric"/>
         </loadData>
     </changeSet>
 

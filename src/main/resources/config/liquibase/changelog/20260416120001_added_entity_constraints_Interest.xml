@@ -17,4 +17,13 @@
                                  referencedTableName="mega_set_type"
                                  />
     </changeSet>
+
+    <changeSet id="20260416120001-2" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="interest"
+                                 constraintName="fk_interest__owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+    </changeSet>
 </databaseChangeLog>

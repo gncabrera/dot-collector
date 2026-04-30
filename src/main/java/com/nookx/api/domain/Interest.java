@@ -17,7 +17,7 @@ import lombok.Setter;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
-public class Interest implements Serializable {
+public class Interest extends AbstractOwnedEntity<Long> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

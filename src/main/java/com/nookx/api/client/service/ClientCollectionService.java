@@ -170,13 +170,15 @@ public class ClientCollectionService {
 
         List<ClientInterestDTO> interestDtos = dto.getInterests();
         if (interestDtos != null && !interestDtos.isEmpty()) {
-            Long profileId = profileService.getCurrentProfile().getId();
+            Profile current = profileService.getCurrentProfile();
+            Long profileId = current.getId();
+            Long userId = current.getUser().getId();
             Set<Interest> resolvedInterests = interestDtos
                 .stream()
                 .filter(interestDto -> interestDto != null && interestDto.getId() != null)
                 .map(interestDto ->
                     interestRepository
-                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId)
+                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId, userId)
                         .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"))
                 )
                 .collect(Collectors.toCollection(HashSet::new));
@@ -349,13 +351,15 @@ public class ClientCollectionService {
 
         List<ClientInterestDTO> interestDtos = dto.getInterests();
         if (interestDtos != null && !interestDtos.isEmpty()) {
-            Long profileId = profileService.getCurrentProfile().getId();
+            Profile current = profileService.getCurrentProfile();
+            Long profileId = current.getId();
+            Long userId = current.getUser().getId();
             Set<Interest> resolvedInterests = interestDtos
                 .stream()
                 .filter(interestDto -> interestDto != null && interestDto.getId() != null)
                 .map(interestDto ->
                     interestRepository
-                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId)
+                        .findByIdLinkedToProfileOrSystem(interestDto.getId(), profileId, userId)
                         .orElseThrow(() -> new BadRequestAlertException("Interest not found", "interest", "idnotfound"))
                 )
                 .collect(Collectors.toCollection(HashSet::new));
