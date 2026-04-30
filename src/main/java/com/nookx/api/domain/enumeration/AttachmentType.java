@@ -9,4 +9,5 @@ public enum AttachmentType {
     SETS_FILE,
     COLLECTIONS,
     PROFILE,
+    REPORT,
 }

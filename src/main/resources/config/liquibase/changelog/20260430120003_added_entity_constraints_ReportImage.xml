@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ReportImage.
+    -->
+    <changeSet id="20260430120003-1" author="nookx">
+
+        <addForeignKeyConstraint baseColumnNames="report_id"
+                                 baseTableName="report_image"
+                                 constraintName="fk_report_image__report_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="report"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="asset_id"
+                                 baseTableName="report_image"
+                                 constraintName="fk_report_image__asset_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="mega_asset"
+                                 />
+    </changeSet>
+</databaseChangeLog>
