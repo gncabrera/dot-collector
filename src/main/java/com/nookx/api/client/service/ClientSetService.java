@@ -98,7 +98,11 @@ public class ClientSetService {
         return profileCollectionSetRepository.findSetsByCollectionId(collectionId).stream().map(this::toLiteDto).toList();
     }
 
-    private ClientSetLiteDTO toLiteDto(MegaSet source) {
+    /**
+     * Build the lite DTO projection for a {@link MegaSet}. Exposed so other client
+     * services (e.g. dashboard feeds) can reuse the same mapping + primary-image resolution.
+     */
+    public ClientSetLiteDTO toLiteDto(MegaSet source) {
         if (source == null) {
             return null;
         }
@@ -132,6 +136,7 @@ public class ClientSetService {
         dto.setAttributes(source.getAttributes());
         dto.setType(source.getType());
         dto.setInterest(source.getInterest());
+        dto.setReleaseDate(source.getReleaseDate());
         return dto;
     }
 
@@ -153,6 +158,7 @@ public class ClientSetService {
         dto.setAttributes(source.getAttributes());
         dto.setType(source.getType());
         dto.setInterest(source.getInterest());
+        dto.setReleaseDate(source.getReleaseDate());
         return dto;
     }
 

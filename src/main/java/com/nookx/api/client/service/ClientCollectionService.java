@@ -326,7 +326,7 @@ public class ClientCollectionService {
             }
         }
 
-        ClientCollectionCommunityDTO communityDTO = getClientCollectionCommunityDTO();
+        ClientCollectionCommunityDTO communityDTO = getClientCollectionCommunityDTO(profileCollection);
         dto.setCommunity(communityDTO);
         dto.setInterests(toClientInterestDtos(profileCollection));
 

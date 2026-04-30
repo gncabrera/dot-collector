@@ -1,6 +1,7 @@
 package com.nookx.api.client.dto;
 
 import com.nookx.api.domain.enumeration.ProfileCollectionType;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 

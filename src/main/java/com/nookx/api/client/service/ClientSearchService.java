@@ -1,16 +1,19 @@
 package com.nookx.api.client.service;
 
+import static com.nookx.api.client.cursor.CursorCodec.decodeSearchCursor;
+import static com.nookx.api.client.cursor.CursorCodec.encodeSearchCursor;
+
+import com.nookx.api.client.cursor.SearchCursorPosition;
 import com.nookx.api.client.dto.ClientImageDTO;
 import com.nookx.api.client.dto.ClientSearchResponseDTO;
 import com.nookx.api.client.dto.ClientSearchTabDTO;
 import com.nookx.api.client.dto.ClientSetSearchItemDTO;
 import com.nookx.api.domain.MegaSet;
+import com.nookx.api.domain.User;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.repository.projection.MegaSetSearchHitProjection;
 import com.nookx.api.service.UserService;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +39,8 @@ public class ClientSearchService {
 
     public ClientSearchResponseDTO searchSets(String query, int limit, String cursorToken) {
         String normalizedQuery = normalizeQuery(query);
-        CursorPosition cursor = decodeCursor(cursorToken);
-        Long currentUserId = userService
-            .getUserWithAuthorities()
-            .map(user -> user.getId())
-            .orElse(null);
+        SearchCursorPosition cursor = decodeSearchCursor(cursorToken);
+        Long currentUserId = userService.getUserWithAuthorities().map(User::getId).orElse(null);
         List<MegaSetSearchHitProjection> hits = megaSetRepository.searchSetHits(
             normalizedQuery,
             currentUserId,
@@ -66,7 +66,7 @@ public class ClientSearchService {
         ClientSearchTabDTO tab = new ClientSearchTabDTO();
         tab.setType(TAB_SETS);
         tab.setItems(items);
-        tab.setNextCursor(hasMore ? encodeCursor(pageHits.get(pageHits.size() - 1)) : null);
+        tab.setNextCursor(hasMore ? encodeSearchCursor(pageHits.getLast()) : null);
 
         ClientSearchResponseDTO response = new ClientSearchResponseDTO();
         response.setTabs(List.of(tab));
@@ -93,29 +93,4 @@ public class ClientSearchService {
     private String normalizeQuery(String query) {
         return query.trim();
     }
-
-    private String encodeCursor(MegaSetSearchHitProjection hit) {
-        String rawCursor = hit.getScore() + "|" + hit.getId();
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(rawCursor.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private CursorPosition decodeCursor(String token) {
-        if (token == null || token.isBlank()) {
-            return new CursorPosition(null, null);
-        }
-        try {
-            String rawValue = new String(Base64.getUrlDecoder().decode(token), StandardCharsets.UTF_8);
-            String[] cursorParts = rawValue.split("\\|");
-            if (cursorParts.length != 2) {
-                throw new BadRequestAlertException("Invalid cursor", ENTITY_NAME, "invalidcursor");
-            }
-            Float score = Float.parseFloat(cursorParts[0]);
-            Long id = Long.parseLong(cursorParts[1]);
-            return new CursorPosition(score, id);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestAlertException("Invalid cursor", ENTITY_NAME, "invalidcursor");
-        }
-    }
-
-    private record CursorPosition(Float score, Long id) {}
 }

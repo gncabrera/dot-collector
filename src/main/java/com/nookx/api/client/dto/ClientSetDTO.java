@@ -2,6 +2,7 @@ package com.nookx.api.client.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.nookx.api.service.dto.MegaSetTypeDTO;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 
@@ -20,4 +21,5 @@ public class ClientSetDTO {
     private ClientSetCommunityDTO community;
     private List<ClientImageDTO> images;
     private List<String> files;
+    private LocalDate releaseDate;
 }
