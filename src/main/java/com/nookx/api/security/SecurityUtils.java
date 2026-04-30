@@ -121,6 +121,10 @@ public final class SecurityUtils {
     }
 
     public static boolean currentUserIsAdmin() {
-        return hasCurrentUserAnyOfAuthorities("ROLE_ADMIN");
+        return hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.ADMIN);
+    }
+
+    public static boolean currentUserIsPremium() {
+        return hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.PREMIUM);
     }
 }
