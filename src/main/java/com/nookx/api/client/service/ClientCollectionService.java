@@ -267,10 +267,7 @@ public class ClientCollectionService {
             }
         }
 
-        ClientCollectionCommunityDTO communityDTO = new ClientCollectionCommunityDTO();
-        communityDTO.setTotalCloned(77);
-        communityDTO.setTotalComments(88);
-        communityDTO.setTotalStars(99);
+        ClientCollectionCommunityDTO communityDTO = getClientCollectionCommunityDTO(profileCollection);
 
         CloneInformation cloneInformation = profileCollection.getCloneInformation();
         if (cloneInformation != null) {
@@ -285,6 +282,14 @@ public class ClientCollectionService {
         dto.setInterests(toClientInterestDtos(profileCollection));
 
         return dto;
+    }
+
+    private ClientCollectionCommunityDTO getClientCollectionCommunityDTO(ProfileCollection collection) {
+        ClientCollectionCommunityDTO communityDTO = new ClientCollectionCommunityDTO();
+        communityDTO.setTotalCloned(77);
+        communityDTO.setTotalComments(88);
+        communityDTO.setTotalStars(99);
+        return communityDTO;
     }
 
     private List<ClientInterestDTO> toClientInterestDtos(ProfileCollection profileCollection) {
@@ -321,10 +326,7 @@ public class ClientCollectionService {
             }
         }
 
-        ClientCollectionCommunityDTO communityDTO = new ClientCollectionCommunityDTO();
-        communityDTO.setTotalCloned(77);
-        communityDTO.setTotalComments(88);
-        communityDTO.setTotalStars(99);
+        ClientCollectionCommunityDTO communityDTO = getClientCollectionCommunityDTO();
         dto.setCommunity(communityDTO);
         dto.setInterests(toClientInterestDtos(profileCollection));
 

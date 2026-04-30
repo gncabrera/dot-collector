@@ -12,6 +12,6 @@ public class ClientReportDTO {
     private ReportCategory category;
     private String description;
     private List<ClientImageDTO> images;
-    private ClientProfileBasicDTO owner;
+    private ClientProfileLiteDTO owner;
     private Instant date;
 }

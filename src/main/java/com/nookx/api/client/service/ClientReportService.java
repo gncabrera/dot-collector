@@ -1,7 +1,6 @@
 package com.nookx.api.client.service;
 
 import com.nookx.api.client.dto.ClientImageDTO;
-import com.nookx.api.client.dto.ClientProfileBasicDTO;
 import com.nookx.api.client.dto.ClientReportDTO;
 import com.nookx.api.domain.MegaAsset;
 import com.nookx.api.domain.Profile;
@@ -44,28 +43,25 @@ public class ClientReportService {
 
     private final ReportRepository reportRepository;
     private final ReportImageRepository reportImageRepository;
-    private final ProfileRepository profileRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final MegaAssetService megaAssetService;
     private final UserService userService;
     private final ClientAssetUrlService clientAssetUrlService;
+    private final ClientProfileService profileService;
 
     public ClientReportService(
         ReportRepository reportRepository,
         ReportImageRepository reportImageRepository,
-        ProfileRepository profileRepository,
-        ProfileImageRepository profileImageRepository,
         MegaAssetService megaAssetService,
         UserService userService,
-        ClientAssetUrlService clientAssetUrlService
+        ClientAssetUrlService clientAssetUrlService,
+        ClientProfileService profileService
     ) {
         this.reportRepository = reportRepository;
         this.reportImageRepository = reportImageRepository;
-        this.profileRepository = profileRepository;
-        this.profileImageRepository = profileImageRepository;
         this.megaAssetService = megaAssetService;
         this.userService = userService;
         this.clientAssetUrlService = clientAssetUrlService;
+        this.profileService = profileService;
     }
 
     public ClientReportDTO create(ReportType reportType, ReportCategory category, String description, List<MultipartFile> files) {
@@ -141,44 +137,9 @@ public class ClientReportService {
         dto.setCategory(report.getCategory());
         dto.setDescription(report.getDescription());
         dto.setDate(report.getDate());
-        dto.setImages(toImageDtos(images));
-        dto.setOwner(toOwnerDto(report.getOwner()));
+        dto.setImages(clientAssetUrlService.toClientImageDtos(images.stream().map(ReportImage::getAsset).toList()));
+        dto.setOwner(profileService.getProfileLite(report.getOwner(), false));
         return dto;
-    }
-
-    private List<ClientImageDTO> toImageDtos(Collection<ReportImage> images) {
-        if (images == null || images.isEmpty()) {
-            return List.of();
-        }
-        List<MegaAsset> assets = images.stream().map(ReportImage::getAsset).toList();
-        return clientAssetUrlService.toClientImageDtos(assets);
-    }
-
-    private ClientProfileBasicDTO toOwnerDto(User owner) {
-        if (owner == null) {
-            return null;
-        }
-        Profile profile = profileRepository.findByUserId(owner.getId()).orElse(null);
-        if (profile == null) {
-            return null;
-        }
-        ClientProfileBasicDTO dto = new ClientProfileBasicDTO();
-        dto.setName(resolveName(profile));
-        dto.setImage(
-            profileImageRepository
-                .findByProfile_Id(profile.getId())
-                .map(ProfileImage::getAsset)
-                .map(clientAssetUrlService::toClientImageDto)
-                .orElse(null)
-        );
-        return dto;
-    }
-
-    private static String resolveName(Profile profile) {
-        if (profile.getUsername() != null) {
-            return profile.getUsername();
-        }
-        return profile.getFullName();
     }
 
     private static List<ReportCategory> categoriesOf(ReportType reportType) {

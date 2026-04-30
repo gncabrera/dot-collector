@@ -8,6 +8,7 @@ import com.nookx.api.client.dto.ClientProfileDTO;
 import com.nookx.api.client.dto.ClientProfileLiteDTO;
 import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileImage;
+import com.nookx.api.domain.User;
 import com.nookx.api.domain.enumeration.ProfileCollectionType;
 import com.nookx.api.repository.ProfileCollectionRepository;
 import com.nookx.api.repository.ProfileImageRepository;
@@ -61,6 +62,25 @@ public class ClientProfileService {
         dto.setName(resolveName(profile));
         dto.setImage(getProfileImage(profile));
         dto.setInterests(interestService.findAllForCurrentProfile());
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public ClientProfileLiteDTO getProfileLite(User user, boolean loadInterests) {
+        log.debug("Request to get ClientProfileLite by User");
+        if (user == null) {
+            return null;
+        }
+        Profile profile = profileRepository.findByUserId(user.getId()).orElse(null);
+        if (profile == null) {
+            return null;
+        }
+        ClientProfileLiteDTO dto = new ClientProfileLiteDTO();
+        dto.setName(resolveName(profile));
+        dto.setImage(getProfileImage(profile));
+        if (loadInterests) {
+            dto.setInterests(interestService.findAllForCurrentProfile());
+        }
         return dto;
     }
 
