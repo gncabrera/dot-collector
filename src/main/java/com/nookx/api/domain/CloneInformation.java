@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,9 @@ public class CloneInformation implements Serializable {
 
     @Column(name = "cloned")
     private Boolean cloned;
+
+    @Column(name = "cloned_at")
+    private Instant clonedAt;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "cloneInformation")
     private ProfileCollection collection;

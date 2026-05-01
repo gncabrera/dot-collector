@@ -128,6 +128,7 @@ public class ClientCollectionService {
 
                 CloneInformation info = new CloneInformation();
                 info.setCloned(true);
+                info.setClonedAt(Instant.now());
                 info.setSourceCollection(sourceCollection);
                 info.setCollection(clonedCollection);
                 cloneInformationRepository.save(info);
@@ -356,12 +357,18 @@ public class ClientCollectionService {
         return dto;
     }
 
-    private ClientCollectionCommunityDTO getClientCollectionCommunityDTO(ProfileCollection collection) {
+    /**
+     * Build the {@link ClientCollectionCommunityDTO} for a collection (stars + clones + comments).
+     * Package-private so peer client services (e.g. {@link ClientDashboardService}) can reuse it.
+     */
+    ClientCollectionCommunityDTO getClientCollectionCommunityDTO(ProfileCollection collection) {
         ClientCollectionCommunityDTO communityDTO = new ClientCollectionCommunityDTO();
-        communityDTO.setTotalCloned(77);
-        communityDTO.setTotalComments(88);
-        long totalStars = collection.getId() != null ? profileCollectionStarRepository.countByProfileCollection_Id(collection.getId()) : 0L;
+        Long collectionId = collection.getId();
+        long totalStars = collectionId != null ? profileCollectionStarRepository.countByProfileCollection_Id(collectionId) : 0L;
+        long totalCloned = collectionId != null ? cloneInformationRepository.countBySourceCollection_IdAndClonedTrue(collectionId) : 0L;
         communityDTO.setTotalStars((int) totalStars);
+        communityDTO.setTotalCloned((int) totalCloned);
+        communityDTO.setTotalComments(0);
         return communityDTO;
     }
 

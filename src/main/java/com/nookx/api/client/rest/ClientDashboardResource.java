@@ -3,6 +3,7 @@ package com.nookx.api.client.rest;
 import static com.nookx.api.client.cursor.CursorCodec.normalizeLimit;
 
 import com.nookx.api.client.dto.ClientDashboardNewsSetsDTO;
+import com.nookx.api.client.dto.ClientDashboardPopularCollectionsDTO;
 import com.nookx.api.client.service.ClientDashboardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,5 +45,24 @@ public class ClientDashboardResource {
         LOG.debug("REST request to get dashboard news sets limit={}, cursor={}", limit, cursor);
         int normalizedLimit = normalizeLimit(limit);
         return ResponseEntity.ok(clientDashboardService.getNewsSets(normalizedLimit, cursor));
+    }
+
+    /**
+     * {@code GET /api/client/dashboard/collections/popular} : public collections ranked by a
+     * weighted sum of recent vs older interactions (each star or clone counts {@code 3} when it
+     * happened in the last two days, {@code 1} otherwise). Collections without any interaction
+     * are excluded from the result.
+     *
+     * @param limit  page size, capped at the {@code normalizeLimit} cap (defaults to {@value #DEFAULT_LIMIT}).
+     * @param cursor opaque cursor returned by the previous call ({@code null} for the first page).
+     */
+    @GetMapping("/collections/popular")
+    public ResponseEntity<ClientDashboardPopularCollectionsDTO> getPopularCollections(
+        @RequestParam(value = "limit", required = false, defaultValue = "" + DEFAULT_LIMIT) int limit,
+        @RequestParam(value = "cursor", required = false) String cursor
+    ) {
+        LOG.debug("REST request to get dashboard popular collections limit={}, cursor={}", limit, cursor);
+        int normalizedLimit = normalizeLimit(limit);
+        return ResponseEntity.ok(clientDashboardService.getPopularCollections(normalizedLimit, cursor));
     }
 }

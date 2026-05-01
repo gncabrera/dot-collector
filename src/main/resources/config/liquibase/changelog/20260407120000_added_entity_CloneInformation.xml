@@ -17,6 +17,9 @@
             <column name="cloned" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="cloned_at" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
             <column name="source_collection_id" type="bigint">
                 <constraints nullable="true" />
             </column>

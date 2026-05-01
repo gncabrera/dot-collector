@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CloneInformationRepository extends JpaRepository<CloneInformation, Long> {
     List<CloneInformation> findBySourceCollection_Id(Long sourceCollectionId);
+
+    long countBySourceCollection_IdAndClonedTrue(Long sourceCollectionId);
 }
