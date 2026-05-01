@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ProfileCollectionStar.
+    -->
+    <changeSet id="20260501120001-1" author="nookx">
+
+        <addForeignKeyConstraint baseColumnNames="profile_id"
+                                 baseTableName="profile_collection_star"
+                                 constraintName="fk_profile_collection_star__profile_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile"/>
+
+        <addForeignKeyConstraint baseColumnNames="profile_collection_id"
+                                 baseTableName="profile_collection_star"
+                                 constraintName="fk_profile_collection_star__profile_collection_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile_collection"/>
+    </changeSet>
+</databaseChangeLog>

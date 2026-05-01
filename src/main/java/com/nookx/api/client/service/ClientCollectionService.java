@@ -7,6 +7,7 @@ import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionImage;
 import com.nookx.api.domain.ProfileCollectionSet;
+import com.nookx.api.domain.ProfileCollectionStar;
 import com.nookx.api.domain.enumeration.MegaAssetImageSize;
 import com.nookx.api.repository.CloneInformationRepository;
 import com.nookx.api.repository.CurrencyRepository;
@@ -14,12 +15,14 @@ import com.nookx.api.repository.InterestRepository;
 import com.nookx.api.repository.ProfileCollectionImageRepository;
 import com.nookx.api.repository.ProfileCollectionRepository;
 import com.nookx.api.repository.ProfileCollectionSetRepository;
+import com.nookx.api.repository.ProfileCollectionStarRepository;
 import com.nookx.api.service.ProfileCollectionService;
 import com.nookx.api.service.ProfileCollectionSetService;
 import com.nookx.api.service.ProfileService;
 import com.nookx.api.service.mapper.CurrencyMapper;
 import com.nookx.api.service.mapper.InterestMapper;
 import com.nookx.api.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +48,7 @@ public class ClientCollectionService {
     private final InterestMapper interestMapper;
     private final ProfileCollectionSetService profileCollectionSetService;
     private final ProfileCollectionSetRepository profileCollectionSetRepository;
+    private final ProfileCollectionStarRepository profileCollectionStarRepository;
 
     public ClientCollectionService(
         ProfileService profileService,
@@ -58,7 +62,8 @@ public class ClientCollectionService {
         InterestRepository interestRepository,
         InterestMapper interestMapper,
         ProfileCollectionSetService profileCollectionSetService,
-        ProfileCollectionSetRepository profileCollectionSetRepository
+        ProfileCollectionSetRepository profileCollectionSetRepository,
+        ProfileCollectionStarRepository profileCollectionStarRepository
     ) {
         this.profileService = profileService;
         this.profileCollectionService = profileCollectionService;
@@ -72,6 +77,7 @@ public class ClientCollectionService {
         this.interestMapper = interestMapper;
         this.profileCollectionSetService = profileCollectionSetService;
         this.profileCollectionSetRepository = profileCollectionSetRepository;
+        this.profileCollectionStarRepository = profileCollectionStarRepository;
     }
 
     @Transactional(readOnly = true)
@@ -238,7 +244,73 @@ public class ClientCollectionService {
             profileCollectionSetService.delete(set.getId());
         }
 
+        profileCollectionStarRepository.deleteByProfileCollection_Id(id);
+
         profileCollectionService.delete(id);
+    }
+
+    /**
+     * Star a public collection on behalf of the current profile.
+     *
+     * <p>Idempotent: if the current profile already starred the collection no new row is created and the existing
+     * total is returned. Returns the total number of stars on the collection after the operation.
+     *
+     * @param collectionId id of the collection to star.
+     * @return total stars on the collection after the operation.
+     * @throws BadRequestAlertException if the collection does not exist, is not public, or belongs to the current profile.
+     */
+    @Transactional
+    public long star(Long collectionId) {
+        ProfileCollection collection = profileCollectionRepository
+            .findById(collectionId)
+            .orElseThrow(() -> new BadRequestAlertException("Collection not found", "clientCollection", "idnotfound"));
+
+        Profile currentProfile = profileService.getCurrentProfile();
+        if (currentProfile == null) {
+            throw new BadRequestAlertException("No current profile", "clientCollection", "noprofile");
+        }
+
+        if (collection.getProfile() != null && currentProfile.getId().equals(collection.getProfile().getId())) {
+            throw new BadRequestAlertException("Cannot star own collection", "clientCollection", "starown");
+        }
+
+        if (!Boolean.TRUE.equals(collection.getIsPublic())) {
+            throw new BadRequestAlertException("Cannot star non-public collection", "clientCollection", "starnonpublic");
+        }
+
+        Optional<ProfileCollectionStar> existing = profileCollectionStarRepository.findByProfile_IdAndProfileCollection_Id(
+            currentProfile.getId(),
+            collectionId
+        );
+        if (existing.isEmpty()) {
+            ProfileCollectionStar star = new ProfileCollectionStar()
+                .profile(currentProfile)
+                .profileCollection(collection)
+                .dateStarred(Instant.now());
+            profileCollectionStarRepository.save(star);
+        }
+
+        return profileCollectionStarRepository.countByProfileCollection_Id(collectionId);
+    }
+
+    /**
+     * Remove the star given by the current profile to a collection. Idempotent: missing stars are a no-op.
+     *
+     * @param collectionId id of the collection to unstar.
+     * @throws BadRequestAlertException if the collection does not exist.
+     */
+    @Transactional
+    public void unstar(Long collectionId) {
+        if (!profileCollectionRepository.existsById(collectionId)) {
+            throw new BadRequestAlertException("Collection not found", "clientCollection", "idnotfound");
+        }
+
+        Profile currentProfile = profileService.getCurrentProfile();
+        if (currentProfile == null) {
+            return;
+        }
+
+        profileCollectionStarRepository.deleteByProfile_IdAndProfileCollection_Id(currentProfile.getId(), collectionId);
     }
 
     private ClientCollectionDTO toClientCollectionDTO(ProfileCollection profileCollection) {
@@ -288,7 +360,8 @@ public class ClientCollectionService {
         ClientCollectionCommunityDTO communityDTO = new ClientCollectionCommunityDTO();
         communityDTO.setTotalCloned(77);
         communityDTO.setTotalComments(88);
-        communityDTO.setTotalStars(99);
+        long totalStars = collection.getId() != null ? profileCollectionStarRepository.countByProfileCollection_Id(collection.getId()) : 0L;
+        communityDTO.setTotalStars((int) totalStars);
         return communityDTO;
     }
 

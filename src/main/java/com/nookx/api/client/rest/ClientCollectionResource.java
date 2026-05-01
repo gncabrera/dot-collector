@@ -173,4 +173,40 @@ public class ClientCollectionResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    /**
+     * {@code PUT  /client-collections/:id/star} : star a public collection on behalf of the current profile.
+     *
+     * <p>Idempotent: returns {@code 200} with the current total stars even if the collection was already starred.
+     *
+     * @param id the id of the collection to star.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the current total stars in the body.
+     */
+    @PutMapping("/{id}/star")
+    public ResponseEntity<Long> star(@PathVariable("id") Long id) {
+        LOG.debug("REST request to star ClientCollection : {}", id);
+        if (id == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        long totalStars = clientCollectionService.star(id);
+        return ResponseEntity.ok(totalStars);
+    }
+
+    /**
+     * {@code DELETE  /client-collections/:id/star} : remove the current profile's star from a collection.
+     *
+     * <p>Idempotent: returns {@code 204} even if the collection was not starred.
+     *
+     * @param id the id of the collection to unstar.
+     * @return the {@link ResponseEntity} with status {@code 204 (No Content)}.
+     */
+    @DeleteMapping("/{id}/star")
+    public ResponseEntity<Void> unstar(@PathVariable("id") Long id) {
+        LOG.debug("REST request to unstar ClientCollection : {}", id);
+        if (id == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        clientCollectionService.unstar(id);
+        return ResponseEntity.noContent().build();
+    }
 }
