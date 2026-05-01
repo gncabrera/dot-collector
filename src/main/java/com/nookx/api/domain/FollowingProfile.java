@@ -2,6 +2,7 @@ package com.nookx.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +13,13 @@ import lombok.Setter;
  * A FollowingProfile.
  */
 @Entity
-@Table(name = "following_profile")
+@Table(
+    name = "following_profile",
+    uniqueConstraints = @UniqueConstraint(
+        name = "ux_following_profile__profile_id_followed_profile_id",
+        columnNames = { "profile_id", "followed_profile_id" }
+    )
+)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
@@ -30,11 +37,15 @@ public class FollowingProfile implements Serializable {
     @Column(name = "date_following")
     private LocalDate dateFollowing;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "profile_id", nullable = false)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "followed_profile_id", nullable = false)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile followedProfile;
 

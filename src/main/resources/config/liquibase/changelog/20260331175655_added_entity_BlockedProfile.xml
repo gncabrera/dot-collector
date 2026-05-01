@@ -21,13 +21,17 @@
                 <constraints nullable="true" />
             </column>
             <column name="profile_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="blocked_profile_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <addUniqueConstraint
+            columnNames="profile_id, blocked_profile_id"
+            constraintName="ux_blocked_profile__profile_id_blocked_profile_id"
+            tableName="blocked_profile"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

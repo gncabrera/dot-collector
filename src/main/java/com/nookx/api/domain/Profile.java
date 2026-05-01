@@ -2,6 +2,7 @@ package com.nookx.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -50,6 +51,10 @@ public class Profile implements Serializable {
     @Column(name = "whatsapp")
     private String whatsapp;
 
+    @NotNull
+    @Column(name = "public_profile", nullable = false)
+    private Boolean publicProfile = Boolean.TRUE;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User user;
@@ -95,6 +100,11 @@ public class Profile implements Serializable {
 
     public Profile whatsapp(String whatsapp) {
         this.setWhatsapp(whatsapp);
+        return this;
+    }
+
+    public Profile publicProfile(Boolean publicProfile) {
+        this.setPublicProfile(publicProfile);
         return this;
     }
 
@@ -149,6 +159,7 @@ public class Profile implements Serializable {
             ", instagram='" + getInstagram() + "'" +
             ", facebook='" + getFacebook() + "'" +
             ", whatsapp='" + getWhatsapp() + "'" +
+            ", publicProfile='" + getPublicProfile() + "'" +
             "}";
     }
 }

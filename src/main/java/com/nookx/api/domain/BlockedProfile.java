@@ -2,6 +2,7 @@ package com.nookx.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +13,13 @@ import lombok.Setter;
  * A BlockedProfile.
  */
 @Entity
-@Table(name = "blocked_profile")
+@Table(
+    name = "blocked_profile",
+    uniqueConstraints = @UniqueConstraint(
+        name = "ux_blocked_profile__profile_id_blocked_profile_id",
+        columnNames = { "profile_id", "blocked_profile_id" }
+    )
+)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 @Getter
 @Setter
@@ -33,11 +40,15 @@ public class BlockedProfile implements Serializable {
     @Column(name = "date_blocked")
     private LocalDate dateBlocked;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "profile_id", nullable = false)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile profile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "blocked_profile_id", nullable = false)
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Profile blockedProfile;
 

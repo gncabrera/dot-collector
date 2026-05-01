@@ -183,6 +183,12 @@ public class InterestService {
     public List<ClientInterestDTO> findAllForCurrentProfile() {
         LOG.debug("Request to get Interests linked to current profile only");
         Long profileId = profileService.getCurrentProfile().getId();
+        return findAllForProfile(profileId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClientInterestDTO> findAllForProfile(Long profileId) {
+        LOG.debug("Request to get Interests linked to profile {}", profileId);
         return interestRepository
             .findAllLinkedToProfile(profileId)
             .stream()

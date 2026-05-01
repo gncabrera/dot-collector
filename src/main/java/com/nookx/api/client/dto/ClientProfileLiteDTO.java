@@ -8,5 +8,6 @@ public class ClientProfileLiteDTO {
 
     private String name;
     private ClientImageDTO image;
+    private Boolean publicProfile;
     private List<ClientInterestDTO> interests;
 }

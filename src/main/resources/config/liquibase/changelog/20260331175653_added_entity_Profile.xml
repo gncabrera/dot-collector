@@ -35,6 +35,9 @@
             <column name="whatsapp" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="public_profile" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false" />
+            </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_profile__user_id" />
             </column>
