@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class ClientProfileLiteDTO {
 
+    private Long id;
     private String name;
     private ClientImageDTO image;
     private Boolean publicProfile;

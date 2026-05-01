@@ -4,6 +4,7 @@ import com.nookx.api.client.dto.ClientBlockedProfileDTO;
 import com.nookx.api.client.dto.ClientCollectionsSummaryDTO;
 import com.nookx.api.client.dto.ClientContactLinksDTO;
 import com.nookx.api.client.dto.ClientImageDTO;
+import com.nookx.api.client.dto.ClientProfileCommunityDTO;
 import com.nookx.api.client.dto.ClientProfileDTO;
 import com.nookx.api.client.dto.ClientProfileLiteDTO;
 import com.nookx.api.domain.BlockedProfile;
@@ -110,6 +111,7 @@ public class ClientProfileService {
         log.debug("Request to get current ClientProfileLite");
         Profile profile = profileService.getCurrentProfile();
         ClientProfileLiteDTO dto = new ClientProfileLiteDTO();
+        dto.setId(profile.getId());
         dto.setName(resolveName(profile));
         dto.setImage(getProfileImage(profile));
         dto.setPublicProfile(profile.getPublicProfile());
@@ -128,6 +130,7 @@ public class ClientProfileService {
             return null;
         }
         ClientProfileLiteDTO dto = new ClientProfileLiteDTO();
+        dto.setId(profile.getId());
         dto.setName(resolveName(profile));
         dto.setImage(getProfileImage(profile));
         dto.setPublicProfile(profile.getPublicProfile());
@@ -278,18 +281,21 @@ public class ClientProfileService {
 
     private ClientProfileDTO toClientProfileDTO(Profile profile) {
         ClientProfileDTO dto = new ClientProfileDTO();
+        dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());
         dto.setLocation(profile.getLocation());
         dto.setPublicProfile(profile.getPublicProfile());
         dto.setImage(getProfileImage(profile));
         dto.setCollectionsSummary(buildCollectionsSummary(profile));
         dto.setContactLinks(buildContactLinks(profile));
+        dto.setCommunityDTO(buildCommunity(profile));
         dto.setInterests(interestService.findAllForProfile(profile.getId()));
         return dto;
     }
 
     private ClientProfileDTO toLimitedClientProfileDTO(Profile profile) {
         ClientProfileDTO dto = new ClientProfileDTO();
+        dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());
         dto.setImage(getProfileImage(profile));
         dto.setPublicProfile(profile.getPublicProfile());
@@ -319,6 +325,18 @@ public class ClientProfileService {
         contactLinks.setFacebook(profile.getFacebook());
         contactLinks.setWhatsapp(profile.getWhatsapp());
         return contactLinks;
+    }
+
+    /**
+     * Build the community section for a profile. Counts ignore follow rows that have any block relationship
+     * with the profile in either direction.
+     */
+    private ClientProfileCommunityDTO buildCommunity(Profile profile) {
+        ClientProfileCommunityDTO community = new ClientProfileCommunityDTO();
+        Long profileId = profile.getId();
+        community.setFollowers((int) followingProfileRepository.countFollowersExcludingBlocked(profileId));
+        community.setFollowing((int) followingProfileRepository.countFollowingExcludingBlocked(profileId));
+        return community;
     }
 
     private String resolveName(Profile profile) {
