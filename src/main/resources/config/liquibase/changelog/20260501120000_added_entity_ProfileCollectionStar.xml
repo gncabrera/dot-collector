@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity ProfileCollectionStar.
+    -->
+    <changeSet id="20260501120000-1" author="nookx">
+        <createTable tableName="profile_collection_star">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date_starred" type="${datetimeType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profile_collection_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+            columnNames="profile_id, profile_collection_id"
+            constraintName="ux_profile_collection_star__profile_id_profile_collection_id"
+            tableName="profile_collection_star"/>
+    </changeSet>
+
+</databaseChangeLog>
