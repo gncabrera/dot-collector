@@ -1,6 +1,7 @@
 package com.nookx.api.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.nookx.api.domain.enumeration.ProfileCollectionSetStatus;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,11 +31,21 @@ public class ProfileCollectionSet implements Serializable {
     @Column(name = "owned")
     private Boolean owned;
 
-    @Column(name = "wanted")
-    private Boolean wanted;
-
     @Column(name = "date_added")
     private LocalDate dateAdded;
+
+    @Column(name = "user_notes", length = 1000)
+    private String userNotes;
+
+    @Column(name = "price")
+    private Float price;
+
+    @Column(name = "quantity_to_sell")
+    private Integer quantityToSell;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 16)
+    private ProfileCollectionSetStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "profile" }, allowSetters = true)
@@ -57,13 +68,28 @@ public class ProfileCollectionSet implements Serializable {
         return this;
     }
 
-    public ProfileCollectionSet wanted(Boolean wanted) {
-        this.setWanted(wanted);
+    public ProfileCollectionSet dateAdded(LocalDate dateAdded) {
+        this.setDateAdded(dateAdded);
         return this;
     }
 
-    public ProfileCollectionSet dateAdded(LocalDate dateAdded) {
-        this.setDateAdded(dateAdded);
+    public ProfileCollectionSet userNotes(String userNotes) {
+        this.setUserNotes(userNotes);
+        return this;
+    }
+
+    public ProfileCollectionSet price(Float price) {
+        this.setPrice(price);
+        return this;
+    }
+
+    public ProfileCollectionSet quantityToSell(Integer quantityToSell) {
+        this.setQuantityToSell(quantityToSell);
+        return this;
+    }
+
+    public ProfileCollectionSet status(ProfileCollectionSetStatus status) {
+        this.setStatus(status);
         return this;
     }
 
@@ -102,8 +128,11 @@ public class ProfileCollectionSet implements Serializable {
         return "ProfileCollectionSet{" +
             "id=" + getId() +
             ", owned='" + getOwned() + "'" +
-            ", wanted='" + getWanted() + "'" +
             ", dateAdded='" + getDateAdded() + "'" +
+            ", userNotes='" + getUserNotes() + "'" +
+            ", price=" + getPrice() +
+            ", quantityToSell=" + getQuantityToSell() +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

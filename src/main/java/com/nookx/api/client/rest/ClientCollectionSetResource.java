@@ -4,6 +4,7 @@ import com.nookx.api.client.dto.ClientCollectionSetDTO;
 import com.nookx.api.client.dto.ClientSetDTO;
 import com.nookx.api.client.dto.ClientSetLiteDTO;
 import com.nookx.api.client.service.ClientCollectionSetService;
+import com.nookx.api.service.dto.ProfileCollectionSetDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,10 @@ public class ClientCollectionSetResource {
      * sets to the collection.
      *
      * <p>The body is a list of {@link ClientCollectionSetDTO} carrying the
-     * {@code setId} together with the {@code owned} / {@code wanted} flags to
-     * persist for that link. Sets already present in the collection are silently
-     * skipped (the operation is idempotent).</p>
+     * {@code setId} together with the {@code owned} flag and the sell-listing
+     * fields ({@code userNotes}, {@code price}, {@code quantityToSell},
+     * {@code status}) to persist for that link. Sets already present in the
+     * collection are silently skipped (the operation is idempotent).</p>
      */
     @PutMapping("")
     public ResponseEntity<Void> addSetsToCollection(
@@ -62,6 +64,27 @@ public class ClientCollectionSetResource {
         LOG.debug("REST request to remove set {} from ClientCollection : {}", setId, collectionId);
         clientCollectionSetService.removeSetFromCollection(collectionId, setId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * {@code PUT /api/client/collections/:collectionId/sets/:id/details} : update the
+     * editable details (owned, userNotes, price, quantityToSell, status) of the
+     * {@link com.nookx.api.domain.ProfileCollectionSet} that links the given
+     * {@link com.nookx.api.domain.MegaSet} ({@code id}) to the collection.
+     *
+     * <p>PUT semantics: {@code null} values in the body overwrite existing values.
+     * The {@code id}, {@code dateAdded}, {@code collection} and {@code set} fields
+     * of the body are ignored.</p>
+     */
+    @PutMapping("/{id}/details")
+    public ResponseEntity<ProfileCollectionSetDTO> updateSetDetails(
+        @PathVariable("collectionId") Long collectionId,
+        @PathVariable("id") Long id,
+        @RequestBody ProfileCollectionSetDTO dto
+    ) {
+        LOG.debug("REST request to update details of set {} in ClientCollection {} : {}", id, collectionId, dto);
+        ProfileCollectionSetDTO result = clientCollectionSetService.updateSetDetails(collectionId, id, dto);
+        return ResponseEntity.ok(result);
     }
 
     /**

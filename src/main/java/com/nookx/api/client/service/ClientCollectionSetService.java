@@ -8,11 +8,14 @@ import com.nookx.api.domain.Profile;
 import com.nookx.api.domain.ProfileCollection;
 import com.nookx.api.domain.ProfileCollectionSet;
 import com.nookx.api.domain.User;
+import com.nookx.api.domain.enumeration.ProfileCollectionSetStatus;
 import com.nookx.api.repository.MegaSetRepository;
 import com.nookx.api.repository.ProfileCollectionRepository;
 import com.nookx.api.repository.ProfileCollectionSetRepository;
 import com.nookx.api.service.ProfileService;
 import com.nookx.api.service.UserService;
+import com.nookx.api.service.dto.ProfileCollectionSetDTO;
+import com.nookx.api.service.mapper.ProfileCollectionSetMapper;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +46,7 @@ public class ClientCollectionSetService {
     private final ProfileCollectionSetRepository profileCollectionSetRepository;
     private final MegaSetRepository megaSetRepository;
     private final ClientSetService clientSetService;
+    private final ProfileCollectionSetMapper profileCollectionSetMapper;
 
     public ClientCollectionSetService(
         ProfileService profileService,
@@ -50,7 +54,8 @@ public class ClientCollectionSetService {
         ProfileCollectionRepository profileCollectionRepository,
         ProfileCollectionSetRepository profileCollectionSetRepository,
         MegaSetRepository megaSetRepository,
-        ClientSetService clientSetService
+        ClientSetService clientSetService,
+        ProfileCollectionSetMapper profileCollectionSetMapper
     ) {
         this.profileService = profileService;
         this.userService = userService;
@@ -58,14 +63,18 @@ public class ClientCollectionSetService {
         this.profileCollectionSetRepository = profileCollectionSetRepository;
         this.megaSetRepository = megaSetRepository;
         this.clientSetService = clientSetService;
+        this.profileCollectionSetMapper = profileCollectionSetMapper;
     }
 
     /**
      * Add every set in {@code requested} to {@code collectionId}.
      *
      * <p>The operation is idempotent: sets already present in the collection are
-     * silently skipped. The {@code owned} / {@code wanted} flags from the request
-     * are persisted as provided; {@code dateAdded} is always set to today.</p>
+     * silently skipped. The {@code owned} flag and the sell-listing fields
+     * ({@code userNotes}, {@code price}, {@code quantityToSell}, {@code status})
+     * from the request are persisted as provided; {@code dateAdded} is always set
+     * to today and {@code status} defaults to {@link ProfileCollectionSetStatus#AVAILABLE}
+     * when omitted.</p>
      *
      * @throws ResponseStatusException 404 if the collection does not belong to the
      *         current profile, or if any of the requested sets is neither public
@@ -95,7 +104,10 @@ public class ClientCollectionSetService {
                 .collection(collection)
                 .set(megaSet)
                 .owned(dto.getOwned())
-                .wanted(dto.getWanted())
+                .userNotes(dto.getUserNotes())
+                .price(dto.getPrice())
+                .quantityToSell(dto.getQuantityToSell())
+                .status(dto.getStatus() != null ? dto.getStatus() : ProfileCollectionSetStatus.AVAILABLE)
                 .dateAdded(LocalDate.now());
             profileCollectionSetRepository.save(entity);
         }
@@ -115,6 +127,35 @@ public class ClientCollectionSetService {
             .findByCollection_IdAndSet_Id(collectionId, setId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         profileCollectionSetRepository.delete(link);
+    }
+
+    /**
+     * Update the editable details of the {@link ProfileCollectionSet} that links
+     * {@code setId} (a {@link MegaSet} id) to {@code collectionId}.
+     *
+     * <p>PUT semantics: the editable fields ({@code owned}, {@code userNotes},
+     * {@code price}, {@code quantityToSell}, {@code status}) are overwritten with
+     * the values from {@code dto} (including {@code null}). The {@code id},
+     * {@code dateAdded}, {@code collection} and {@code set} fields are ignored.</p>
+     *
+     * @throws ResponseStatusException 404 if the collection does not belong to the
+     *         current profile, or no such link exists.
+     */
+    public ProfileCollectionSetDTO updateSetDetails(Long collectionId, Long setId, ProfileCollectionSetDTO dto) {
+        log.debug("Request to update details of set {} in ClientCollection {} : {}", setId, collectionId, dto);
+        getOwnedCollectionOrNotFound(collectionId);
+        ProfileCollectionSet link = profileCollectionSetRepository
+            .findByCollection_IdAndSet_Id(collectionId, setId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        link.setOwned(dto.getOwned());
+        link.setUserNotes(dto.getUserNotes());
+        link.setPrice(dto.getPrice());
+        link.setQuantityToSell(dto.getQuantityToSell());
+        link.setStatus(dto.getStatus());
+
+        ProfileCollectionSet saved = profileCollectionSetRepository.save(link);
+        return profileCollectionSetMapper.toDto(saved);
     }
 
     /**

@@ -24,15 +24,7 @@ public interface ProfileCollectionSetRepository extends JpaRepository<ProfileCol
     )
     long countDistinctOwnersBySetId(Long setId);
 
-    /** Unique profiles that have flagged this set as wanted. */
-    @Query(
-        "select count(distinct pcs.collection.profile.id) " +
-            "from ProfileCollectionSet pcs " +
-            "where pcs.set.id = :setId and pcs.wanted = true"
-    )
-    long countDistinctWantersBySetId(Long setId);
-
-    /** Unique collections that include this set (regardless of owned/wanted). */
+    /** Unique collections that include this set (regardless of owned status). */
     @Query("select count(distinct pcs.collection.id) from ProfileCollectionSet pcs where pcs.set.id = :setId")
     long countDistinctCollectionsBySetId(Long setId);
 

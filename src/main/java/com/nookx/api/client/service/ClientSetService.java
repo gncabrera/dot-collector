@@ -192,7 +192,10 @@ public class ClientSetService {
     private ClientSetCommunityDTO buildCommunityDto(Long setId) {
         ClientSetCommunityDTO community = new ClientSetCommunityDTO();
         community.setTotalOwned(profileCollectionSetRepository.countDistinctOwnersBySetId(setId));
-        community.setTotalWanted(profileCollectionSetRepository.countDistinctWantersBySetId(setId));
+        // `wanted` flag was removed from ProfileCollectionSet in favour of the sell-listing
+        // model (status / price / quantityToSell). The DTO field is kept to preserve the
+        // existing client contract and is reported as 0 until a new metric is defined.
+        community.setTotalWanted(0L);
         community.setTotalCollectionsContaining(profileCollectionSetRepository.countDistinctCollectionsBySetId(setId));
         return community;
     }

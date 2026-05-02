@@ -1,6 +1,7 @@
 package com.nookx.api.service.dto;
 
 import com.nookx.api.domain.ProfileCollectionSet;
+import com.nookx.api.domain.enumeration.ProfileCollectionSetStatus;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,9 +20,15 @@ public class ProfileCollectionSetDTO implements Serializable {
 
     private Boolean owned;
 
-    private Boolean wanted;
-
     private LocalDate dateAdded;
+
+    private String userNotes;
+
+    private Float price;
+
+    private Integer quantityToSell;
+
+    private ProfileCollectionSetStatus status;
 
     private ProfileCollectionDTO collection;
 
@@ -54,8 +61,11 @@ public class ProfileCollectionSetDTO implements Serializable {
         return "ProfileCollectionSetDTO{" +
             "id=" + getId() +
             ", owned='" + getOwned() + "'" +
-            ", wanted='" + getWanted() + "'" +
             ", dateAdded='" + getDateAdded() + "'" +
+            ", userNotes='" + getUserNotes() + "'" +
+            ", price=" + getPrice() +
+            ", quantityToSell=" + getQuantityToSell() +
+            ", status='" + getStatus() + "'" +
             ", collection=" + getCollection() +
             ", set=" + getSet() +
             "}";

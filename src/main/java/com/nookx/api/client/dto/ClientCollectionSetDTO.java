@@ -1,5 +1,6 @@
 package com.nookx.api.client.dto;
 
+import com.nookx.api.domain.enumeration.ProfileCollectionSetStatus;
 import lombok.Data;
 
 /**
@@ -11,5 +12,8 @@ public class ClientCollectionSetDTO {
 
     private Long setId;
     private Boolean owned;
-    private Boolean wanted;
+    private String userNotes;
+    private Float price;
+    private Integer quantityToSell;
+    private ProfileCollectionSetStatus status;
 }
